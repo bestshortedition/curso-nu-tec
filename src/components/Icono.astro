@@ -1,0 +1,46 @@
+---
+// Íconos de línea de Lucide (un solo estilo en todo el sitio).
+import creditCard from 'lucide-static/icons/credit-card.svg?raw';
+import fileClock from 'lucide-static/icons/file-clock.svg?raw';
+import shieldCheck from 'lucide-static/icons/shield-check.svg?raw';
+import piggyBank from 'lucide-static/icons/piggy-bank.svg?raw';
+import keyRound from 'lucide-static/icons/key-round.svg?raw';
+import check from 'lucide-static/icons/check.svg?raw';
+import messageCircle from 'lucide-static/icons/message-circle.svg?raw';
+import arrowRight from 'lucide-static/icons/arrow-right.svg?raw';
+import calendarDays from 'lucide-static/icons/calendar-days.svg?raw';
+import info from 'lucide-static/icons/info.svg?raw';
+
+const iconos = {
+	'credit-card': creditCard,
+	'file-clock': fileClock,
+	'shield-check': shieldCheck,
+	'piggy-bank': piggyBank,
+	'key-round': keyRound,
+	check,
+	'message-circle': messageCircle,
+	'arrow-right': arrowRight,
+	'calendar-days': calendarDays,
+	info,
+} as const;
+
+interface Props {
+	nombre: keyof typeof iconos;
+	tamano?: number;
+	class?: string;
+}
+const { nombre, tamano = 24, class: clase } = Astro.props;
+const svg = iconos[nombre]
+	.replace(/width="\d+"/, `width="${tamano}"`)
+	.replace(/height="\d+"/, `height="${tamano}"`)
+	.replace('<svg', '<svg aria-hidden="true" focusable="false"');
+---
+
+<span class:list={['icono', clase]} set:html={svg} />
+
+<style>
+	.icono {
+		display: inline-flex;
+		line-height: 0;
+	}
+</style>

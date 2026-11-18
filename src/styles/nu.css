@@ -1,0 +1,205 @@
+/*
+ * Identidad visual del curso (CLAUDE.md, sección 8).
+ * Morado Nu solo como acento. Fondos blancos. Sin gradientes.
+ */
+:root,
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+	--nu-morado: #820ad1;
+	--nu-morado-oscuro: #5c0794;
+	--nu-lila: #efe3fa;
+	--nu-lila-borde: #dcc5f2;
+	--nu-texto: #1f1a24;
+	--nu-gris: #5f5966;
+	--nu-linea: #e7e2ec;
+	--nu-verde: #1b6b3a;
+	--nu-verde-fondo: #e6f4ea;
+	--nu-rojo: #a1232b;
+	--nu-rojo-fondo: #fbe9ea;
+
+	--sl-font: 'Inter Variable', 'Inter', system-ui, sans-serif;
+	--sl-text-base: 1.0625rem; /* 17 px: se lee mejor en celular */
+	--sl-text-body: var(--sl-text-base);
+	--sl-line-height: 1.6;
+	--sl-content-width: 42rem;
+
+	--sl-color-white: var(--nu-texto);
+	--sl-color-gray-1: #2b2531;
+	--sl-color-gray-2: #3d3644;
+	--sl-color-gray-3: var(--nu-gris);
+	--sl-color-gray-4: #8a8391;
+	--sl-color-gray-5: #c9c3cf;
+	--sl-color-gray-6: var(--nu-linea);
+	--sl-color-gray-7: #faf8fc;
+	--sl-color-black: #ffffff;
+
+	--sl-color-accent-high: var(--nu-morado-oscuro);
+	--sl-color-accent: var(--nu-morado);
+	--sl-color-accent-low: var(--nu-lila);
+	--sl-color-text-accent: var(--nu-morado);
+	--sl-color-bg-nav: #ffffff;
+	--sl-color-hairline-shade: var(--nu-linea);
+}
+
+body {
+	background: #ffffff;
+	color: var(--nu-texto);
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h2 {
+	font-size: 1.375rem;
+}
+
+/* Enlaces: subrayados, para que se distingan sin depender del color. */
+.sl-markdown-content a:not(.boton) {
+	color: var(--nu-morado);
+	text-underline-offset: 0.18em;
+}
+
+/* Botones grandes, fáciles de tocar con el pulgar. */
+.boton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 3rem;
+	padding: 0.75rem 1.25rem;
+	border-radius: 999px;
+	border: 2px solid var(--nu-morado);
+	background: var(--nu-morado);
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 1rem;
+	text-decoration: none;
+	cursor: pointer;
+	line-height: 1.2;
+}
+.boton:hover {
+	background: var(--nu-morado-oscuro);
+	border-color: var(--nu-morado-oscuro);
+	color: #ffffff;
+}
+.boton--claro {
+	background: #ffffff;
+	color: var(--nu-morado);
+}
+.boton--claro:hover {
+	background: var(--nu-lila);
+	color: var(--nu-morado-oscuro);
+}
+.boton:focus-visible,
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+	outline: 3px solid var(--nu-morado);
+	outline-offset: 3px;
+}
+
+.boton svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	flex: none;
+}
+
+/* Etiqueta pequeña sobre los títulos ("Byte 1.3 · 1 min"). */
+.etiqueta {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--nu-gris);
+	letter-spacing: 0.01em;
+}
+
+/* Ocultar visualmente pero dejar para lectores de pantalla. */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Si no hay JavaScript, se esconden los controles que lo necesitan. */
+.solo-js {
+	display: none;
+}
+.js .solo-js {
+	display: revert;
+}
+.js .sin-js {
+	display: none;
+}
+
+/* Portada: la cita de un joven es lo primero que se ve. */
+.portada {
+	margin: 1rem 0 0;
+}
+.sl-markdown-content .portada blockquote {
+	background: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.portada blockquote p {
+	margin: 0;
+	font-size: clamp(1.5rem, 6.5vw, 2.25rem);
+	line-height: 1.25;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--nu-texto);
+}
+.portada figcaption {
+	margin-top: 1rem;
+	color: var(--nu-gris);
+	font-size: 0.9375rem;
+}
+.intro {
+	font-size: 1.125rem;
+	max-width: 36rem;
+}
+
+/* Línea de tiempo de la fecha de corte. */
+.sl-markdown-content .linea-tiempo {
+	list-style: none;
+	padding: 0;
+	margin: 1.5rem 0 0.5rem;
+	border-left: 3px solid var(--nu-lila-borde);
+}
+.sl-markdown-content .linea-tiempo li {
+	position: relative;
+	margin: 0 0 1rem;
+	padding-left: 1.25rem;
+}
+.sl-markdown-content .linea-tiempo li::before {
+	content: '';
+	position: absolute;
+	left: -0.55rem;
+	top: 0.35rem;
+	width: 0.8rem;
+	height: 0.8rem;
+	border-radius: 50%;
+	background: var(--nu-morado);
+}
+.sl-markdown-content .linea-tiempo strong {
+	display: block;
+	color: var(--nu-morado);
+}
+.sl-markdown-content blockquote {
+	border-left-color: var(--nu-morado);
+	background: #faf8fc;
+	padding: 0.75rem 1rem;
+	border-radius: 0 0.75rem 0.75rem 0;
+}

@@ -1,0 +1,41 @@
+---
+title: ¿Qué es un préstamo personal?
+description: Una cantidad que recibes una vez y pagas en pagos fijos. La tarjeta funciona distinto.
+tipo: byte
+tema: credito
+numero: "1.6"
+minutos: 2
+duda:
+  clase: dato
+  texto: "Solo 2 de 17 aprendieron algo de crédito en casa."
+  quien: Entrevistas del equipo, noviembre de 2026
+accion: Antes de pedir cualquier crédito, calcula el pago mensual y el CAT.
+fuentes:
+  - { nombre: "CONDUSEF, Simulador de crédito personal y de nómina", url: "https://www.condusef.gob.mx/?p=contenido&idc=468&idcat=1" }
+  - { nombre: "CONDUSEF, Proteja su Dinero: Meses ¿sin intereses? (act. 2021)", url: "https://revista.condusef.gob.mx/credito/tarjeta/2012/05/meses-sin-intereses/" }
+---
+import Ejercicio from '../../../components/Ejercicio.astro';
+
+Un **préstamo personal** te da una cantidad **una sola vez**. La pagas en un plazo definido, con pagos que conoces desde el inicio.
+
+La **tarjeta** es distinta: es **revolvente**. Lo que pagas, lo puedes volver a usar.
+
+CONDUSEF sugiere elegir **tasa fija**, para que tus pagos no cambien.
+
+<Ejercicio
+	titulo="¿Tarjeta o préstamo?"
+	pregunta="Pides $6,000 y los pagas en 12 pagos iguales. Al terminar, ya no puedes volver a usarlos. ¿Qué es?"
+	opciones={['Tarjeta de crédito', 'Préstamo personal']}
+	correcta={1}
+>
+	Préstamo personal: lo recibes una vez y tiene plazo fijo.
+</Ejercicio>
+
+<Ejercicio
+	titulo="¿Tarjeta o préstamo?"
+	pregunta="Pagas $1,000 de lo que debías y puedes volver a gastarlos. ¿Qué es?"
+	opciones={['Tarjeta de crédito', 'Préstamo personal']}
+	correcta={0}
+>
+	Tarjeta de crédito: al pagar, recuperas tu crédito disponible.
+</Ejercicio>

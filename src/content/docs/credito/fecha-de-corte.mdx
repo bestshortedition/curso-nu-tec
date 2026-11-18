@@ -1,0 +1,39 @@
+---
+title: Fecha de corte y fecha límite de pago
+description: Dos fechas que deciden si pagas intereses o no.
+tipo: byte
+tema: credito
+numero: "1.2"
+minutos: 2
+duda:
+  clase: dato
+  texto: "Solo 24% (6 de 25) explica bien qué es la fecha de corte."
+  quien: Entrevistas del equipo, noviembre de 2026
+accion: Anota en tu calendario las dos fechas de una tarjeta (tuya o de tu familia).
+fuentes:
+  - { nombre: "Banxico, Términos financieros: tarjetas de crédito", url: "https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp" }
+  - { nombre: "CONDUSEF, Proteja su Dinero: Utiliza la TDC a tu favor (2022)", url: "https://revista.condusef.gob.mx/credito/2022/02/utiliza-la-tdc-a-tu-favor/" }
+---
+import Ejercicio from '../../../components/Ejercicio.astro';
+
+La **fecha de corte** es el día del mes en que el banco cierra tu periodo y suma lo que gastaste.
+
+La **fecha límite de pago** es el último día para pagar sin atrasarte. Normalmente llega unos 20 días después del corte.
+
+Si pagas todo lo del periodo antes de la fecha límite, **no pagas intereses**.
+
+<ol class="linea-tiempo">
+	<li><strong>Del día 6 al día 5 del mes siguiente</strong> Compras con la tarjeta</li>
+	<li><strong>Día 5</strong> Fecha de corte: se suma lo que debes</li>
+	<li><strong>Antes del día 25</strong> Fecha límite: pagas</li>
+</ol>
+
+<small>Fechas de ejemplo. Cada tarjeta tiene las suyas en su estado de cuenta.</small>
+
+<Ejercicio
+	pregunta="Tu fecha de corte es el día 5. Compras algo el día 8. ¿Cuándo aparece esa compra?"
+	opciones={['En el corte del día 5 que acaba de pasar', 'En el siguiente corte']}
+	correcta={1}
+>
+	En el siguiente corte. Lo que compras después del corte entra al periodo que sigue.
+</Ejercicio>

@@ -1,0 +1,13 @@
+# Dependencias y build
+node_modules/
+dist/
+.astro/
+.DS_Store
+
+# NO subir: el repositorio es público.
+# - Entrevistas a menores (aunque estén anonimizadas)
+# - Presentaciones de Nu y del equipo
+datos/
+referencia/
+PROMPT_INICIAL.md
+.claude/

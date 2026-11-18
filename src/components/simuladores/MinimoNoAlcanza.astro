@@ -1,0 +1,320 @@
+---
+/**
+ * Simulador "El mínimo no alcanza" (CLAUDE.md, iniciativa 1).
+ * Compara pagar una deuda de $3,000 solo con el mínimo contra otras formas de pagar.
+ * Es un EJEMPLO ILUSTRATIVO: no usa tasas de ningún banco.
+ *
+ * Sin JavaScript se ve una tabla fija con el ejemplo de 45% anual.
+ */
+import { simular, pesos, tiempo } from '../../lib/minimo';
+
+const DEUDA = 3000;
+const LIMITE = 5000;
+const TASAS = [0.3, 0.45, 0.6];
+const TASA_INICIAL = 0.45;
+
+const filas = [
+	{ nombre: 'Solo el mínimo', pagoFijo: null as number | null },
+	{ nombre: '$300 al mes', pagoFijo: 300 },
+	{ nombre: '$500 al mes', pagoFijo: 500 },
+].map((f) => ({ ...f, r: simular({ deuda: DEUDA, tasaAnual: TASA_INICIAL, limite: LIMITE, pagoFijo: f.pagoFijo }) }));
+---
+
+<section class="sim not-content" data-simulador data-deuda={DEUDA} data-limite={LIMITE} aria-labelledby="sim-titulo">
+	<div class="cabeza">
+		<p class="tag">Simulador · Ejemplo ilustrativo</p>
+		<h2 id="sim-titulo">El mínimo no alcanza</h2>
+		<p class="planteamiento">
+			Debes <strong>{pesos(DEUDA)}</strong> en tu tarjeta. Tu límite es de {pesos(LIMITE)}. Ya no compras nada más con ella.
+		</p>
+	</div>
+
+	<form class="controles solo-js" onsubmit="return false">
+		<fieldset>
+			<legend>¿Cómo la pagas?</legend>
+			<div class="chips">
+				<label><input type="radio" name="pago" value="minimo" checked /> <span>Solo el mínimo</span></label>
+				<label><input type="radio" name="pago" value="300" /> <span>$300 al mes</span></label>
+				<label><input type="radio" name="pago" value="500" /> <span>$500 al mes</span></label>
+				<label><input type="radio" name="pago" value="total" /> <span>Todo, antes de la fecha límite</span></label>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Tasa de interés anual (ilustrativa)</legend>
+			<div class="chips chips--tasa">
+				{TASAS.map((t) => (
+					<label>
+						<input type="radio" name="tasa" value={t} checked={t === TASA_INICIAL} />
+						<span>{Math.round(t * 100)}%</span>
+					</label>
+				))}
+			</div>
+		</fieldset>
+	</form>
+
+	<div class="resultado solo-js" aria-live="polite">
+		<div class="cifras">
+			<div>
+				<p class="cifra" data-meses>—</p>
+				<p class="leyenda">para terminar de pagar</p>
+			</div>
+			<div>
+				<p class="cifra" data-intereses>—</p>
+				<p class="leyenda">de intereses + IVA</p>
+			</div>
+		</div>
+		<div class="barra" aria-hidden="true">
+			<span class="b-deuda" data-b-deuda></span><span class="b-int" data-b-int></span>
+		</div>
+		<p class="barra-leyenda" aria-hidden="true">
+			<span class="item"><span class="punto punto--deuda"></span> Lo que compraste</span>
+			<span class="item"><span class="punto punto--int"></span> Lo que pagas de más</span>
+		</p>
+		<p class="mensaje" data-mensaje></p>
+	</div>
+
+	<div class="sin-js">
+		<table>
+			<caption>Ejemplo con tasa ilustrativa de {Math.round(TASA_INICIAL * 100)}% anual</caption>
+			<thead>
+				<tr><th scope="col">Cómo pagas</th><th scope="col">Tiempo</th><th scope="col">Intereses + IVA</th></tr>
+			</thead>
+			<tbody>
+				{filas.map((f) => (
+					<tr><th scope="row">{f.nombre}</th><td>{tiempo(f.r.meses)}</td><td>{pesos(f.r.intereses)}</td></tr>
+				))}
+				<tr><th scope="row">Todo, antes de la fecha límite</th><td>1 mes</td><td>{pesos(0)}</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<details class="supuestos">
+		<summary>¿Cómo se calcula?</summary>
+		<ul>
+			<li>Es un ejemplo para aprender. Las tasas no son de ningún banco. Como referencia, Banxico reporta 37.1% de tasa efectiva promedio para quienes no pagan el total (datos a junio de 2025).</li>
+			<li>Cada mes se cobran intereses sobre lo que debes, más 16% de IVA sobre esos intereses.</li>
+			<li>El pago mínimo sigue la regla de Banxico (Circular 34/2010, numeral 4.1): el mayor entre 1.5% de lo que debes más intereses e IVA, y 1.25% de tu límite.</li>
+			<li>Si pagas todo antes de la fecha límite, no pagas intereses.</li>
+			<li>No incluye comisiones, seguros ni compras nuevas.</li>
+		</ul>
+	</details>
+</section>
+
+<script>
+	import { simular, pesos, tiempo } from '../../lib/minimo';
+
+	document.querySelectorAll<HTMLElement>('[data-simulador]').forEach((caja) => {
+		const deuda = Number(caja.dataset.deuda);
+		const limite = Number(caja.dataset.limite);
+		const form = caja.querySelector('form')!;
+		const $ = (s: string) => caja.querySelector<HTMLElement>(s)!;
+
+		function actualizar() {
+			const datos = new FormData(form);
+			const pago = String(datos.get('pago'));
+			const tasa = Number(datos.get('tasa'));
+			const tasaTexto = Math.round(tasa * 100) + '%';
+
+			if (pago === 'total') {
+				$('[data-meses]').textContent = '1 mes';
+				$('[data-intereses]').textContent = pesos(0);
+				$('[data-b-deuda]').style.flexGrow = '1';
+				$('[data-b-int]').style.flexGrow = '0';
+				$('[data-mensaje]').textContent =
+					'Pagas solo lo que compraste. Así se usa bien una tarjeta.';
+				return;
+			}
+
+			const r = simular({ deuda, tasaAnual: tasa, limite, pagoFijo: pago === 'minimo' ? null : Number(pago) });
+			$('[data-meses]').textContent = tiempo(r.meses);
+			$('[data-intereses]').textContent = pesos(r.intereses);
+			$('[data-b-deuda]').style.flexGrow = String(deuda);
+			$('[data-b-int]').style.flexGrow = String(r.intereses);
+			$('[data-mensaje]').textContent =
+				pago === 'minimo'
+					? `Con ${tasaTexto} anual, tu primer mínimo sería de ${pesos(r.primerPago)}. En total pagas ${pesos(r.pagado)} por algo que costó ${pesos(deuda)}.`
+					: `Pagando ${pesos(Number(pago))} al mes, en total pagas ${pesos(r.pagado)}.`;
+		}
+
+		form.addEventListener('change', actualizar);
+		actualizar();
+	});
+</script>
+
+<style>
+	.sim {
+		margin: 2rem 0;
+		padding: 1.25rem;
+		border-radius: 1.25rem;
+		background: var(--nu-lila);
+		color: var(--nu-texto);
+	}
+	.tag {
+		margin: 0;
+		font-size: 0.8125rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--nu-morado);
+	}
+	h2 {
+		margin: 0.25rem 0 0;
+		font-size: 1.5rem;
+		line-height: 1.2;
+		color: var(--nu-texto);
+	}
+	.planteamiento {
+		margin: 0.5rem 0 1rem;
+	}
+	fieldset {
+		margin: 0 0 1rem;
+		padding: 0;
+		border: 0;
+	}
+	legend {
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+	}
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.chips label {
+		position: relative;
+	}
+	.chips input {
+		position: absolute;
+		opacity: 0;
+		inset: 0;
+	}
+	.chips span {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		padding: 0.5rem 1rem;
+		border-radius: 999px;
+		border: 2px solid var(--nu-lila-borde);
+		background: #ffffff;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.chips input:checked + span {
+		background: var(--nu-morado);
+		border-color: var(--nu-morado);
+		color: #ffffff;
+	}
+	.chips input:focus-visible + span {
+		outline: 3px solid var(--nu-morado);
+		outline-offset: 2px;
+	}
+	.resultado {
+		padding: 1rem;
+		border-radius: 1rem;
+		background: #ffffff;
+	}
+	:global(.js) .resultado.solo-js,
+	:global(.js) .controles.solo-js {
+		display: block;
+	}
+	.cifras {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+	.cifra {
+		margin: 0;
+		font-size: clamp(1.375rem, 6vw, 1.875rem);
+		font-weight: 800;
+		line-height: 1.1;
+		color: var(--nu-morado);
+	}
+	.leyenda {
+		margin: 0.25rem 0 0;
+		font-size: 0.9375rem;
+		color: var(--nu-gris);
+	}
+	.barra {
+		display: flex;
+		height: 0.875rem;
+		margin-top: 1rem;
+		border-radius: 999px;
+		overflow: hidden;
+		background: var(--nu-linea);
+	}
+	.b-deuda {
+		background: var(--nu-texto);
+		transition: flex-grow 0.3s;
+	}
+	.b-int {
+		background: var(--nu-morado);
+		transition: flex-grow 0.3s;
+	}
+	.barra-leyenda {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem 0.5rem;
+		margin: 0.5rem 0 0;
+		font-size: 0.875rem;
+		color: var(--nu-gris);
+	}
+	.punto {
+		display: inline-block;
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 50%;
+	}
+	.punto--deuda {
+		background: var(--nu-texto);
+	}
+	.punto--int {
+		background: var(--nu-morado);
+	}
+	.item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-right: 0.75rem;
+		white-space: nowrap;
+	}
+	.mensaje {
+		margin: 0.75rem 0 0;
+		font-weight: 600;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		background: #ffffff;
+		border-radius: 0.75rem;
+		overflow: hidden;
+		font-size: 0.9375rem;
+	}
+	caption {
+		text-align: start;
+		font-weight: 600;
+		padding-bottom: 0.5rem;
+	}
+	th,
+	td {
+		padding: 0.6rem 0.75rem;
+		text-align: start;
+		border-bottom: 1px solid var(--nu-linea);
+	}
+	.supuestos {
+		margin-top: 1rem;
+		font-size: 0.9375rem;
+	}
+	.supuestos summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--nu-morado);
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+	}
+	.supuestos ul {
+		margin: 0.25rem 0 0;
+		padding-left: 1.2rem;
+	}
+</style>

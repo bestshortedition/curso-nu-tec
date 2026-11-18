@@ -1,0 +1,166 @@
+---
+/**
+ * Mini ejercicio de opción múltiple (o verdadero/falso).
+ *
+ * Uso en un byte (.mdx):
+ *   <Ejercicio pregunta="¿El límite es tu dinero?" opciones={['Verdadero', 'Falso']} correcta={1}>
+ *     Explicación corta que aparece al contestar.
+ *   </Ejercicio>
+ *
+ * Sin JavaScript: se ven las opciones y un "Ver respuesta" que se abre.
+ * Con JavaScript: se toca una opción y aparece si acertaste y la explicación.
+ */
+interface Props {
+	pregunta: string;
+	opciones: string[];
+	/** Posición de la respuesta correcta, empezando en 0. */
+	correcta: number;
+	/** Texto pequeño arriba de la pregunta. */
+	titulo?: string;
+}
+const { pregunta, opciones, correcta, titulo = 'Mini ejercicio' } = Astro.props;
+const id = `ej-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section class="ejercicio not-content" data-ejercicio data-correcta={correcta} aria-labelledby={`${id}-p`}>
+	<p class="etiqueta">{titulo}</p>
+	<p class="pregunta" id={`${id}-p`}>{pregunta}</p>
+
+	<div class="opciones solo-js" role="group" aria-labelledby={`${id}-p`}>
+		{opciones.map((o, i) => (
+			<button type="button" class="opcion" data-i={i}>{o}</button>
+		))}
+	</div>
+	<ul class="opciones-texto sin-js">
+		{opciones.map((o) => <li>{o}</li>)}
+	</ul>
+
+	<p class="resultado" role="status" aria-live="polite"></p>
+
+	<details class="explicacion">
+		<summary>Ver respuesta</summary>
+		<p class="correcta"><strong>Respuesta:</strong> {opciones[correcta]}</p>
+		<div class="texto"><slot /></div>
+	</details>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-ejercicio]').forEach((caja) => {
+		const correcta = Number(caja.dataset.correcta);
+		const resultado = caja.querySelector<HTMLElement>('.resultado')!;
+		const detalles = caja.querySelector<HTMLDetailsElement>('.explicacion')!;
+		const botones = caja.querySelectorAll<HTMLButtonElement>('.opcion');
+		detalles.hidden = true;
+		botones.forEach((b) =>
+			b.addEventListener('click', () => {
+				const i = Number(b.dataset.i);
+				botones.forEach((x) => {
+					x.classList.remove('elegida', 'bien', 'mal');
+					x.setAttribute('aria-pressed', 'false');
+				});
+				b.classList.add('elegida', i === correcta ? 'bien' : 'mal');
+				b.setAttribute('aria-pressed', 'true');
+				botones[correcta].classList.add('bien');
+				resultado.textContent = i === correcta ? '¡Exacto!' : 'Casi. Mira la respuesta:';
+				resultado.className = 'resultado ' + (i === correcta ? 'ok' : 'no');
+				detalles.hidden = false;
+				detalles.open = true;
+			}),
+		);
+	});
+</script>
+
+<style>
+	.ejercicio {
+		margin: 2rem 0;
+		padding: 1.25rem;
+		border: 2px solid var(--nu-lila-borde);
+		border-radius: 1.25rem;
+		background: #ffffff;
+	}
+	.etiqueta {
+		margin: 0;
+		color: var(--nu-morado);
+		text-transform: uppercase;
+		font-size: 0.8125rem;
+		letter-spacing: 0.06em;
+	}
+	.pregunta {
+		margin: 0.4rem 0 1rem;
+		font-size: 1.1875rem;
+		font-weight: 700;
+		line-height: 1.35;
+		color: var(--nu-texto);
+	}
+	.opciones {
+		display: grid;
+		gap: 0.6rem;
+	}
+	:global(.js) .opciones.solo-js {
+		display: grid;
+	}
+	.opcion {
+		min-height: 3rem;
+		padding: 0.7rem 1rem;
+		text-align: start;
+		font: inherit;
+		font-weight: 600;
+		color: var(--nu-texto);
+		background: #ffffff;
+		border: 2px solid var(--nu-linea);
+		border-radius: 0.875rem;
+		cursor: pointer;
+	}
+	.opcion:hover {
+		border-color: var(--nu-morado);
+	}
+	.opcion.bien {
+		border-color: var(--nu-verde);
+		background: var(--nu-verde-fondo);
+	}
+	.opcion.mal {
+		border-color: var(--nu-rojo);
+		background: var(--nu-rojo-fondo);
+	}
+	.opcion.bien::after {
+		content: '  ✓';
+		color: var(--nu-verde);
+	}
+	.opcion.mal::after {
+		content: '  ✗';
+		color: var(--nu-rojo);
+	}
+	.opciones-texto {
+		margin: 0 0 1rem;
+		padding-left: 1.2rem;
+	}
+	.resultado {
+		margin: 0.75rem 0 0;
+		font-weight: 700;
+		min-height: 1px;
+	}
+	.resultado.ok {
+		color: var(--nu-verde);
+	}
+	.resultado.no {
+		color: var(--nu-rojo);
+	}
+	.explicacion {
+		margin-top: 0.5rem;
+	}
+	.explicacion summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--nu-morado);
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+	}
+	:global(.js) .explicacion summary {
+		display: none;
+	}
+	.explicacion p,
+	.texto :global(p) {
+		margin: 0.5rem 0 0;
+	}
+</style>

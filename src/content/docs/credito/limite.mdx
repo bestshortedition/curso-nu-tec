@@ -1,0 +1,31 @@
+---
+title: ¿El límite de mi tarjeta es mi dinero?
+description: No. Es dinero que el banco te presta y que tienes que devolver.
+tipo: byte
+tema: credito
+numero: "1.1"
+minutos: 1
+duda:
+  clase: dato
+  texto: "4 de 24 jóvenes que contestaron creen que el límite de su tarjeta es dinero suyo, o no saben."
+  quien: Entrevistas del equipo, noviembre de 2026
+accion: Explícale a alguien la diferencia entre límite y saldo.
+fuentes:
+  - { nombre: "CONDUSEF, Proteja su Dinero: Utiliza la TDC a tu favor (2022)", url: "https://revista.condusef.gob.mx/credito/2022/02/utiliza-la-tdc-a-tu-favor/" }
+  - { nombre: "Banxico, Términos financieros: tarjetas de crédito", url: "https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp" }
+---
+import Ejercicio from '../../../components/Ejercicio.astro';
+
+**No. Es dinero prestado.** Tu límite es lo máximo que el banco te presta con la tarjeta. Todo lo que gastas, lo devuelves.
+
+Tu **saldo** es lo que debes. Tu **crédito disponible** es lo que te queda por usar.
+
+> **Ejemplo ilustrativo.** Límite de $5,000. Gastas $1,200. Tu saldo es $1,200 y tu disponible, $3,800.
+
+<Ejercicio
+	pregunta="Tienes una tarjeta con límite de $5,000. ¿Tienes $5,000 que son tuyos?"
+	opciones={['Verdadero', 'Falso']}
+	correcta={1}
+>
+	Falso. Son $5,000 que el banco te puede prestar. Si los usas, los debes.
+</Ejercicio>

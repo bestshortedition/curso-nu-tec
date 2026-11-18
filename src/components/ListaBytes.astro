@@ -1,0 +1,118 @@
+---
+/**
+ * Lista de bytes de un tema, con palomita en los que ya viste (progreso local).
+ */
+import { getCollection } from 'astro:content';
+import Icono from './Icono.astro';
+
+interface Props {
+	tema: string;
+}
+const { tema } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const bytes = (await getCollection('docs', (e) => e.data.tipo === 'byte' && e.data.tema === tema)).sort((a, b) =>
+	(a.data.numero ?? '').localeCompare(b.data.numero ?? '', 'es', { numeric: true }),
+);
+const totalMin = bytes.reduce((s, b) => s + (b.data.minutos ?? 0), 0);
+---
+
+<div class="lista not-content" data-lista-bytes>
+	<p class="resumen">
+		{bytes.length} bytes · {totalMin} minutos en total
+		<span class="solo-js progreso" data-progreso></span>
+	</p>
+	<ol>
+		{bytes.map((b) => (
+			<li data-byte={b.id}>
+				<a href={`${base}${b.id}/`}>
+					<span class="num">{b.data.numero}</span>
+					<span class="titulo">{b.data.title}</span>
+					<span class="min">{b.data.minutos} min</span>
+					<span class="hecho" aria-hidden="true"><Icono nombre="check" tamano={18} /></span>
+					<span class="sr-only estado"></span>
+				</a>
+			</li>
+		))}
+	</ol>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-lista-bytes]').forEach((lista) => {
+		let vistos: Record<string, boolean> = {};
+		try {
+			vistos = JSON.parse(localStorage.getItem('bytes-progreso') || '{}');
+		} catch {}
+		const items = lista.querySelectorAll<HTMLElement>('li[data-byte]');
+		let n = 0;
+		items.forEach((li) => {
+			if (vistos[li.dataset.byte!]) {
+				li.classList.add('visto');
+				li.querySelector('.estado')!.textContent = '(ya lo viste)';
+				n++;
+			}
+		});
+		const p = lista.querySelector('[data-progreso]');
+		if (p && n > 0) p.textContent = ` · Llevas ${n} de ${items.length}`;
+	});
+</script>
+
+<style>
+	.lista {
+		margin: 1.5rem 0;
+	}
+	.resumen {
+		margin: 0 0 0.75rem;
+		color: var(--nu-gris);
+		font-weight: 600;
+	}
+	.progreso {
+		color: var(--nu-morado);
+	}
+	ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--nu-linea);
+	}
+	li {
+		border-bottom: 1px solid var(--nu-linea);
+	}
+	a {
+		display: grid;
+		grid-template-columns: 2.5rem 1fr auto;
+		align-items: center;
+		gap: 0.25rem 0.75rem;
+		min-height: 3.5rem;
+		padding: 0.75rem 0.25rem;
+		text-decoration: none;
+		color: var(--nu-texto);
+	}
+	a:hover .titulo {
+		color: var(--nu-morado);
+		text-decoration: underline;
+	}
+	.num {
+		font-weight: 700;
+		color: var(--nu-morado);
+		font-variant-numeric: tabular-nums;
+	}
+	.titulo {
+		font-weight: 600;
+		line-height: 1.35;
+	}
+	.min {
+		font-size: 0.875rem;
+		color: var(--nu-gris);
+		white-space: nowrap;
+	}
+	.hecho {
+		display: none;
+	}
+	.visto .min {
+		display: none;
+	}
+	.visto .hecho {
+		display: inline-flex;
+		color: var(--nu-verde);
+	}
+</style>

@@ -1,0 +1,24 @@
+---
+title: ¡Terminaste el tema de crédito!
+description: Repasa lo más importante y cuéntanos qué te pareció.
+tipo: pagina
+tema: credito
+sidebar:
+  label: Terminaste
+---
+import Calificacion from '../../../components/Calificacion.astro';
+import { FORMULARIO_PILOTO } from '../../../lib/temas';
+
+Lo más importante, en tres frases:
+
+1. El límite de tu tarjeta es dinero prestado, no tuyo.
+2. Si pagas el total antes de la fecha límite, no pagas intereses.
+3. Con puro pago mínimo, una deuda chica puede tardar años.
+
+<Calificacion tema="credito" />
+
+{FORMULARIO_PILOTO && (
+	<p><a class="boton" href={FORMULARIO_PILOTO} target="_blank" rel="noopener">Contesta 5 preguntas (anónimo)</a></p>
+)}
+
+<p><a class="boton boton--claro" href={import.meta.env.BASE_URL}>Volver al inicio</a></p>
