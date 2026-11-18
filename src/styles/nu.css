@@ -58,7 +58,7 @@ h3 {
 }
 
 /* Enlaces: subrayados, para que se distingan sin depender del color. */
-.sl-markdown-content a:not(.boton) {
+.sl-markdown-content :where(a:not(.boton)) {
 	color: var(--nu-morado);
 	text-underline-offset: 0.18em;
 }
@@ -202,4 +202,12 @@ summary:focus-visible {
 	background: #faf8fc;
 	padding: 0.75rem 1rem;
 	border-radius: 0 0.75rem 0.75rem 0;
+}
+
+/* Inicio: el título está oculto (solo para lectores de pantalla); quitamos su espacio. */
+.content-panel:has(h1.sr-only) {
+	padding: 0;
+}
+.content-panel:has(h1.sr-only) + .content-panel {
+	border-top: 0;
 }

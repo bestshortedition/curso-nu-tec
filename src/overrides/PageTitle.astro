@@ -13,7 +13,7 @@ const tema = temaPorClave(data.tema);
 const esByte = data.tipo === 'byte';
 const esTema = data.tipo === 'tema';
 // En el inicio, lo primero que se ve es la cita; el título queda para lectores de pantalla.
-const esInicio = Astro.locals.starlightRoute.entry.id === 'index';
+const esInicio = Astro.locals.starlightRoute.id === '' || Astro.locals.starlightRoute.entry.id === 'index';
 ---
 
 {(esByte || esTema) && tema && (
