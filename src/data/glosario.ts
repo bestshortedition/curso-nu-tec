@@ -37,7 +37,7 @@ const banxicoGlosario: Fuente = {
 const condusef: Fuente = { nombre: 'CONDUSEF', url: 'https://www.condusef.gob.mx/' };
 const buro: Fuente = { nombre: 'Buró de Crédito', url: 'https://www.burodecredito.com.mx/' };
 
-export const glosario: Palabra[] = [
+const base: Palabra[] = [
 	{
 		id: 'apartado-de-ahorro',
 		palabra: 'Apartado de ahorro',
@@ -239,6 +239,18 @@ export const glosario: Palabra[] = [
 		ver: ['historial-crediticio'],
 	},
 ];
+
+// Palabras que agregó cada módulo (src/data/glosario-extra/).
+import { palabras as m1 } from './glosario-extra/modulo-1';
+import { palabras as m2 } from './glosario-extra/modulo-2';
+import { palabras as m3 } from './glosario-extra/modulo-3';
+import { palabras as m4 } from './glosario-extra/modulo-4';
+import { palabras as m5 } from './glosario-extra/modulo-5';
+
+export const glosario: Palabra[] = [...base, ...m1, ...m2, ...m3, ...m4, ...m5];
+
+const repetidas = glosario.map((p) => p.id).filter((id, i, todas) => todas.indexOf(id) !== i);
+if (repetidas.length) throw new Error(`Palabras repetidas en el glosario: ${repetidas.join(', ')}`);
 
 export const porId = new Map(glosario.map((p) => [p.id, p]));
 

@@ -1,0 +1,89 @@
+---
+numero: "1.1"
+descripcion: Un refresco diario o una suscripción que ya no usas parecen poco. Juntos suman cientos de pesos al mes.
+minutos: 2
+duda:
+  pregunta: ¿A dónde se va tu dinero si nunca compras nada caro?
+  tema: Los gastos chiquitos y las suscripciones olvidadas casi no se notan. Aquí ves cuánto suman.
+  cita:
+    texto: Se me antoja comida en la prepa o salgo con mis amigos y termino usando lo que guardé.
+    quien: Joven de 15 años, sin cuenta
+  cifra:
+    texto: Gastan más en comida (20 de 25) y salidas con amigos (18 de 25).
+    n: 20
+    de: 25
+accion: "Anota hoy todo lo que gastes y revisa qué suscripciones pagas."
+resumen:
+  - Los gastos hormiga son chiquitos, pero juntos suman mucho.
+  - "En el ejemplo, $20 al día suman $7,300 al año."
+  - Cancela las suscripciones que ya no usas.
+palabras:
+  - gasto-hormiga
+  - presupuesto
+fuentes:
+  - nombre: CONDUSEF, ¡Cuida tu bolsillo de los gastos hormiga! (2022)
+    url: https://www.gob.mx/condusef/articulos/cuida-tu-bolsillo-de-los-gastos-hormiga?idiom=es
+  - nombre: CONDUSEF, Revista Proteja su Dinero 272, Cuidado con los gastos fantasma, hormiga y vampiro
+    url: https://revista.condusef.gob.mx/wp-content/uploads/2022/10/gastos_272.pdf
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Diego compra un refresco de **$20** cada día. Además paga una app que ya ni abre. Son <Termino id="gasto-hormiga">gastos hormiga</Termino>.
+
+<VideoReel archivo="efecto-hormiga" segundos={29} titulo="Video: cuánto suman un refresco diario y una suscripción olvidada">
+	Ejemplo ilustrativo. Son solo $20, ¿no? Un refresco de $20 cada día suma $600 en un mes y $7,300 en un año. Una suscripción de $99 al mes son $1,188 al año, aunque ya no la abras. Anota lo que gastas por 3 días, busca los cobros que se repiten y cancela lo que no usas. Lo chiquito también suma: ponle un tope a tus antojos.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Cuánto suma?"
+	icono="coins"
+	opciones={[
+		{ boton: 'Refresco', sub: '$20 al día', titulo: 'Al mes:', destacado: '$600',
+			cuentas: [{ icono: 'calendar-check', etq: 'Al año', valor: '$7,300', tono: 'morado' }] },
+		{ boton: 'Snack', sub: '$30 al día', titulo: 'Al mes:', destacado: '$900',
+			cuentas: [{ icono: 'calendar-check', etq: 'Al año', valor: '$10,950', tono: 'morado' }] },
+		{ boton: 'Suscripción', sub: '$99 al mes', titulo: 'Al mes:', destacado: '$99',
+			cuentas: [{ icono: 'calendar-check', etq: 'Al año', valor: '$1,188', tono: 'morado' }] },
+		{ boton: 'Los tres', sub: 'juntos', titulo: 'Al mes:', destacado: '$1,599',
+			cuentas: [{ icono: 'calendar-check', etq: 'Al año', valor: '$19,438', tono: 'morado' }] },
+	]}
+	como={['Mes de 30 días; año de 365.']}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'coins', tono: 'neutro', titulo: 'Son chiquitos', texto: 'Cuestan poco y no los piensas.' },
+		{ icono: 'x-circle', tono: 'mal', titulo: 'Se repiten', texto: 'Uno diario se paga 365 veces al año.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Los gustos se valen', texto: 'Solo ponles un tope.' },
+	]}
+/>
+
+<Nota titulo="Así les dice CONDUSEF" fuente="CONDUSEF, Proteja su Dinero 272">
+	Las suscripciones que olvidas son "gastos vampiro". Quita las que no usas.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Diego paga $79 al mes por una app de música que usa y $99 por una que ya no abre. ¿Qué hace?"
+	opciones={['Dejarlas: son pocos pesos', 'Cancelar la que no abre', 'Cancelar las dos']}
+	correcta={1}
+	porque={['$99 al mes suman $1,188 al año.', 'Ahorra $1,188 al año y conserva lo que usa.', 'La de música sí la usa: es un gusto válido.']}
+>
+	Paga solo lo que usas y cuida tu <Termino id="presupuesto">presupuesto</Termino>.
+</Ejercicio>

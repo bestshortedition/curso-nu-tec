@@ -1,0 +1,64 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Dos fechas",
+      "b": "que valen dinero."
+    },
+    {
+      "tipo": "lista",
+      "dur": 5,
+      "sobre": "La tarjeta de Diego",
+      "numerada": false,
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "Día 10: fecha de corte"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Día 30: fecha límite de pago"
+        }
+      ]
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5,
+      "sobre": "El día 10 se suman sus compras:",
+      "valor": "$800",
+      "pie": "eso debe pagar."
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5,
+      "sobre": "Después del corte tiene hasta",
+      "valor": "20",
+      "pie": "días para pagar."
+    },
+    {
+      "tipo": "lista",
+      "dur": 5.6,
+      "sobre": "Si paga antes del día 30…",
+      "items": [
+        {
+          "tono": "bien",
+          "texto": "Todo, $800: paga $0 de intereses"
+        },
+        {
+          "tono": "mal",
+          "texto": "Una parte: el resto genera intereses"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Corte: se suma.",
+      "b": "Límite: se paga.",
+      "c": "Paga todo antes de la fecha límite.",
+      "destacado": "$0 de intereses"
+    }
+  ]
+}

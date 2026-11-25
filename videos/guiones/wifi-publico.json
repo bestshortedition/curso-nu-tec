@@ -1,0 +1,17 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Wi-Fi gratis?", "b": "Para tu banco, no." },
+    { "tipo": "chat", "dur": 5, "sobre": "En la plaza", "de": "Redes Wi-Fi disponibles", "texto": "Plaza_Gratis · abierta, sin contraseña", "alerta": "Red pública" },
+    { "tipo": "lista", "dur": 6, "sobre": "En una red abierta, evita", "items": [
+      { "tono": "mal", "texto": "Entrar a tu banco" },
+      { "tono": "mal", "texto": "Transferir o pagar en línea" },
+      { "tono": "mal", "texto": "Escribir contraseñas o tu NIP" }
+    ] },
+    { "tipo": "lista", "dur": 6, "sobre": "Mejor así", "items": [
+      { "tono": "bien", "texto": "Espera a la red de tu casa" },
+      { "tono": "bien", "texto": "O apaga el Wi-Fi y usa tus datos" },
+      { "tono": "bien", "texto": "Quita la conexión automática" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "Wi-Fi gratis:", "b": "no para tu banco.", "c": "Tu banco, en tu casa o con tus datos.", "destacado": "Lo recomienda CONDUSEF" }
+  ]
+}

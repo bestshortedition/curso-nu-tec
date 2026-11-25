@@ -1,0 +1,86 @@
+---
+numero: "3.4"
+descripcion: Huella, tarjeta apagada, límite y alertas. Y si algo sale mal, tú puedes avisar a tu banco y reclamar.
+minutos: 2
+duda:
+  pregunta: ¿Qué ajustes protegen mi cuenta, y qué hago si algo sale mal?
+  tema: Tu app tiene candados que activas en minutos. Y si ves algo raro, puedes reclamar tú solo.
+  cifra:
+    texto: 48% (12 de 25) no le escribiría solo al banco si algo sale mal.
+    n: 12
+    de: 25
+accion: "Si ya tienes cuenta, activa hoy alertas de cada compra y huella o rostro en tu app."
+resumen:
+  - Activa huella o rostro y alertas. Apaga tu tarjeta si no la usas.
+  - Si ves algo raro, bloquea tu tarjeta y avisa a tu banco por canal oficial.
+palabras:
+  - aclaracion
+  - tarjeta-digital
+fuentes:
+  - nombre: CONDUSEF, Compras seguras en el Buen Fin (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/12/EFI_H_Compras-seguras-en-el-Buen-Fin.pdf
+  - nombre: CONDUSEF, No seas un blanco fácil (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/06/EFI_H_No-seas-un-blanco-facil.pdf
+  - nombre: CONDUSEF, ¿Conoces las tarjetas virtuales? (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/08/EFI_H_Conoces-las-tarjetas-virtuales.pdf
+  - nombre: CONDUSEF, Proteja su Dinero, Que el fraude no te sorprenda (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/2026/09/que-el-fraude-no-te-sorprenda/
+  - nombre: CONDUSEF, Proteja su Dinero, ¡No te calles! Derecho a reclamar (agosto de 2026)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/2026/08/no-te-calles/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Diego perdió su cartera en un concierto. Apaga su tarjeta desde su celular.
+
+<VideoReel archivo="candados-de-seguridad" segundos={26} titulo="Video: cuatro candados de seguridad en tu app">
+	¿Perdiste tu tarjeta? Apágala en segundos. 4 candados en tu app: huella o rostro, apagar tu tarjeta si no la usas, límite de gasto en línea y alertas. 48% de 25 jóvenes no le escribiría solo al banco. ¿Algo raro? Tú solo puedes bloquear la tarjeta, avisar a tu banco por canal oficial y pedir tu folio de aclaración. Tienes derecho a reclamar.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Te protege', icono: 'shield-check' }, { texto: 'Te expone', icono: 'warning-circle' }]}
+	items={[
+		{ frase: 'Abres tu app con huella o rostro.', correcta: 0, explicacion: 'Es un candado de tu app.', fuente: 'CONDUSEF' },
+		{ frase: 'Tu tarjeta está apagada mientras no la usas.', correcta: 0, explicacion: 'La prendes solo al pagar.', fuente: 'CONDUSEF' },
+		{ frase: 'Tu contraseña es tu fecha de nacimiento.', correcta: 1, explicacion: 'Usa 8 caracteres o más, con letras, números y símbolos.', fuente: 'CONDUSEF' },
+		{ frase: 'Ves un cargo raro y esperas a fin de mes.', correcta: 1, explicacion: 'Entre más rápido avises, menor el daño.', fuente: 'CONDUSEF' },
+	]}
+/>
+
+---
+
+## Si algo sale mal
+
+<ListaIconos
+	items={[
+		{ icono: 'lock-simple', tono: 'neutro', titulo: '1. Bloquea tu tarjeta', texto: 'Desde la app.' },
+		{ icono: 'lifebuoy', tono: 'neutro', titulo: '2. Avisa a tu banco', texto: 'Por la app o al número de tu tarjeta.' },
+		{ icono: 'receipt', tono: 'neutro', titulo: '3. Guarda pruebas', texto: 'Capturas, mensajes y tu folio.' },
+	]}
+/>
+
+<Nota titulo="Tienes derecho a reclamar" fuente="CONDUSEF, Proteja su Dinero">
+	Por un cargo que no reconoces, pide una <Termino id="aclaracion">aclaración</Termino>: te deben dar folio y respuesta. Si no, acude a CONDUSEF.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Santi ve en su app un cargo de $450 que no hizo. ¿Qué hace primero?"
+	opciones={['Bloquea su tarjeta y reporta el cargo en la app', 'Le escribe a un perfil de redes que dice ser del banco', 'Espera al siguiente mes']}
+	correcta={0}
+	porque={['Frena más cargos.', 'Puede ser un perfil falso.', 'Hay que actuar de inmediato.']}
+>
+	Bloquea, avisa y guarda pruebas. Reclamar es tu derecho.
+</Ejercicio>

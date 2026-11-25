@@ -22,6 +22,8 @@ const lecciones = defineCollection({
 			pregunta: z.string().max(90),
 			/** El tema en general, en 1 o 2 frases. */
 			tema: z.string().max(220),
+			/** Cita TEXTUAL de un joven entrevistado (CLAUDE.md, sección 3). No inventar citas. */
+			cita: z.object({ texto: z.string(), quien: z.string() }).optional(),
 			/** Cuántos de los 25 entrevistados tienen esta duda. Texto EXACTO de CLAUDE.md, sección 3. */
 			cifra: z
 				.object({

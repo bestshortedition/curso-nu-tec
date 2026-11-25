@@ -1,0 +1,69 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Dos tarjetas iguales,",
+      "b": "dos dineros distintos."
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 5.6,
+      "sobre": "Diego tiene en su cuenta",
+      "etiqueta": "Saldo de tu débito",
+      "monto": "$800",
+      "pie": "Quiere unos audífonos de $1,000."
+    },
+    {
+      "tipo": "lista",
+      "dur": 6,
+      "sobre": "¿Qué pasa si paga con…?",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "Débito: el pago no pasa"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Crédito: sí pasa, con dinero prestado"
+        }
+      ]
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 5.5,
+      "sobre": "Si paga con crédito",
+      "etiqueta": "Le debe al banco",
+      "monto": "$1,000",
+      "pie": "Si no paga el total a tiempo, hay intereses."
+    },
+    {
+      "tipo": "comparar",
+      "dur": 5.5,
+      "sobre": "¿De quién es el dinero?",
+      "columnas": [
+        {
+          "valor": 800,
+          "texto": "$800",
+          "etq": "Débito: tuyo"
+        },
+        {
+          "valor": 1000,
+          "texto": "$1,000",
+          "etq": "Crédito: prestado",
+          "resaltar": true
+        }
+      ],
+      "remate": "Lo prestado se devuelve."
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Débito: tu dinero.",
+      "b": "Crédito: prestado.",
+      "c": "Usa crédito solo si puedes pagar el total.",
+      "destacado": "Paga el total a tiempo"
+    }
+  ]
+}

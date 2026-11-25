@@ -1,0 +1,78 @@
+---
+numero: "3.3"
+descripcion: Premio que no pediste, prisa o miedo. Así reconoces un mensaje o una llamada falsa antes de caer.
+minutos: 2
+duda:
+  pregunta: ¿Cómo reconozco un mensaje o una llamada falsa?
+  tema: Las estafas llegan por mensaje, correo o llamada. Casi todas usan un premio, prisa o miedo.
+  cifra:
+    texto: 52% conoce a alguien a quien intentaron estafar, casi siempre con una llamada que finge ser del banco.
+    n: 13
+    de: 25
+accion: "Dile hoy a tu familia: ningún banco pide códigos por teléfono. Si llaman, cuelga y marca tú."
+resumen:
+  - Premio que no pediste, prisa o miedo son señales de estafa.
+  - Nadie de tu banco te pide códigos ni NIP. Cuelga y marca tú.
+palabras:
+  - phishing
+  - codigos-y-nip
+fuentes:
+  - nombre: CONDUSEF, Proteja su Dinero, Que el fraude no te sorprenda (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/2026/09/que-el-fraude-no-te-sorprenda/
+  - nombre: CONDUSEF, Comercio electrónico, Tipos de fraude
+    url: https://www.condusef.gob.mx/?p=tipos-de-fraude
+  - nombre: CONDUSEF, No seas un blanco fácil (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/06/EFI_H_No-seas-un-blanco-facil.pdf
+  - nombre: CONDUSEF, Portal de Fraudes Financieros
+    url: https://phpapps.condusef.gob.mx/fraudes_financieros/index.php
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+A Vale le llegan tres mensajes urgentes. Todos son <Termino id="phishing">phishing</Termino>.
+
+<VideoReel archivo="estafas-para-jovenes" segundos={30} titulo="Video: tres mensajes falsos y cómo reconocerlos">
+	¿Ganaste un premio? Lee antes de dar clic. WhatsApp: "Ganaste unos audífonos. Paga $149 de envío aquí". Alerta: premio que no pediste. SMS: "Tu paquete no se pudo entregar. Confirma tus datos hoy". Alerta: prisa y link raro. Llamada de "tu banco": "Dime el código que te llegó por SMS". Alerta: nunca des tu código. 52% de 25 jóvenes conoce a alguien a quien intentaron estafar, casi siempre por llamada. ¿Premio, prisa o miedo? Para y revisa. Cuelga y marca tú al número de tu tarjeta. Tu código no se comparte.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	opciones={[{ texto: 'Estafa', icono: 'warning-circle' }, { texto: 'Puede ser real', icono: 'check-circle' }]}
+	items={[
+		{ frase: 'WhatsApp de un número desconocido: ¡Ganaste un celular! Paga $199 de envío en este link.', correcta: 0, explicacion: 'Premio, pago y link: tres señales.', fuente: 'CONDUSEF' },
+		{ frase: 'SMS: Tu paquete no se pudo entregar. Confirma tu dirección y paga aquí.', correcta: 0, explicacion: 'Si no esperas un paquete, bórralo.', fuente: 'CONDUSEF' },
+		{ frase: 'Correo: Tu cuenta fue bloqueada. Entra en menos de 24 horas o la perderás.', correcta: 0, explicacion: 'Miedo y prisa. Revisa en tu app.', fuente: 'CONDUSEF' },
+		{ frase: 'Aviso de tu app: Compra de $89 en una cafetería. ¿No fuiste tú? Revísalo en la app.', correcta: 1, explicacion: 'No pide datos ni trae link.' },
+	]}
+/>
+
+---
+
+## ¿Cómo te atrapan?
+
+<ListaIconos
+	items={[
+		{ icono: 'trophy', tono: 'mal', titulo: 'Premio que no pediste', texto: 'Si no participaste, no ganaste.' },
+		{ icono: 'lightning', tono: 'mal', titulo: 'Prisa', texto: 'Quieren que no pienses.' },
+		{ icono: 'seal-warning', tono: 'mal', titulo: 'Miedo', texto: 'Para que des clic sin revisar.' },
+	]}
+/>
+
+<Nota titulo="Lo que recomienda CONDUSEF" fuente="CONDUSEF, Proteja su Dinero">
+	No abras links de mensajes inesperados. Reporta números y páginas falsas en el Portal de Fraudes Financieros de CONDUSEF.
+</Nota>
+
+---
+
+<Ejercicio diagnostico="llamada">
+	Cuelga y marca tú. Nadie de tu banco te pide <Termino id="codigos-y-nip">códigos ni NIP</Termino>.
+</Ejercicio>

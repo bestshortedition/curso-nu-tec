@@ -1,0 +1,13 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Lo viste en un reel.", "b": "Lo quieres ya." },
+    { "tipo": "chat", "dur": 6.6, "sobre": "Te sale este anuncio:", "de": "Anuncio", "texto": "Últimas piezas. Solo hoy, 40% de descuento en estos tenis.", "alerta": "¿Lo necesitas o no?" },
+    { "tipo": "lista", "dur": 6, "items": [
+      { "tono": "bien", "texto": "Necesidad: sin eso no puedes" },
+      { "tono": "neutro", "texto": "Antojo: lo quieres, pero puede esperar" },
+      { "tono": "bien", "texto": "Un antojo no es malo: solo planéalo" }
+    ] },
+    { "tipo": "cifra", "dur": 5, "sobre": "Antes de pagar, espera", "valor": "24 h", "pie": "y piénsalo otra vez", "color": "morado" },
+    { "tipo": "cierre", "dur": 5, "a": "¿Mañana lo", "b": "sigues queriendo?", "c": "Si sí, y te alcanza, cómpralo.", "destacado": "Regla de las 24 horas" }
+  ]
+}

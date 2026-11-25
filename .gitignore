@@ -17,3 +17,9 @@ contexto/
 
 # Caché de la herramienta de video
 .hyperframes/
+
+# Videos generados por videos/generar.mjs (se rehacen desde videos/guiones/).
+# Los MP4 finales sí se suben, en public/videos/.
+videos/*/
+!videos/pago-minimo/
+!videos/guiones/

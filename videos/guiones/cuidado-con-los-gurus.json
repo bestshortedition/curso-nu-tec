@@ -1,0 +1,18 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Duplicar tu dinero", "b": "en una semana?" },
+    { "tipo": "chat", "dur": 5.6, "de": "Supuesto experto", "texto": "Duplica tu dinero en 7 días. 100% garantizado. Solo hoy, escríbeme por DM.", "alerta": "Señal de alerta" },
+    { "tipo": "lista", "dur": 7, "sobre": "Señales de alerta:", "items": [
+      { "tono": "mal", "texto": "Ganancias rápidas y garantizadas" },
+      { "tono": "mal", "texto": "Te pide invitar a más personas" },
+      { "tono": "mal", "texto": "Prisa: “solo hoy”" },
+      { "tono": "mal", "texto": "Te escribe por mensaje directo" }
+    ] },
+    { "tipo": "lista", "dur": 6, "sobre": "Antes de dar tu dinero:", "items": [
+      { "tono": "bien", "texto": "Búscalo en el SIPRES de la CONDUSEF" },
+      { "tono": "bien", "texto": "Desconfía de lo demasiado bueno" },
+      { "tono": "bien", "texto": "No compartas datos ni contraseñas" }
+    ] },
+    { "tipo": "cierre", "dur": 6, "a": "Si suena demasiado bueno,", "b": "probablemente es estafa.", "c": "Verifica en el SIPRES antes de pagar.", "destacado": "Pausa y verifica" }
+  ]
+}

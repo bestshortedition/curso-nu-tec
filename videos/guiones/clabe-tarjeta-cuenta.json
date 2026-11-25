@@ -1,0 +1,67 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "¿Tarjeta o CLABE?",
+      "b": "Para recibir: CLABE."
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5.1,
+      "sobre": "Tu CLABE tiene",
+      "valor": "18",
+      "pie": "dígitos y es única para tu cuenta.",
+      "color": "morado"
+    },
+    {
+      "tipo": "barra",
+      "dur": 6,
+      "sobre": "Así se arma tu CLABE",
+      "partes": [
+        {
+          "valor": 6,
+          "texto": "6",
+          "etq": "Banco y plaza"
+        },
+        {
+          "valor": 11,
+          "texto": "11",
+          "etq": "Tu cuenta"
+        },
+        {
+          "valor": 1,
+          "texto": "1",
+          "etq": "Control"
+        }
+      ]
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.5,
+      "sobre": "Para que te paguen",
+      "items": [
+        {
+          "tono": "bien",
+          "texto": "CLABE: recibe de cualquier banco"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Tarjeta: también sirve, pero cuídala"
+        },
+        {
+          "tono": "mal",
+          "texto": "NIP y CVV: nunca, a nadie"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "¿Te van a pagar?",
+      "b": "Manda tu CLABE.",
+      "c": "Tu NIP y tu CVV no se comparten nunca.",
+      "destacado": "18 dígitos y listo"
+    }
+  ]
+}

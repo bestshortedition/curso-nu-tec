@@ -1,0 +1,10 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Ganaste un premio?", "b": "Lee antes de dar clic." },
+    { "tipo": "chat", "dur": 5.5, "sobre": "WhatsApp de un número nuevo", "de": "Número desconocido", "texto": "¡Felicidades! Ganaste unos audífonos. Solo paga $149 de envío aquí: [link]", "alerta": "Premio que no pediste" },
+    { "tipo": "chat", "dur": 5.5, "sobre": "SMS", "de": "Paquetería", "texto": "Tu paquete no se pudo entregar. Confirma tus datos hoy o se devuelve: [link]", "alerta": "Prisa y link raro" },
+    { "tipo": "chat", "dur": 6, "sobre": "Llamada", "de": "\"Tu banco\"", "texto": "Detectamos un cargo raro. Para cancelarlo, dime el código que te llegó por SMS.", "alerta": "Nunca des tu código" },
+    { "tipo": "cifra", "dur": 5, "sobre": "Intentaron estafar a alguien que conocen", "valor": "52%", "pie": "de 25 jóvenes. Casi siempre, por llamada.", "color": "morado" },
+    { "tipo": "cierre", "dur": 5, "a": "¿Premio, prisa o miedo?", "b": "Para y revisa.", "c": "Cuelga y marca tú al número de tu tarjeta.", "destacado": "Tu código no se comparte" }
+  ]
+}

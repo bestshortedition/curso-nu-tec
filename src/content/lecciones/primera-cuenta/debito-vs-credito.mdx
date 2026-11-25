@@ -1,0 +1,85 @@
+---
+numero: "2.2"
+descripcion: La tarjeta de débito usa tu dinero. La de crédito usa dinero prestado que tienes que devolver. Aprende a distinguirlas.
+minutos: 2
+duda:
+  pregunta: ¿Qué diferencia hay entre una tarjeta de débito y una de crédito?
+  tema: Por fuera se ven iguales. Aquí vas a ver de dónde sale el dinero en cada una.
+  cifra:
+    texto: 40% dice que su primera tarjeta de crédito llega pronto.
+    n: 10
+    de: 25
+accion: "Pregunta en casa cuándo usan débito y cuándo crédito."
+resumen:
+  - Con débito pagas con tu dinero. Sin saldo, el pago no pasa.
+  - Con crédito pagas con dinero prestado que devuelves.
+  - Si no pagas el total a tiempo, el crédito cobra intereses.
+palabras:
+  - tarjeta-de-debito
+  - tarjeta-de-credito
+  - interes
+  - limite-de-credito
+fuentes:
+  - nombre: Banxico, Términos de cuentas de débito (¿Qué es una tarjeta de débito?)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-cuentas-deposito.jsp
+  - nombre: Banxico, Términos financieros de tarjetas de crédito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+  - nombre: CONDUSEF, ¿Sabes cómo leer tu estado de cuenta?
+    url: https://www.condusef.gob.mx/?p=contenido&idc=905&idcat=1
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Diego tiene **$800** en su cuenta. Quiere unos audífonos de **$1,000**. Trae dos tarjetas.
+
+<VideoReel archivo="debito-vs-credito" segundos={31} titulo="Video: qué pasa si pagas con débito o con crédito">
+	Ejemplo ilustrativo. Dos tarjetas iguales, dos dineros distintos. Diego tiene $800 y quiere unos audífonos de $1,000. Con débito, el pago no pasa. Con crédito, sí pasa, con dinero prestado: le debe $1,000 al banco. Si no paga el total a tiempo, hay intereses. Débito: tuyo. Crédito: prestado. Lo prestado se devuelve. Usa crédito solo si puedes pagar el total a tiempo.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Débito', icono: 'money' }, { texto: 'Crédito', icono: 'credit-card' }]}
+	items={[
+		{ frase: 'Pagas con el dinero de tu cuenta.', correcta: 0, explicacion: 'Ese dinero es completamente tuyo.', fuente: 'Banxico' },
+		{ frase: 'Pagas con dinero que te presta el banco.', correcta: 1, explicacion: 'Después lo devuelves.' },
+		{ frase: 'Si no pagas el total a tiempo, pagas intereses.', correcta: 1, explicacion: 'Lo que queda sin pagar genera intereses.', fuente: 'CONDUSEF' },
+		{ frase: 'Puedes gastar hasta un límite, aunque tu cuenta esté en ceros.', correcta: 1, explicacion: 'Es tu límite de crédito.', fuente: 'CONDUSEF' },
+	]}
+/>
+
+---
+
+## ¿Por qué importa?
+
+<ListaIconos
+	items={[
+		{ icono: 'money', tono: 'bien', titulo: 'Débito: tu dinero', texto: 'No le debes a nadie.' },
+		{ icono: 'credit-card', tono: 'neutro', titulo: 'Crédito: prestado', texto: 'Cada compra es una deuda.' },
+		{ icono: 'warning-circle', tono: 'mal', titulo: 'Sin pagar el total', texto: 'Hay intereses.' },
+	]}
+/>
+
+<Nota titulo="Lo que dice Banxico" fuente="Banxico, Términos de cuentas de débito">
+	A diferencia de la <Termino id="tarjeta-de-credito">tarjeta de crédito</Termino>, el dinero de tu <Termino id="tarjeta-de-debito">tarjeta de débito</Termino> es completamente tuyo.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Ana tiene $500 en su cuenta. Compra un videojuego de $900 con su tarjeta de crédito. ¿Qué pasó?"
+	opciones={['Pagó con su dinero.', 'Le debe $900 al banco.', 'El banco le regaló $400.']}
+	correcta={1}
+	porque={['Pagó con crédito.', 'Cada compra con crédito es una deuda.', 'Todo lo prestado se devuelve.']}
+>
+	Si paga los $900 antes de la fecha límite, no paga <Termino id="interes">intereses</Termino>.
+</Ejercicio>

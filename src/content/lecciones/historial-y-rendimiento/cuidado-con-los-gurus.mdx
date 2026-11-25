@@ -1,0 +1,86 @@
+---
+numero: "5.7"
+descripcion: "Ganancias rápidas, garantizadas y “solo hoy”: así se ven las estafas de falsos expertos en redes. Aprende a verificar."
+minutos: 2
+duda:
+  pregunta: ¿Cómo saber si un “gurú” de internet te quiere estafar?
+  tema: En redes hay quien promete dinero fácil. Aquí vas a ver las señales de estafa y cómo verificar.
+accion: "Deja de seguir a quien promete dinero fácil y garantizado."
+resumen:
+  - Ganancias garantizadas, prisa e invitar a más gente son señales de estafa.
+  - Antes de dar tu dinero, busca la empresa en el SIPRES.
+  - No operes por redes sociales.
+palabras:
+  - esquema-piramidal
+  - sipres
+  - rendimiento
+fuentes:
+  - nombre: CONDUSEF, Protégete y evita perder tu dinero (26/09/2025)
+    url: https://www.gob.mx/condusef/articulos/protegete-y-evita-perder-tu-dinero?idiom=es
+  - nombre: CONDUSEF, Estafadores usan la imagen de figuras públicas y creadores de contenido financiero (22/08/2025)
+    url: https://www.gob.mx/condusef/prensa/condusef-alerta-estafadores-usan-la-imagen-de-figuras-publicas-y-creadores-de-contenido-financiero?idiom=es
+  - nombre: CONDUSEF, Revista Proteja su Dinero, El fraude ya no roba, convence (enero de 2026)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/a-tu-favor/2026/01/el-fraude-ya-no-roba-convence/
+  - nombre: SHCP, Banxico y CNBV, Comunicado conjunto sobre los riesgos de los activos virtuales (13/12/2017)
+    url: https://www.gob.mx/shcp/prensa/las-autoridades-financieras-advierten-de-los-riesgos-asociados-al-uso-de-activos-virtuales?idiom=es-MX
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Emi ve un video: un “experto” promete duplicar su dinero en una semana con cripto.
+
+<VideoReel archivo="cuidado-con-los-gurus" segundos={28} titulo="Video: señales para detectar a un falso experto que promete dinero fácil">
+	¿Duplicar tu dinero en una semana? Un supuesto experto escribe: "Duplica tu dinero en 7 días. 100% garantizado. Solo hoy, escríbeme por DM". Señales de alerta: ganancias rápidas y garantizadas, te pide invitar a más personas, prisa con "solo hoy", y te escribe por mensaje directo. Antes de dar tu dinero: búscalo en el SIPRES de la CONDUSEF, desconfía de lo demasiado bueno y no compartas datos ni contraseñas. Si suena demasiado bueno, probablemente es estafa. Verifica en el SIPRES antes de pagar. Pausa y verifica.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Estafa o puede ser real?
+
+<Clasifica
+	opciones={[{ texto: 'Estafa', icono: 'warning-circle' }, { texto: 'Puede ser real', icono: 'check-circle' }]}
+	items={[
+		{ frase: 'Duplica tu dinero en 30 días, garantizado.', correcta: 0, explicacion: 'Desconfía de ganancias rápidas y sin esfuerzo.', fuente: 'CONDUSEF' },
+		{ frase: 'Gana más por cada amigo que invites a meter dinero.', correcta: 0, explicacion: 'Es una pirámide.', fuente: 'CONDUSEF' },
+		{ frase: 'Compra esta cripto hoy, su precio solo sube.', correcta: 0, explicacion: 'Su precio cambia mucho. Puedes perderlo todo.', fuente: 'SHCP, Banxico y CNBV' },
+		{ frase: 'Escríbeme por DM y te paso dónde depositar.', correcta: 0, explicacion: 'Hay falsos asesores por mensaje directo.', fuente: 'CONDUSEF' },
+		{ frase: 'Está en el SIPRES y te muestra su GAT nominal y real.', correcta: 1, explicacion: 'Eso lo puedes verificar.' },
+	]}
+/>
+
+---
+
+## Señales de estafa
+
+<ListaIconos
+	items={[
+		{ icono: 'seal-warning', tono: 'mal', titulo: 'Ganancias rápidas y garantizadas' },
+		{ icono: 'users-three', tono: 'mal', titulo: 'Presión para invitar a otros', texto: 'Los nuevos pagan a los de antes.' },
+		{ icono: 'lightning', tono: 'mal', titulo: 'Prisa', texto: '“Solo hoy”, para que no pienses.' },
+	]}
+/>
+
+Invitar gente para ganar es un <Termino id="esquema-piramidal">esquema piramidal</Termino>.
+
+<Nota titulo="Verifica antes" fuente="CONDUSEF">
+	Busca la empresa en el <Termino id="sipres">SIPRES</Termino>. Hay anuncios falsos con la imagen de figuras públicas, hasta con inteligencia artificial.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Un influencer le ofrece a Sofi duplicar $1,000 en una semana, si transfiere hoy. ¿Qué hace?"
+	opciones={['Manda poquito para probar', 'No manda nada y busca en el SIPRES', 'Invita a sus amigos']}
+	correcta={1}
+	porque={['Puede perderlo.', 'Garantía y prisa son señales de estafa.', 'Ellos también perderían.']}
+>
+	Pausa y verifica en el <Termino id="sipres">SIPRES</Termino> antes de pagar.
+</Ejercicio>

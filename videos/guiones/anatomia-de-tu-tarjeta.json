@@ -1,0 +1,79 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Tu primera tarjeta",
+      "b": "trae datos secretos."
+    },
+    {
+      "tipo": "lista",
+      "dur": 5.6,
+      "sobre": "Al frente",
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "16 dígitos: identifican tu tarjeta"
+        },
+        {
+          "tono": "neutro",
+          "texto": "MM/AA: hasta cuándo sirve"
+        }
+      ]
+    },
+    {
+      "tipo": "lista",
+      "dur": 5,
+      "sobre": "Atrás",
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "CVV: 3 o 4 dígitos"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Sirve para comprar en línea"
+        }
+      ]
+    },
+    {
+      "tipo": "lista",
+      "dur": 6,
+      "sobre": "Nunca los compartas",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "Tu NIP"
+        },
+        {
+          "tono": "mal",
+          "texto": "Tu CVV"
+        },
+        {
+          "tono": "mal",
+          "texto": "Tus contraseñas"
+        },
+        {
+          "tono": "mal",
+          "texto": "Los códigos que te llegan por SMS"
+        }
+      ]
+    },
+    {
+      "tipo": "chat",
+      "dur": 6,
+      "sobre": "Si te llega esto…",
+      "de": "Número desconocido",
+      "texto": "Tu tarjeta fue bloqueada. Responde con tu NIP y el código que te enviamos.",
+      "alerta": "El banco nunca lo pide"
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Tus datos secretos",
+      "b": "son solo tuyos.",
+      "c": "Nadie del banco te pedirá tu NIP ni tu CVV.",
+      "destacado": "Ni por llamada ni SMS"
+    }
+  ]
+}

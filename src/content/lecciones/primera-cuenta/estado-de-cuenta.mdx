@@ -1,0 +1,83 @@
+---
+numero: "2.5"
+descripcion: Lee tu estado de cuenta en 30 segundos. Saldo, fecha límite, pago para no generar intereses y movimientos.
+minutos: 2
+duda:
+  pregunta: ¿Qué datos de tu estado de cuenta tienes que revisar?
+  tema: Cada mes te llega un resumen lleno de números. Aquí vas a ver cuáles importan.
+accion: "Pide en casa que te enseñen un estado de cuenta y encuentra los 4 datos."
+resumen:
+  - "Busca 4 datos: saldo, fecha límite, pago para no generar intereses y movimientos."
+  - El saldo es todo lo que debes. El pago sin intereses es lo que conviene pagar.
+  - Si no reconoces un cargo, reclama pronto a tu banco.
+palabras:
+  - estado-de-cuenta
+  - pago-para-no-generar-intereses
+  - fecha-limite-de-pago
+  - fecha-de-corte
+  - pago-minimo
+  - meses-sin-intereses
+fuentes:
+  - nombre: CONDUSEF, ¿Sabes cómo leer tu estado de cuenta?
+    url: https://www.condusef.gob.mx/?p=contenido&idc=905&idcat=1
+  - nombre: CONDUSEF, ¿Sabes leer tu estado de cuenta? (mayo de 2026)
+    url: https://www.gob.mx/condusef/articulos/sabes-leer-tu-estado-de-cuenta
+  - nombre: Banxico, Buenas prácticas de cuentas de débito (movimientos que no reconoces)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/recomendaciones-cuentas-deposito.jsp
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+A Vale le llega el <Termino id="estado-de-cuenta">estado de cuenta</Termino> de su tarjeta de crédito. ¿Qué número mira?
+
+<VideoReel archivo="estado-de-cuenta" segundos={27} titulo="Video: cómo leer tu estado de cuenta en 30 segundos">
+	Ejemplo ilustrativo. Tu estado de cuenta en 30 segundos. Busca 4 datos: saldo, lo que debes en total; fecha límite, hasta cuándo pagas; pago para no generar intereses; y movimientos, para revisar cada compra. Vale debe $3,000 en total, pero su pago para no generar intereses es $1,800: ese conviene. En sus movimientos hay una app de música de $199 que nunca contrató: reclama a tu banco. Revísalo cada mes, antes de la fecha límite.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Este es el estado de cuenta de Vale. ¿Qué dato quieres ver?"
+	icono="receipt"
+	opciones={[
+		{ boton: 'Saldo', sub: 'lo que debes', titulo: 'Debe en total', destacado: '$3,000', cuentas: [{ icono: 'coins', etq: 'Compras del mes', valor: '$1,200' }, { icono: 'sneaker', etq: 'Tenis a 3 meses sin intereses', valor: '$1,800' }] },
+		{ boton: 'Sin intereses', sub: 'lo que conviene', titulo: 'Para no pagar intereses:', destacado: '$1,800', cuentas: [{ icono: 'coins', etq: 'Compras del mes', valor: '$1,200' }, { icono: 'sneaker', etq: 'Mensualidad de los tenis', valor: '$600' }], idea: 'Págalo completo.', buena: true },
+		{ boton: 'Fecha límite', sub: 'hasta cuándo', titulo: 'Paga a más tardar el', destacado: '30 de noviembre', cuentas: [{ icono: 'calendar-dots', etq: 'Fecha de corte', valor: '10 de noviembre' }] },
+	]}
+	como={['Saldo: $1,200 + $1,800 = $3,000.', 'Sin intereses: $1,200 + $600 = $1,800.']}
+/>
+
+---
+
+## ¿En qué fijarte?
+
+<ListaIconos
+	items={[
+		{ icono: 'receipt', tono: 'neutro', titulo: 'Saldo no es lo que pagas', texto: 'Suma lo que pagarás a meses.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Paga sin intereses', texto: 'Completo, antes de la fecha límite.' },
+		{ icono: 'magnifying-glass', tono: 'mal', titulo: 'Revisa tus movimientos', texto: 'Así detectas cargos raros.' },
+	]}
+/>
+
+<Nota titulo="Tiempo para reclamar" fuente="CONDUSEF">
+	Tienes 90 días desde la <Termino id="fecha-de-corte">fecha de corte</Termino> para reclamar un cargo de tu tarjeta de crédito.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Diego ve en su estado de cuenta un cargo de $199 de una app que nunca usó. ¿Qué hace?"
+	opciones={['Lo deja pasar: es poco.', 'Llama a su banco lo antes posible.', 'Paga solo el mínimo.']}
+	correcta={1}
+	porque={['Podría repetirse.', 'El banco bloquea la tarjeta y revisa el cargo.', 'El cargo sigue ahí.']}
+>
+	Revisa tus movimientos cada mes.
+</Ejercicio>

@@ -1,0 +1,19 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Miedo a transferir?", "b": "Revisa 3 cosas." },
+    { "tipo": "cifra", "dur": 5, "sobre": "Teme equivocarse al transferir", "valor": "60%", "pie": "de 25 jóvenes entrevistados.", "color": "morado" },
+    { "tipo": "lista", "dur": 6, "sobre": "Antes de confirmar, revisa", "numerada": true, "items": [
+      { "texto": "El número: CLABE, tarjeta o celular" },
+      { "texto": "El monto: $250, no $2,500" },
+      { "texto": "El nombre de quien recibe" }
+    ] },
+    { "tipo": "tarjeta", "dur": 5, "sobre": "Leo le manda a Sofi", "etiqueta": "Concepto: Boletos cine", "monto": "$250", "pie": "SPEI funciona las 24 horas, los 7 días." },
+    { "tipo": "lista", "dur": 6, "sobre": "Después de enviar", "items": [
+      { "tono": "bien", "texto": "Guarda la clave de rastreo" },
+      { "tono": "bien", "texto": "Baja tu CEP en banxico.org.mx/cep" },
+      { "tono": "neutro", "texto": "¿Hubo un error? Avisa ya a tu banco" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "El dinero sigue", "b": "al número.", "c": "Revísalo antes de confirmar.", "destacado": "Número, monto y nombre" }
+  ]
+}

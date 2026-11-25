@@ -1,0 +1,84 @@
+---
+numero: "1.3"
+descripcion: "Una fórmula fácil para repartir tu domingo, mesada o primer sueldo: 50% básicos, 30% gustos y 20% ahorro."
+minutos: 2
+duda:
+  pregunta: ¿Cómo repartes tu dinero para que te alcance y además ahorres?
+  tema: "Cuando recibes dinero, es fácil gastarlo sin plan. La regla 50/30/20 te dice cuánto va a básicos, cuánto a gustos y cuánto a ahorro."
+accion: "Escribe cuánto recibes a la semana o al mes y calcula tu 50, tu 30 y tu 20."
+resumen:
+  - "50% para lo básico, 30% para tus gustos y 20% para ahorrar."
+  - Puedes ajustar los números a tu vida, pero el ahorro va fijo.
+  - "En el ejemplo, $100 a la semana suman $5,200 en un año."
+palabras:
+  - presupuesto
+  - apartado-de-ahorro
+fuentes:
+  - nombre: CONDUSEF, Un presupuesto para millennials. ¡Conoce la Regla del 50-30-20! (2019)
+    url: https://revista.condusef.gob.mx/presupuesto/ingresos/2019/06/un-presupuesto-para-millennials/
+  - nombre: CONDUSEF, Presupuesto. Toma el control de tu dinero
+    url: https://www.condusef.gob.mx/documentos/275532_PRESUPUESTO_versi_n_electr_nica__4_hojas_menos_.pdf
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+A Leo le dan **$500** cada semana. Para el jueves ya no le queda nada. Le falta un <Termino id="presupuesto">presupuesto</Termino>.
+
+<VideoReel archivo="presupuesto-50-30-20" segundos={26} titulo="Video: cómo repartir $500 con la regla 50/30/20">
+	Ejemplo ilustrativo. Te dan $500. ¿Cómo lo repartes? La regla 50/30/20: $250 para básicos, $150 para gustos y $100 para ahorro. 50%: pasajes y comida en la prepa. 30%: salidas, cine y juegos. 20%: ahorro, antes de gastar. Con $100 a la semana, en un año juntas $5,200, solo con tu 20%. Básicos, gustos y ahorro. Ajusta los números a tu vida.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Cuánto recibes? Así se reparte."
+	icono="chart-pie-slice"
+	opciones={[
+		{ boton: '$500', sub: 'domingo a la semana', titulo: 'Tu ahorro:', destacado: '$100 a la semana',
+			cuentas: [{ icono: 'house', etq: 'Básicos (50%)', valor: '$250' }, { icono: 'game-controller', etq: 'Gustos (30%)', valor: '$150' }, { icono: 'piggy-bank', etq: 'Ahorro (20%)', valor: '$100', tono: 'morado' }],
+			barra: [{ valor: 50, tono: 'tinta' }, { valor: 30, tono: 'lila' }, { valor: 20, tono: 'morado' }] },
+		{ boton: '$1,200', sub: 'mesada al mes', titulo: 'Tu ahorro:', destacado: '$240 al mes',
+			cuentas: [{ icono: 'house', etq: 'Básicos (50%)', valor: '$600' }, { icono: 'game-controller', etq: 'Gustos (30%)', valor: '$360' }, { icono: 'piggy-bank', etq: 'Ahorro (20%)', valor: '$240', tono: 'morado' }],
+			barra: [{ valor: 50, tono: 'tinta' }, { valor: 30, tono: 'lila' }, { valor: 20, tono: 'morado' }] },
+		{ boton: '$3,000', sub: 'primer sueldo al mes', titulo: 'Tu ahorro:', destacado: '$600 al mes',
+			cuentas: [{ icono: 'house', etq: 'Básicos (50%)', valor: '$1,500' }, { icono: 'game-controller', etq: 'Gustos (30%)', valor: '$900' }, { icono: 'piggy-bank', etq: 'Ahorro (20%)', valor: '$600', tono: 'morado' }],
+			barra: [{ valor: 50, tono: 'tinta' }, { valor: 30, tono: 'lila' }, { valor: 20, tono: 'morado' }] },
+	]}
+	leyenda={[{ tono: 'tinta', texto: 'Básicos' }, { tono: 'lila', texto: 'Gustos' }, { tono: 'morado', texto: 'Ahorro' }]}
+	como={['Multiplica lo que recibes por 0.5, 0.3 y 0.2.']}
+/>
+
+---
+
+## ¿Cómo se usa?
+
+<ListaIconos
+	items={[
+		{ icono: 'house', tono: 'neutro', titulo: '50% básicos', texto: 'Pasajes, comida en la prepa, recargas.' },
+		{ icono: 'game-controller', tono: 'neutro', titulo: '30% gustos', texto: 'Salidas, cine, juegos, ropa.' },
+		{ icono: 'piggy-bank', tono: 'bien', titulo: '20% ahorro', texto: 'Se aparta primero, no con lo que sobra.' },
+	]}
+/>
+
+<Nota titulo="La regla 50/30/20" fuente="CONDUSEF">
+	Puedes ajustarla a tu vida. Pero el ahorro va con un porcentaje fijo, no con "lo que sobra".
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Mariana gana $2,000 al mes en su trabajo de fin de semana. Con la regla 50/30/20, ¿cuánto aparta para ahorrar?"
+	opciones={['$200', '$400', '$600']}
+	correcta={1}
+	porque={['Eso es solo 10%.', 'El 20% de $2,000 son $400.', 'Eso es 30%: lo de sus gustos.']}
+>
+	Su <Termino id="presupuesto">presupuesto</Termino> queda así: $1,000 para básicos, $600 para gustos y $400 para ahorro.
+</Ejercicio>

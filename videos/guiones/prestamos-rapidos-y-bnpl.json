@@ -1,0 +1,67 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "¿Dinero rápido",
+      "b": "desde una app?"
+    },
+    {
+      "tipo": "chat",
+      "dur": 5.6,
+      "de": "App de préstamos",
+      "texto": "¡Aprobado al instante! Deposita $500 para liberar tu préstamo de $5,000.",
+      "alerta": "Señal de fraude"
+    },
+    {
+      "tipo": "lista",
+      "dur": 6,
+      "sobre": "Desconfía si la app:",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "Pide dinero por adelantado"
+        },
+        {
+          "tono": "mal",
+          "texto": "Pide tus contactos y fotos"
+        },
+        {
+          "tono": "mal",
+          "texto": "No aparece en el SIPRES"
+        },
+        {
+          "tono": "mal",
+          "texto": "Te presiona para aceptar ya"
+        }
+      ]
+    },
+    {
+      "tipo": "lista",
+      "dur": 6,
+      "sobre": "¿Compras ahora y pagas después?",
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "Anota cada pago y su fecha"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Suma todos tus pagos del mes"
+        },
+        {
+          "tono": "bien",
+          "texto": "¿No te alcanza? Mejor espera"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Antes de pedir,",
+      "b": "busca en el SIPRES.",
+      "c": "Si no está registrada, no es financiera.",
+      "destacado": "SIPRES de CONDUSEF"
+    }
+  ]
+}

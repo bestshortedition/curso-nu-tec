@@ -1,0 +1,85 @@
+---
+numero: "5.1"
+descripcion: "El buró de crédito no es una lista negra: guarda tus pagos buenos y malos. Un buen historial te abre puertas."
+minutos: 2
+duda:
+  pregunta: ¿Estar en el buró de crédito es malo?
+  tema: Cuando tienes un crédito, cómo pagas queda registrado. Aquí vas a ver qué guarda el buró.
+  cita:
+    texto: El buró es como una lista negra.
+    quien: Joven de 16 años, sin cuenta
+  cifra:
+    texto: 92% (23 de 25) cree que estar en buró siempre es malo o no sabe.
+    n: 23
+    de: 25
+accion: "Cuéntale a alguien en casa: el buró no es una lista negra."
+resumen:
+  - El buró guarda cómo pagas, lo bueno y lo malo.
+  - Pagar a tiempo te ayuda a que te presten después.
+  - Tu Reporte de Crédito Especial es gratis cada 12 meses.
+palabras:
+  - buro-de-credito
+  - historial-crediticio
+  - reporte-de-credito-especial
+  - tarjeta-de-credito
+fuentes:
+  - nombre: CONDUSEF, ¿En cuánto tiempo me borran del Buró de Crédito? (No es una lista negra)
+    url: https://www.gob.mx/condusef/articulos/no-es-una-lista-negra
+  - nombre: CONDUSEF, Alerta sobre página web que ofrece borrar el historial del Buró de Crédito
+    url: https://www.gob.mx/condusef/prensa/alerta-condusef-sobre-pagina-web-que-ofrece-borrar-el-historial-del-buro-de-credito
+  - nombre: CONDUSEF, Revista Proteja su Dinero, Que no te asuste el Buró de Crédito
+    url: https://revista.condusef.gob.mx/usuario-inteligente/ponlo-en-la-balanza/2016/07/que-no-te-asuste-el-buro-de-credito/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Ana va a cumplir 18 y le da miedo “caer en el buró”. ¿Qué es el <Termino id="buro-de-credito">buró de crédito</Termino>?
+
+<VideoReel archivo="historial-crediticio" segundos={26} titulo="Video: qué guarda el buró de crédito y por qué no es una lista negra">
+	¿El buró es una lista negra? 23 de 25 jóvenes creen que estar en el buró es malo o no saben. El buró guarda tus pagos a tiempo, tus atrasos y quién revisó tu historial. Un buen historial te ayuda a que te presten después y muestra que eres confiable. No es una lista negra: es tu historial. Pide tu reporte gratis cada 12 meses. Paga a tiempo.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Mito o realidad?
+
+<Clasifica
+	opciones={[{ texto: 'Mito', icono: 'x-circle' }, { texto: 'Realidad', icono: 'check-circle' }]}
+	items={[
+		{ frase: 'Al buró solo entran los que no pagan.', correcta: 0, explicacion: 'Aparece todo el que tiene un crédito, pague bien o mal.' },
+		{ frase: 'El buró también guarda tus pagos a tiempo.', correcta: 1, explicacion: 'Guarda lo bueno y lo malo.' },
+		{ frase: 'Si pagas una deuda atrasada, el atraso se borra al momento.', correcta: 0, explicacion: 'Se queda de 1 a 6 años, según el monto.' },
+		{ frase: 'Alguien te puede sacar del buró si le pagas.', correcta: 0, explicacion: 'Nadie puede sacarte a cambio de dinero. Es estafa.', fuente: 'CONDUSEF' },
+		{ frase: 'Puedes ver tu reporte gratis una vez al año.', correcta: 1, explicacion: 'Tienes derecho a uno gratis cada 12 meses.' },
+	]}
+/>
+
+---
+
+## ¿Cómo funciona?
+
+<ListaIconos
+	items={[
+		{ icono: 'file-text', tono: 'neutro', titulo: 'Es un registro', texto: 'Cada mes se reporta cómo pagas.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Lo bueno cuenta', texto: 'Pagar a tiempo muestra que eres confiable.' },
+		{ icono: 'clock', tono: 'mal', titulo: 'Los atrasos se quedan', texto: 'Se borran de 1 a 6 años.' },
+	]}
+/>
+
+<Nota titulo="Tu reporte es gratis" fuente="CONDUSEF">
+	Pide tu <Termino id="reporte-de-credito-especial">Reporte de Crédito Especial</Termino> gratis una vez cada 12 meses. Ahí ves tu <Termino id="historial-crediticio">historial</Termino>.
+</Nota>
+
+---
+
+<Ejercicio diagnostico="buro">
+	El buró guarda pagos a tiempo y atrasos. Pagar a tiempo te abre puertas.
+</Ejercicio>

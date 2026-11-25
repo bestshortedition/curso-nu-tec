@@ -1,0 +1,72 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "¿Sin intereses",
+      "b": "o pagos chiquitos?"
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 5,
+      "sobre": "Sofi quiere una consola",
+      "etiqueta": "Precio de contado",
+      "monto": "$6,000",
+      "pie": "Le ofrecen dos formas de pagarla."
+    },
+    {
+      "tipo": "comparar",
+      "dur": 6,
+      "sobre": "Lo que paga en total",
+      "columnas": [
+        {
+          "valor": 6000,
+          "texto": "$6,000",
+          "etq": "6 MSI"
+        },
+        {
+          "valor": 9360,
+          "texto": "$9,360",
+          "etq": "$180 a la semana",
+          "resaltar": true
+        }
+      ],
+      "remate": "$3,360 de más."
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5,
+      "sobre": "A 6 meses sin intereses paga",
+      "valor": "$1,000",
+      "pie": "al mes, completo y a tiempo."
+    },
+    {
+      "tipo": "lista",
+      "dur": 5.6,
+      "sobre": "Ojo con los MSI:",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "No vienen en el pago mínimo"
+        },
+        {
+          "tono": "mal",
+          "texto": "Si no pagas uno, genera intereses"
+        },
+        {
+          "tono": "neutro",
+          "texto": "Suma todas tus mensualidades"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Un pago chiquito",
+      "b": "puede salir caro.",
+      "c": "Antes de aceptar, suma todos los pagos.",
+      "destacado": "Pago × plazo = total"
+    }
+  ]
+}

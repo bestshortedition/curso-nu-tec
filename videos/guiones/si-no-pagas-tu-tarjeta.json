@@ -1,0 +1,63 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "¿Y si no pagas",
+      "b": "tu tarjeta?"
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.5,
+      "sobre": "Si no pagas a tiempo:",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "Pueden cobrarte comisión por atraso"
+        },
+        {
+          "tono": "mal",
+          "texto": "Y también intereses moratorios"
+        },
+        {
+          "tono": "mal",
+          "texto": "El atraso queda en tu historial"
+        }
+      ]
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.5,
+      "sobre": "Si te llaman de cobranza, deben:",
+      "items": [
+        {
+          "tono": "bien",
+          "texto": "Tratarte con respeto"
+        },
+        {
+          "tono": "bien",
+          "texto": "Llamar de 7:00 a 22:00"
+        },
+        {
+          "tono": "mal",
+          "texto": "Nunca amenazarte"
+        }
+      ]
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5.6,
+      "sobre": "Un atraso puede quedarse en tu historial",
+      "valor": "6 años",
+      "pie": "Hasta 72 meses."
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "¿No te alcanza?",
+      "b": "Habla con tu banco.",
+      "c": "Pregunta tus opciones antes de atrasarte.",
+      "destacado": "No lo ignores"
+    }
+  ]
+}

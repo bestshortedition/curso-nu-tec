@@ -1,0 +1,17 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "\"Ahorro lo que sobre\".", "b": "Y nunca sobra." },
+    { "tipo": "comparar", "dur": 6.6, "sobre": "Leo, $500 a la semana. En un mes:", "columnas": [
+      { "valor": 110, "texto": "$110", "etq": "Lo que sobró" },
+      { "valor": 400, "texto": "$400", "etq": "Apartando $100", "resaltar": true }
+    ], "remate": "Mismo dinero, otro orden." },
+    { "tipo": "lista", "dur": 6, "numerada": true, "items": [
+      { "texto": "Recibes tu dinero" },
+      { "texto": "Apartas tu ahorro primero" },
+      { "texto": "Gastas lo que queda" }
+    ] },
+    { "tipo": "cifra", "dur": 5, "sobre": "Tenis de $1,600, apartando $100:", "valor": "16", "pie": "semanas", "color": "morado" },
+    { "tipo": "cierre", "dur": 5, "a": "Primero tú.", "b": "Luego lo demás.", "c": "Apártalo el día que te pagan.", "destacado": "Págate a ti primero" }
+  ]
+}

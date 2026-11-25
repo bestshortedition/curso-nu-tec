@@ -1,0 +1,80 @@
+---
+numero: "3.2"
+descripcion: Para comprar en línea, usa tu tarjeta digital. Su código de seguridad cambia y caduca en minutos.
+minutos: 2
+duda:
+  pregunta: ¿Con qué tarjeta conviene comprar en línea?
+  tema: Muchas apps te dan una tarjeta digital, además del plástico. Aquí ves por qué conviene en línea.
+accion: "Si ya tienes cuenta, busca hoy tu tarjeta digital en la app y úsala en tu próxima compra en línea."
+resumen:
+  - El CVV de tu plástico no cambia. El de tu tarjeta digital caduca en minutos.
+  - Compra solo en páginas con https:// y candado, y activa alertas.
+palabras:
+  - tarjeta-digital
+  - cvv-dinamico
+  - cvv
+fuentes:
+  - nombre: CONDUSEF, ¿Conoces las tarjetas virtuales? (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/08/EFI_H_Conoces-las-tarjetas-virtuales.pdf
+  - nombre: CONDUSEF, Compras seguras en el Buen Fin (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/12/EFI_H_Compras-seguras-en-el-Buen-Fin.pdf
+  - nombre: CONDUSEF, Proteja su Dinero, Duelo de plásticos (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/duelo-de-plasticos-tdc-vs-tdd/
+  - nombre: CONDUSEF, Comercio electrónico, Tipos de fraude
+    url: https://www.condusef.gob.mx/?p=tipos-de-fraude
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Emi quiere comprar el pase de su videojuego. Tiene su plástico y una <Termino id="tarjeta-digital">tarjeta digital</Termino>.
+
+<VideoReel archivo="tarjeta-digital" segundos={26} titulo="Video: por qué usar tu tarjeta digital para comprar en línea">
+	¿Compras en línea? Usa la digital. El CVV impreso en tu plástico no cambia: si alguien lo copia, le sirve después. Tu tarjeta digital vive en tu app y su CVV dinámico cambia en cada compra y caduca en minutos. Al comprar en línea: usa tu tarjeta digital, revisa https:// y el candado, activa alertas y no entres desde links de mensajes.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Más seguro', icono: 'shield-check' }, { texto: 'Riesgo', icono: 'warning-circle' }]}
+	items={[
+		{ frase: 'Pagas con tu tarjeta digital y su CVV dinámico.', correcta: 0, explicacion: 'Si alguien copia el código, ya no le sirve.', fuente: 'CONDUSEF' },
+		{ frase: 'Le mandas foto de tu tarjeta, por los dos lados, a un amigo.', correcta: 1, explicacion: 'Con esos datos, cualquiera compra con tu tarjeta.' },
+		{ frase: 'La página empieza con https:// y tiene candado.', correcta: 0, explicacion: 'Es señal de sitio seguro.', fuente: 'CONDUSEF' },
+		{ frase: 'Entras a la tienda desde un link que te llegó por mensaje.', correcta: 1, explicacion: 'Escribe tú la dirección.', fuente: 'CONDUSEF' },
+	]}
+/>
+
+---
+
+## ¿Por qué funciona?
+
+<ListaIconos
+	items={[
+		{ icono: 'credit-card', tono: 'mal', titulo: 'Plástico: datos fijos', texto: 'Si alguien copia el CVV impreso, le sirve después.' },
+		{ icono: 'device-mobile', tono: 'bien', titulo: 'Digital: vive en tu app', texto: 'Su CVV dinámico caduca en minutos.' },
+	]}
+/>
+
+<Nota titulo="Lo que recomienda CONDUSEF" fuente="CONDUSEF, Compras seguras en el Buen Fin">
+	En internet, usa tarjetas digitales con <Termino id="cvv-dinamico">código de seguridad dinámico</Termino> y activa alertas.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Ana va a comprar un juego en línea y su app tiene tarjeta digital. ¿Qué datos usa?"
+	opciones={['Los de su tarjeta digital', 'Los de su plástico, como siempre', 'Los de su plástico, guardados en la página']}
+	correcta={0}
+	porque={['Su CVV dinámico caduca.', 'Su CVV impreso no cambia.', 'Guardar datos fijos te expone más.']}
+>
+	En línea, usa tu <Termino id="tarjeta-digital">tarjeta digital</Termino>.
+</Ejercicio>

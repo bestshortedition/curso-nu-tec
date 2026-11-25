@@ -1,0 +1,86 @@
+---
+numero: "2.4"
+descripcion: ¿Te van a transferir? Manda tu CLABE de 18 dígitos. Aprende para qué sirve cada número de tu cuenta y cuáles nunca compartes.
+minutos: 2
+duda:
+  pregunta: ¿Qué número das para que te manden una transferencia?
+  tema: Tu cuenta tiene varios números. Aquí vas a ver cuál compartir para recibir dinero.
+  cita:
+    texto: No sabía si pasar el número de la tarjeta o la CLABE.
+    quien: Joven de 17 años, con cuenta
+accion: "Si ya tienes cuenta, busca tu CLABE en la app y guárdala en tus notas."
+resumen:
+  - Para recibir una transferencia, comparte tu CLABE de 18 dígitos.
+  - Tu número de tarjeta también recibe, pero sirve para comprar. Cuídalo.
+  - Tu NIP y tu CVV no se comparten nunca.
+palabras:
+  - clabe
+  - spei
+  - cvv
+  - codigos-y-nip
+fuentes:
+  - nombre: Banxico, Preguntas frecuentes (¿Qué es la CLABE? ¿Cómo se compone?)
+    url: https://www.banxico.org.mx/footer-es/preguntas-frecuentes-dudas-ba.html
+  - nombre: Banxico, MiSPEI (qué necesitas para una transferencia)
+    url: https://www.banxico.org.mx/servicios/mi-spei_-transferencias-ban.html
+  - nombre: CONDUSEF, Revista Proteja su Dinero, Clave Bancaria Estandarizada (CLABE)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/ponlo-en-la-balanza/2015/06/clave-bancaria-estandarizada-clabe/
+  - nombre: Banxico, Buenas prácticas de cuentas de débito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/recomendaciones-cuentas-deposito.jsp
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Mariana cuidó a sus primos. Su tía le va a transferir y le pide "tu número".
+
+<VideoReel archivo="clabe-tarjeta-cuenta" segundos={26} titulo="Video: qué número compartir para recibir una transferencia">
+	¿Tarjeta o CLABE? Para recibir: CLABE. Tiene 18 dígitos y es única para tu cuenta: 6 de banco y plaza, 11 de tu cuenta y 1 de control. La CLABE recibe de cualquier banco. La tarjeta también sirve, pero cuídala. El NIP y el CVV, nunca, a nadie. ¿Te van a pagar? Manda tu CLABE. 18 dígitos y listo.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Qué le mandas a tu tía?"
+	etiqueta={null}
+	icono="hash"
+	opciones={[
+		{ boton: 'Tu CLABE', sub: '18 dígitos', titulo: 'Te llega.', destacado: 'La mejor opción', cuentas: [{ icono: 'bank', etq: 'Recibe de', valor: 'Cualquier banco', tono: 'verde' }], idea: 'Está hecha para recibir transferencias.', buena: true },
+		{ boton: 'Tu tarjeta', sub: '16 dígitos', titulo: 'También llega.', destacado: 'Pero cuídala', idea: 'Con número, vencimiento y CVV se puede comprar.' },
+		{ boton: 'NIP o CVV', sub: 'secretos', titulo: 'No se necesita.', destacado: 'Nunca', idea: 'Si te los piden, es trampa.' },
+	]}
+/>
+
+---
+
+## ¿Para qué sirve cada número?
+
+<ListaIconos
+	items={[
+		{ icono: 'check-circle', tono: 'bien', titulo: 'CLABE', texto: 'Para recibir de cualquier banco.' },
+		{ icono: 'credit-card', tono: 'neutro', titulo: 'Número de tarjeta', texto: 'Recibe, pero también sirve para comprar.' },
+		{ icono: 'bank', tono: 'neutro', titulo: 'Número de cuenta', texto: 'Identifica tu cuenta. Va dentro de tu CLABE.' },
+	]}
+/>
+
+<Nota titulo="Así se arma tu CLABE" fuente="Banxico, Preguntas frecuentes">
+	Tu <Termino id="clabe">CLABE</Termino> tiene 3 dígitos del banco, 3 de la plaza, 11 de tu cuenta y 1 de control. Tu banco te la da.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Leo vende su videojuego usado. Su compañero le pide sus datos para pagarle. ¿Qué le manda?"
+	opciones={['Su CLABE.', 'Foto de su tarjeta por los dos lados.', 'Su NIP.']}
+	correcta={0}
+	porque={['Llega directo a su cuenta.', 'Muestra número, vencimiento y CVV.', 'Nadie lo necesita para pagarte.']}
+>
+	Tu <Termino id="codigos-y-nip">NIP</Termino> y tu CVV se quedan contigo.
+</Ejercicio>

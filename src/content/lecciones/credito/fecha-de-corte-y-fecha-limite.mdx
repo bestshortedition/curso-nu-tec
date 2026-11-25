@@ -1,0 +1,77 @@
+---
+numero: "4.4"
+descripcion: "La fecha de corte suma lo que gastaste. La fecha límite es el último día para pagar sin intereses."
+minutos: 2
+duda:
+  pregunta: ¿Qué diferencia hay entre la fecha de corte y la fecha límite de pago?
+  tema: Tu tarjeta de crédito tiene dos fechas cada mes. Una suma lo que gastaste y otra te dice hasta cuándo pagar.
+  cifra:
+    texto: Solo 24% (6 de 25) explica bien qué es la fecha de corte.
+    n: 19
+    de: 25
+accion: "Pregunta en casa las dos fechas de una tarjeta y anótalas."
+resumen:
+  - "Corte: se suma lo que gastaste. Fecha límite: hasta 20 días después, último día para pagar."
+  - Si pagas todo antes de la fecha límite, no pagas intereses.
+palabras:
+  - fecha-de-corte
+  - fecha-limite-de-pago
+  - pago-para-no-generar-intereses
+  - estado-de-cuenta
+  - interes
+fuentes:
+  - nombre: Banxico, Términos financieros de tarjetas de crédito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+La <Termino id="fecha-de-corte">fecha de corte</Termino> de la tarjeta de Diego es el día 10. Su <Termino id="fecha-limite-de-pago">fecha límite de pago</Termino> es el día 30.
+
+<VideoReel archivo="fecha-de-corte-y-fecha-limite" segundos={29} titulo="Video: la fecha de corte y la fecha límite de pago">
+	Ejemplo ilustrativo. Dos fechas que valen dinero. La tarjeta de Diego: el día 10 es su fecha de corte y el día 30, su fecha límite de pago. El día 10 se suman sus compras: $800. Eso debe pagar. Después del corte, tiene hasta 20 días para pagar. Si paga antes del día 30 todo, los $800, paga $0 de intereses. Si paga solo una parte, el resto genera intereses. Corte: se suma. Límite: se paga. Paga todo antes de la fecha límite y pagas $0 de intereses.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿De qué fecha habla cada frase?
+
+<Clasifica
+	opciones={[{ texto: 'Corte', icono: 'calendar-dots' }, { texto: 'Fecha límite', icono: 'calendar-check' }]}
+	items={[
+		{ frase: 'Ese día se cierra el periodo y se suma lo que gastaste.', correcta: 0, explicacion: 'El corte calcula cuánto debes.' },
+		{ frase: 'Si pagas todo antes de este día, no pagas intereses.', correcta: 1, explicacion: 'Pagar el total a tiempo te deja en $0 de intereses.', fuente: 'Banxico' },
+		{ frase: 'Lo que compras un día después ya entra al siguiente periodo.', correcta: 0, explicacion: 'Aparece hasta el corte que sigue.' },
+		{ frase: 'Llega hasta 20 días naturales después de la otra fecha.', correcta: 1, explicacion: 'Tienes hasta 20 días después del corte.', fuente: 'Banxico' },
+	]}
+/>
+
+---
+
+## ¿Cómo se usan?
+
+<ListaIconos
+	items={[
+		{ icono: 'calendar-dots', tono: 'neutro', titulo: 'Corte: se suma', texto: 'Se calcula cuánto debes.' },
+		{ icono: 'calendar-check', tono: 'neutro', titulo: 'Fecha límite: se paga', texto: 'Último día para pagar.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Todo a tiempo = $0', texto: 'Sin intereses.' },
+	]}
+/>
+
+<Nota titulo="La regla de Banxico" fuente="Banxico, Términos de tarjetas de crédito">
+	Tienes hasta 20 días naturales después del corte para pagar. Si pagas el saldo total del periodo antes de la fecha límite, no pagas ningún <Termino id="interes">interés</Termino>.
+</Nota>
+
+---
+
+<Ejercicio diagnostico="fecha-corte">
+	El corte cierra el periodo y suma lo que debes. Para pagar tienes hasta la <Termino id="fecha-limite-de-pago">fecha límite de pago</Termino>, hasta 20 días después.
+</Ejercicio>

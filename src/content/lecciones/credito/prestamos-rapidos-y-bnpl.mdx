@@ -1,0 +1,91 @@
+---
+numero: "4.6"
+descripcion: Algunas apps de préstamos son fraudes que amenazan y extorsionan. Antes de pedir, revisa que estén registradas.
+minutos: 2
+duda:
+  pregunta: ¿Las apps que prestan dinero rápido son seguras?
+  tema: Hay apps que prestan en minutos. Algunas son legales y otras son fraudes.
+accion: "Busca en el SIPRES de CONDUSEF una institución financiera que conozcas."
+resumen:
+  - Antes de pedir, busca a la institución en el SIPRES de CONDUSEF.
+  - Si compras ahora y pagas después, suma todos tus pagos del mes.
+palabras:
+  - sipres
+  - prestamo-personal
+  - cat
+  - credito
+fuentes:
+  - nombre: CONDUSEF, Proteja su Dinero, Créditos desde el celular (julio de 2026)
+    url: https://revista.condusef.gob.mx/destacados-del-mes/2026/07/creditos-desde-el-celular/
+  - nombre: CONDUSEF, ¡Cuídate de las app montadeudas!
+    url: https://www.condusef.gob.mx/?idc=2055&idcat=3&p=contenido
+  - nombre: CONDUSEF, alerta sobre suplantación de instituciones financieras (cómo usar el SIPRES)
+    url: https://www.condusef.gob.mx/?idc=2376&idcat=1&p=contenido
+  - nombre: CONDUSEF, Proteja su Dinero, Que el crédito fácil no te saque un grito (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/que-el-credito-facil-no-te-saque-un-grito/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Santi quiere dinero para su viaje. Una app le ofrece: "Préstamo inmediato, sin requisitos".
+
+<VideoReel archivo="prestamos-rapidos-y-bnpl" segundos={26} titulo="Video: señales de alerta en las apps de préstamos">
+	¿Dinero rápido desde una app? Una dice: "¡Aprobado al instante! Deposita $500 para liberar tu préstamo de $5,000". Es señal de fraude. Desconfía si pide dinero por adelantado, tus contactos y fotos, no está en el SIPRES o te presiona. ¿Compras ahora y pagas después? Anota cada pago y súmalos. ¿No te alcanza? Mejor espera. Antes de pedir, busca en el SIPRES de CONDUSEF: si no está registrada, no es financiera.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	opciones={[{ texto: 'Alerta', icono: 'warning-circle' }, { texto: 'Buena señal', icono: 'check-circle' }]}
+	comillas={false}
+	items={[
+		{ frase: 'Te piden depositar $500 para "liberar" tu préstamo.', correcta: 0, explicacion: 'Nadie pide dinero para prestar dinero.' },
+		{ frase: 'La app pide acceso a tus contactos y fotos.', correcta: 0, explicacion: 'Los fraudes los usan para presionarte.' },
+		{ frase: 'La empresa aparece en el SIPRES de CONDUSEF.', correcta: 1, explicacion: 'Existe legalmente.' },
+		{ frase: 'Antes de firmar, te dicen el CAT y el total a pagar.', correcta: 1, explicacion: 'Sabes cuánto te cuesta.' },
+		{ frase: 'Por WhatsApp: "Aprobación garantizada, acepta hoy".', correcta: 0, explicacion: 'La prisa es un anzuelo.' },
+	]}
+/>
+
+---
+
+## ¿Cómo cuidarte?
+
+<ListaIconos
+	items={[
+		{ icono: 'magnifying-glass', tono: 'neutro', titulo: 'Revisa el registro', texto: 'Búscala en el SIPRES.' },
+		{ icono: 'lock-simple', tono: 'neutro', titulo: 'Cuida tus datos', texto: 'Ni contactos, ni fotos, ni micrófono.' },
+		{ icono: 'list-checks', tono: 'bien', titulo: 'Suma tus pagos', texto: 'Anota cada pago a plazos.' },
+	]}
+/>
+
+<Nota titulo="Lo que dice CONDUSEF" fuente="CONDUSEF">
+	Si quien te ofrece un préstamo no está en el <Termino id="sipres">SIPRES</Termino>, no es una entidad financiera. Las "montadeudas" prestan rápido y luego extorsionan.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Vale paga $350 al mes de compras a plazos y recibe $900. ¿Compra un celular a $400 al mes?"
+	opciones={[
+		'Sí: cada pago es chico',
+		'Mejor espera: le quedarían $150',
+		'Sí, y pide un préstamo si falta',
+	]}
+	correcta={1}
+	porque={[
+		'Juntos suman $750 de $900.',
+		'Exacto. $350 + $400 = $750.',
+		'Pedir para pagar otro crédito es alerta.',
+	]}
+>
+	Suma tus pagos antes de comprar algo nuevo.
+</Ejercicio>

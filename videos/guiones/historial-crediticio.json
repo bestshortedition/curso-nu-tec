@@ -1,0 +1,16 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿El buró es una", "b": "lista negra?" },
+    { "tipo": "puntos", "dur": 6, "total": 25, "llenos": 23, "leyenda": "23 de 25 jóvenes creen que es malo o no saben", "remate": "No es así." },
+    { "tipo": "lista", "dur": 6, "sobre": "El buró guarda:", "items": [
+      { "tono": "bien", "texto": "Tus pagos a tiempo" },
+      { "tono": "mal", "texto": "Tus atrasos" },
+      { "tono": "neutro", "texto": "Quién revisó tu historial" }
+    ] },
+    { "tipo": "lista", "dur": 5.6, "sobre": "Un buen historial:", "items": [
+      { "tono": "bien", "texto": "Te ayuda a que te presten después" },
+      { "tono": "bien", "texto": "Muestra que eres confiable" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "No es lista negra:", "b": "es tu historial.", "c": "Pide tu reporte gratis cada 12 meses.", "destacado": "Paga a tiempo" }
+  ]
+}

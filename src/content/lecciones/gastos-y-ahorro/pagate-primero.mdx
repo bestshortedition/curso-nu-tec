@@ -1,0 +1,85 @@
+---
+numero: "1.4"
+descripcion: Ahorrar "lo que sobre" casi nunca funciona. Aparta tu ahorro el mismo día que recibes tu dinero.
+minutos: 2
+duda:
+  pregunta: ¿Por qué nunca te sobra nada para ahorrar?
+  tema: Muchos ahorran lo que queda al final de la semana. Aquí ves qué pasa si apartas primero.
+  cita:
+    texto: Como lo tengo ahí en mi cuarto, se me hace fácil sacarlo.
+    quien: Joven de 17 años, sin cuenta
+  cifra:
+    texto: 20 de 25 ahorran, pero solo 3 de 20 apartan una cantidad fija; el resto ahorra lo que sobra.
+    n: 17
+    de: 20
+accion: "La próxima vez que recibas dinero, aparta tu ahorro antes de gastar."
+resumen:
+  - Ahorrar lo que sobra casi nunca funciona.
+  - Aparta una cantidad fija el mismo día que recibes tu dinero.
+  - Guárdala lejos del dinero que usas para gastar.
+palabras:
+  - apartado-de-ahorro
+  - presupuesto
+fuentes:
+  - nombre: CONDUSEF, Ahorro. El primer paso para alcanzar tus metas (cuaderno de educación financiera)
+    url: https://www.condusef.gob.mx/documentos/275536_AHORRO.PDF
+  - nombre: CONDUSEF, Un presupuesto para millennials. ¡Conoce la Regla del 50-30-20! (2019)
+    url: https://revista.condusef.gob.mx/presupuesto/ingresos/2019/06/un-presupuesto-para-millennials/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo recibe **$500** a la semana y quiere unos tenis de **$1,600**. Ahorra lo que le sobra.
+
+<VideoReel archivo="pagate-primero" segundos={26} titulo="Video: guardar lo que sobre contra apartar primero">
+	Ejemplo ilustrativo. "Ahorro lo que sobre". Y nunca sobra. Leo recibe $500 a la semana. En un mes, guardando lo que sobró, junta $110. Apartando $100 primero, junta $400. Mismo dinero, otro orden. Paso 1: recibes tu dinero. Paso 2: apartas tu ahorro primero. Paso 3: gastas lo que queda. Para unos tenis de $1,600, apartando $100, tarda 16 semanas. Primero tú. Luego lo demás. Apártalo el día que te pagan.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Leo recibe $500 a la semana. ¿Cómo ahorra?"
+	icono="hand-coins"
+	opciones={[
+		{ boton: 'Lo que sobre', sub: 'al final de la semana', titulo: 'En un mes junta', destacado: '$110',
+			cuentas: [{ icono: 'sneaker', etq: 'Tenis de $1,600', valor: 'unos 15 meses' }],
+			idea: 'Unas semanas sobró algo; otras, nada.' },
+		{ boton: '$50 primero', sub: 'el día que recibe', titulo: 'En un mes junta', destacado: '$200',
+			cuentas: [{ icono: 'sneaker', etq: 'Tenis de $1,600', valor: '32 semanas', tono: 'verde' }],
+			buena: true },
+		{ boton: '$100 primero', sub: 'el día que recibe', titulo: 'En un mes junta', destacado: '$400',
+			cuentas: [{ icono: 'sneaker', etq: 'Tenis de $1,600', valor: '16 semanas', tono: 'verde' }],
+			buena: true, idea: 'Le quedan $400 a la semana para gastar.' },
+	]}
+	como={['Lo que sobre: $80, $0, $30 y $0 en 4 semanas.', 'Tenis: $1,600 entre lo que aparta.']}
+/>
+
+---
+
+## ¿Por qué funciona?
+
+<ListaIconos
+	items={[
+		{ icono: 'x-circle', tono: 'mal', titulo: 'Lo que sobra casi nunca llega', texto: 'Los antojos se lo comen antes.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Lo apartado ya no se gasta', texto: 'Gastas lo que queda.' },
+		{ icono: 'lock-simple', tono: 'neutro', titulo: 'Lejos de la mano', texto: 'No junto al dinero de diario.' },
+	]}
+/>
+
+<Nota titulo="Qué es ahorrar" fuente="CONDUSEF, cuaderno Ahorro">
+	No es guardar lo que te sobra. Es apartar una cantidad fija que incluyes en tu <Termino id="presupuesto">presupuesto</Termino>.
+</Nota>
+
+---
+
+<Ejercicio diagnostico="ahorro">
+	Si apartas primero, tu ahorro ya no está a la mano para gastarlo. A los 18, un <Termino id="apartado-de-ahorro">apartado de ahorro</Termino> en tu cuenta te ayuda a separarlo.
+</Ejercicio>

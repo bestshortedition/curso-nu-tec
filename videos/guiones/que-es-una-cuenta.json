@@ -1,0 +1,58 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "¿Tu dinero en una app?",
+      "b": "¿Está seguro?"
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.6,
+      "sobre": "Antes de abrir tu cuenta, revisa:",
+      "numerada": true,
+      "items": [
+        {
+          "texto": "Que la CNBV la autorice"
+        },
+        {
+          "texto": "Que aparezca en el SIPRES"
+        },
+        {
+          "texto": "Qué tipo de institución es"
+        }
+      ]
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 6,
+      "sobre": "En un banco, te protege el IPAB",
+      "etiqueta": "UDIS por persona y banco",
+      "monto": "400 mil",
+      "pie": "Más de 3 millones de pesos."
+    },
+    {
+      "tipo": "lista",
+      "dur": 6,
+      "sobre": "En otras instituciones, cambia",
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "Sofipo: hasta 25 mil UDIS"
+        },
+        {
+          "tono": "mal",
+          "texto": "Otras fintech: sin garantía oficial"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Antes de abrir tu cuenta,",
+      "b": "revisa quién la ofrece.",
+      "c": "Búscala en el SIPRES de CONDUSEF.",
+      "destacado": "Gratis y en línea"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Compras en línea?", "b": "Usa la digital." },
+    { "tipo": "lista", "dur": 5.5, "sobre": "Tu tarjeta de plástico", "items": [
+      { "tono": "mal", "texto": "Su CVV impreso no cambia" },
+      { "tono": "mal", "texto": "Si alguien lo copia, le sirve después" }
+    ] },
+    { "tipo": "tarjeta", "dur": 5.5, "sobre": "Tu tarjeta digital, en tu app", "etiqueta": "Cambia en cada compra", "monto": "CVV 482", "pie": "Y caduca en pocos minutos." },
+    { "tipo": "lista", "dur": 6.5, "sobre": "Al comprar en línea", "items": [
+      { "tono": "bien", "texto": "Usa tu tarjeta digital" },
+      { "tono": "bien", "texto": "Revisa https:// y el candado" },
+      { "tono": "bien", "texto": "Activa alertas de cada compra" },
+      { "tono": "mal", "texto": "No entres desde links de mensajes" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "En línea,", "b": "tarjeta digital.", "c": "Si alguien copia el código, ya no le sirve.", "destacado": "CVV dinámico" }
+  ]
+}

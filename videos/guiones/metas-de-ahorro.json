@@ -1,0 +1,14 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "\"Quiero ahorrar\"", "b": "no es una meta." },
+    { "tipo": "lista", "dur": 6, "sobre": "Una meta dice:", "numerada": true, "items": [
+      { "texto": "Qué: boleto para el concierto" },
+      { "texto": "Cuánto: $1,800" },
+      { "texto": "Cuándo: en 12 semanas" }
+    ] },
+    { "tipo": "cifra", "dur": 5, "sobre": "$1,800 entre 12 semanas", "valor": "$150", "pie": "a la semana", "color": "morado" },
+    { "tipo": "puntos", "dur": 6.6, "total": 12, "llenos": 12, "leyenda": "12 semanas de $150", "remate": "¡Boleto listo!" },
+    { "tipo": "cierre", "dur": 5, "a": "Ponle nombre,", "b": "precio y fecha.", "c": "Divide el precio entre las semanas.", "destacado": "Meta ÷ semanas" }
+  ]
+}

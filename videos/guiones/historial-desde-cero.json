@@ -1,0 +1,20 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Sin historial,", "b": "nadie sabe cómo pagas." },
+    { "tipo": "lista", "dur": 5.6, "sobre": "No tener historial es como:", "items": [
+      { "tono": "neutro", "texto": "Un currículum sin experiencia" },
+      { "tono": "neutro", "texto": "Nadie puede ver cómo pagas" }
+    ] },
+    { "tipo": "lista", "dur": 7, "sobre": "Pasos para empezar:", "numerada": true, "items": [
+      { "texto": "Un crédito pequeño o tarjeta garantizada" },
+      { "texto": "Usa solo lo que puedes pagar" },
+      { "texto": "Paga el total, a tiempo" },
+      { "texto": "Revisa tu reporte cada año" }
+    ] },
+    { "tipo": "lista", "dur": 6, "sobre": "Lo que daña tu historial:", "items": [
+      { "tono": "mal", "texto": "Atrasarte, aunque sean pocos días" },
+      { "tono": "mal", "texto": "Liquidar una deuda con descuento" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "Tu historial empieza", "b": "con tu primer pago.", "c": "Cada pago a tiempo suma.", "destacado": "Paga completo y a tiempo" }
+  ]
+}

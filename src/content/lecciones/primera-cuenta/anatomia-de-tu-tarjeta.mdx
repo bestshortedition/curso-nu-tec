@@ -1,0 +1,78 @@
+---
+numero: "2.3"
+descripcion: Qué significa cada dato de tu tarjeta y cuáles nunca se comparten. Nadie del banco te va a pedir tu NIP ni tu CVV.
+minutos: 2
+duda:
+  pregunta: ¿Qué significa cada dato de tu tarjeta y cuáles nunca compartes?
+  tema: Tu tarjeta trae números por los dos lados. Aquí vas a ver cuáles son secretos.
+accion: "Cuando tengas tu tarjeta, memoriza tu NIP y no se lo digas a nadie."
+resumen:
+  - Al frente, el número y el vencimiento. Atrás, el CVV.
+  - Tu NIP, CVV, contraseñas y códigos por SMS no se comparten.
+  - El banco nunca te los pide por llamada, correo o SMS.
+palabras:
+  - cvv
+  - codigos-y-nip
+  - tarjeta-de-debito
+fuentes:
+  - nombre: Banxico, Buenas prácticas de cuentas de débito (CVV y datos que no debes compartir)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/recomendaciones-cuentas-deposito.jsp
+  - nombre: PROFECO, Seguridad al pagar con tarjetas de débito y crédito
+    url: https://www.gob.mx/profeco/es/articulos/seguridad-al-pagar-con-tarjetas-de-debito-y-credito?idiom=es
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Emi recibe su primera tarjeta de débito. Trae su nombre, números y una fecha.
+
+<VideoReel archivo="anatomia-de-tu-tarjeta" segundos={31} titulo="Video: los datos de tu tarjeta y cuáles nunca compartes">
+	Tu primera tarjeta trae datos secretos. Al frente: 16 dígitos que la identifican y la fecha MM/AA, hasta cuándo sirve. Atrás: el CVV, de 3 o 4 dígitos, para comprar en línea. Nunca compartas tu NIP, tu CVV, tus contraseñas ni los códigos por SMS. Si te llega: "Tu tarjeta fue bloqueada. Responde con tu NIP y el código que te enviamos", es trampa: el banco nunca lo pide. Tus datos secretos son solo tuyos. Nadie del banco te pedirá tu NIP ni tu CVV, ni por llamada ni por SMS.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Nunca', icono: 'x-circle' }, { texto: 'Se puede', icono: 'check-circle' }]}
+	items={[
+		{ frase: 'Te llaman "del banco" y te piden tu NIP.', correcta: 0, explicacion: 'El banco nunca te lo pide.', fuente: 'PROFECO' },
+		{ frase: 'Un amigo te pide tu CLABE para pasarte lo del cine.', correcta: 1, explicacion: 'La CLABE es para recibir transferencias.', fuente: 'Banxico' },
+		{ frase: 'Un mensaje te pide el código que te llegó por SMS.', correcta: 0, explicacion: 'Ese código confirma operaciones.' },
+		{ frase: 'Una página de un sorteo te pide número, vencimiento y CVV.', correcta: 0, explicacion: 'Esos tres no se comparten con nadie.', fuente: 'Banxico' },
+	]}
+/>
+
+---
+
+## Lo que dice tu tarjeta
+
+<ListaIconos
+	items={[
+		{ icono: 'hash', tono: 'neutro', titulo: '16 dígitos', texto: 'Al frente. Identifican tu tarjeta.' },
+		{ icono: 'calendar-dots', tono: 'neutro', titulo: 'Vencimiento', texto: 'Hasta cuándo sirve (mes/año).' },
+		{ icono: 'lock-simple', tono: 'mal', titulo: 'CVV', texto: '3 o 4 dígitos, atrás. Para compras en línea.' },
+	]}
+/>
+
+<Nota titulo="El banco no te los pide" fuente="PROFECO, con información de CONDUSEF">
+	Tu banco no te pide por correo, SMS o llamada tu contraseña, token, <Termino id="codigos-y-nip">NIP</Termino> o <Termino id="cvv">CVV</Termino>.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="A Santi le llega un SMS: “Tu tarjeta fue bloqueada. Responde con tu NIP”. ¿Qué hace?"
+	opciones={['Responde rápido.', 'Llama al teléfono oficial de su banco.', 'Manda la mitad de su NIP.']}
+	correcta={1}
+	porque={['Es trampa.', 'Así confirma si hay un problema real.', 'Ni completo ni a medias.']}
+>
+	Si dudas de un mensaje, busca tú el teléfono oficial de tu banco.
+</Ejercicio>

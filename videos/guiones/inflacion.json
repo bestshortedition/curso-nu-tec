@@ -1,0 +1,64 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Guardas $500",
+      "b": "y alcanzan para menos."
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5,
+      "sobre": "Unos audífonos de $500, en 3 años:",
+      "valor": "$562",
+      "pie": "Tus billetes siguen siendo $500",
+      "color": "morado"
+    },
+    {
+      "tipo": "comparar",
+      "dur": 6,
+      "sobre": "Con precios que suben 4% al año:",
+      "columnas": [
+        {
+          "valor": 500,
+          "texto": "$500",
+          "etq": "Tienes"
+        },
+        {
+          "valor": 562,
+          "texto": "$562",
+          "etq": "Cuestan",
+          "resaltar": true
+        }
+      ],
+      "remate": "Te faltan $62"
+    },
+    {
+      "tipo": "lista",
+      "dur": 5.6,
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "Banxico busca 3% de inflación al año"
+        },
+        {
+          "tono": "neutro",
+          "texto": "INEGI mide cuánto suben los precios"
+        },
+        {
+          "tono": "mal",
+          "texto": "El dinero quieto pierde poder de compra"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Tu billete no cambia,",
+      "b": "los precios sí.",
+      "c": "Guardar sin rendimiento te hace perder.",
+      "destacado": "Precios que suben"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Son solo $20.", "b": "¿Qué tanto es?" },
+    { "tipo": "cifra", "dur": 5.1, "sobre": "Un refresco de $20 cada día", "valor": "$600", "pie": "en un mes" },
+    { "tipo": "cifra", "dur": 5, "sobre": "En un año, solo ese refresco", "valor": "$7,300", "pie": "sin darte cuenta", "color": "morado" },
+    { "tipo": "tarjeta", "dur": 5.5, "sobre": "La app que ya no abres", "etiqueta": "Suscripción de $99/mes", "monto": "$1,188", "pie": "al año, aunque ya no la abras" },
+    { "tipo": "lista", "dur": 5, "sobre": "Qué hacer:", "items": [
+      { "tono": "bien", "texto": "Anota todo lo que gastas por 3 días" },
+      { "tono": "bien", "texto": "Busca los cobros que se repiten" },
+      { "tono": "bien", "texto": "Cancela lo que ya no usas" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "Lo chiquito", "b": "también suma.", "c": "Ponle un tope a tus antojos.", "destacado": "Anota y decide" }
+  ]
+}

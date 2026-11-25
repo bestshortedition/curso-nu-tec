@@ -1,0 +1,87 @@
+---
+numero: "5.5"
+descripcion: "Antes de poner tu ahorro donde genere rendimiento, revisa tres cosas: que esté autorizada, protegida y con GAT clara."
+minutos: 2
+duda:
+  pregunta: ¿Cómo sabes si un lugar para tu ahorro es seguro?
+  tema: Quieres que tu ahorro genere rendimiento sin arriesgarlo. Aquí vas a ver qué revisar antes.
+accion: "Busca en el SIPRES la institución donde tu familia ahorra."
+resumen:
+  - Revisa en el SIPRES que la institución esté autorizada.
+  - En un banco, el IPAB protege tus depósitos hasta 400 mil UDIS.
+  - Compara la GAT real. Desconfía de ganancias altas garantizadas.
+palabras:
+  - sipres
+  - ipab
+  - gat
+  - rendimiento
+fuentes:
+  - nombre: IPAB, Preguntas frecuentes de ahorradores
+    url: https://www.gob.mx/ipab/acciones-y-programas/preguntas-frecuentes-ahorradores
+  - nombre: CONDUSEF, Revista Proteja su Dinero, Tus ahorros están a salvo (IPAB, septiembre de 2024)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/tu-bolsillo/2024/09/ipab/
+  - nombre: CONDUSEF, ¿Vas a contratar un servicio financiero? (SIPRES)
+    url: https://www.gob.mx/condusef/articulos/vas-a-contratar-un-servicio-financiero?idiom=es
+  - nombre: Banxico, Circular 12/2014, que modifica la Circular 35/2010 sobre la GAT (DOF, 28/07/2014)
+    url: https://www.banxico.org.mx/marco-normativo/normativa-emitida-por-el-banco-de-mexico/circular-35-2010/%7B112004D4-5601-BDC9-2335-2BE3FC5F4A67%7D.pdf
+  - nombre: CONDUSEF, Protégete y evita perder tu dinero (26/09/2025)
+    url: https://www.gob.mx/condusef/articulos/protegete-y-evita-perder-tu-dinero?idiom=es
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Santi quiere que sus **$2,000** generen <Termino id="rendimiento">rendimiento</Termino>. ¿Dónde es seguro?
+
+<VideoReel archivo="empezar-a-invertir" segundos={26} titulo="Video: qué revisar antes de dejar tu ahorro en una institución">
+	Antes de guardar, revisa dónde. Tres cosas que revisar: uno, ¿está en el SIPRES de la CONDUSEF? Dos, ¿tiene el seguro del IPAB? Tres, ¿cuál es su GAT real? Un anuncio en redes dice: "Gana 20% al mes, garantizado. Solo hoy. Escríbeme por DM". Es una señal de alerta. En los bancos, el seguro del IPAB protege hasta 400 mil UDIS por persona y por banco. Rendimiento sí, pero en un lugar seguro: autorizado, protegido y con GAT clara. Revisa antes de guardar.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Señal segura o de alerta?
+
+<Clasifica
+	opciones={[{ texto: 'Segura', icono: 'shield-check' }, { texto: 'Alerta', icono: 'warning-circle' }]}
+	items={[
+		{ frase: 'La institución aparece en el SIPRES de la CONDUSEF.', correcta: 0, explicacion: 'Ahí confirmas que está autorizada.', fuente: 'CONDUSEF' },
+		{ frase: 'Te prometen 20% al mes, garantizado.', correcta: 1, explicacion: 'Desconfía de ganancias rápidas y sin esfuerzo.', fuente: 'CONDUSEF' },
+		{ frase: 'Te muestran la GAT nominal y la GAT real antes de contratar.', correcta: 0, explicacion: 'Deben mostrar las dos, para que compares.', fuente: 'Banxico' },
+		{ frase: 'Es un banco y tus depósitos tienen el seguro del IPAB.', correcta: 0, explicacion: 'Es gratis y automático.', fuente: 'IPAB y CONDUSEF' },
+		{ frase: 'No te explican bien qué es ni quién está detrás.', correcta: 1, explicacion: 'Sin información clara, aléjate.', fuente: 'CONDUSEF' },
+	]}
+/>
+
+---
+
+## Antes de guardar, revisa
+
+<ListaIconos
+	items={[
+		{ icono: 'magnifying-glass', tono: 'neutro', titulo: 'Que esté autorizada', texto: 'Búscala en el SIPRES.' },
+		{ icono: 'shield-check', tono: 'bien', titulo: 'Que proteja tu dinero', texto: 'En bancos, la protege el IPAB.' },
+		{ icono: 'percent', tono: 'neutro', titulo: 'Que su GAT sea clara', texto: 'Compara la GAT real.' },
+	]}
+/>
+
+<Nota titulo="El seguro del IPAB" fuente="IPAB y CONDUSEF">
+	El <Termino id="ipab">IPAB</Termino> protege tus depósitos en bancos hasta 400 mil UDIS por persona y por banco. No cubre Sofipos ni cooperativas.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Por WhatsApp le ofrecen a Santi “15% al mes, garantizado”. ¿Qué hace?"
+	opciones={['Mete poquito para probar', 'Desconfía y busca la empresa en el SIPRES', 'Se lo pasa a sus amigos']}
+	correcta={1}
+	porque={['Puede perderlo.', 'Tan alto y garantizado es alerta.', 'Ellos también perderían.']}
+>
+	Revisa que la institución esté en el <Termino id="sipres">SIPRES</Termino> y compara su <Termino id="gat">GAT</Termino>.
+</Ejercicio>

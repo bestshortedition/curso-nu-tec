@@ -1,0 +1,19 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Empezar a los 18", "b": "le gana al doble." },
+    { "tipo": "lista", "dur": 5.6, "sobre": "Rendimiento de 6% al año", "items": [
+      { "tono": "neutro", "texto": "Leo: $300 al mes desde los 18" },
+      { "tono": "neutro", "texto": "Ana: $600 al mes desde los 35" }
+    ] },
+    { "tipo": "comparar", "dur": 6, "sobre": "A los 50 años tienen:", "columnas": [
+      { "valor": 347304, "texto": "$347,304", "etq": "Leo, desde los 18", "resaltar": true },
+      { "valor": 174491, "texto": "$174,491", "etq": "Ana, desde los 35" }
+    ], "remate": "Mitad al mes, doble al final" },
+    { "tipo": "barra", "dur": 6, "sobre": "De lo que tiene Leo:", "total": "$347,304", "partes": [
+      { "valor": 115200, "texto": "33%", "etq": "lo puso él" },
+      { "valor": 232104, "texto": "67%", "etq": "lo ganó su dinero" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "Lo ganado también gana.", "b": "Y el tiempo multiplica.", "c": "Empieza con poco, pero empieza pronto.", "destacado": "El tiempo pesa más" }
+  ]
+}

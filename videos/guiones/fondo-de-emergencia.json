@@ -1,0 +1,15 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Se descompuso tu cel.", "b": "¿Y ahora qué?" },
+    { "tipo": "lista", "dur": 6, "sobre": "Un fondo de emergencia es para:", "items": [
+      { "tono": "bien", "texto": "Una consulta médica que no esperabas" },
+      { "tono": "bien", "texto": "El celular que usas para la escuela" },
+      { "tono": "mal", "texto": "No: una consola en oferta" },
+      { "tono": "mal", "texto": "No: boletos para un concierto" }
+    ] },
+    { "tipo": "cifra", "dur": 5.6, "sobre": "Emi gasta $800 al mes. Por 3 meses:", "valor": "$2,400", "pie": "la meta de su fondo", "color": "morado" },
+    { "tipo": "tarjeta", "dur": 6, "sobre": "Recibe $2,000; aparta $200 (10%)", "etiqueta": "Llega a $2,400 en", "monto": "12 meses", "pie": "Poco a poco también se llega." },
+    { "tipo": "cierre", "dur": 5, "a": "Solo para", "b": "imprevistos.", "c": "Guárdalo separado de tu dinero diario.", "destacado": "Tu colchón" }
+  ]
+}

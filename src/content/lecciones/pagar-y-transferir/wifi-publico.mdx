@@ -1,0 +1,79 @@
+---
+numero: "3.5"
+descripcion: El Wi-Fi gratis de la plaza sirve para videos, no para tu banco. Usa la red de tu casa o tus datos.
+minutos: 2
+duda:
+  pregunta: ¿Puedo entrar a mi banco con el Wi-Fi gratis de la plaza?
+  tema: El internet gratis de una plaza o un café es cómodo, pero no es buen lugar para tu banco.
+accion: "Hoy: en los ajustes de tu celular, quita la conexión automática a redes Wi-Fi abiertas."
+resumen:
+  - CONDUSEF recomienda no hacer operaciones financieras en Wi-Fi público.
+  - Para tu banco, usa la red de tu casa o tus datos.
+palabras:
+  - wifi-publico
+  - codigos-y-nip
+fuentes:
+  - nombre: CONDUSEF, Proteja su Dinero, Ofertas irresistibles… y peligrosas (julio de 2026)
+    url: https://revista.condusef.gob.mx/usuario-inteligente/2026/07/ofertas-irresistibles-y-peligrosas/
+  - nombre: CONDUSEF, No seas un blanco fácil (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/06/EFI_H_No-seas-un-blanco-facil.pdf
+  - nombre: CONDUSEF, Compras seguras en el Buen Fin (Educación Financiera en tu Institución, 2023)
+    url: https://www.uv.mx/iiesca/files/2023/12/EFI_H_Compras-seguras-en-el-Buen-Fin.pdf
+  - nombre: CONDUSEF, Proteja su Dinero, La banca biométrica
+    url: https://revista.condusef.gob.mx/destacados-2/2020/12/la-banca-biometrica/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Sofi quiere pagarle a Leo la pizza desde la plaza. Hay una red de <Termino id="wifi-publico">Wi-Fi público</Termino> abierta.
+
+<VideoReel archivo="wifi-publico" segundos={25} titulo="Video: por qué no entrar a tu banco con Wi-Fi público">
+	¿Wi-Fi gratis? Para tu banco, no. "Plaza_Gratis", abierta y sin contraseña, es una red pública. Ahí evita entrar a tu banco, transferir, pagar en línea o escribir contraseñas o tu NIP. Mejor espera a la red de tu casa, o apaga el Wi-Fi y usa tus datos. Y quita la conexión automática. Lo recomienda CONDUSEF.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Ahí sí', icono: 'check-circle' }, { texto: 'Mejor espera', icono: 'hand-palm' }]}
+	items={[
+		{ frase: 'Revisar tu saldo con el Wi-Fi gratis de la plaza.', correcta: 1, explicacion: 'Escribes tu contraseña en una red pública.', fuente: 'CONDUSEF' },
+		{ frase: 'Ver un video con el Wi-Fi del café.', correcta: 0, explicacion: 'No escribes datos de tu banco.' },
+		{ frase: 'Pagar boletos con la red abierta del aeropuerto.', correcta: 1, explicacion: 'Nada de compras en redes abiertas.', fuente: 'CONDUSEF' },
+		{ frase: 'Transferir con el Wi-Fi apagado y tus datos.', correcta: 0, explicacion: 'No usas una red pública.' },
+	]}
+/>
+
+---
+
+## ¿Por qué el riesgo?
+
+<ListaIconos
+	items={[
+		{ icono: 'wifi-high', tono: 'mal', titulo: 'Red abierta, red de todos', texto: 'Puede ser vulnerable a robo de información.' },
+		{ icono: 'lock-simple', tono: 'bien', titulo: 'Sin conexión automática', texto: 'Que tu celular no se conecte solo.' },
+	]}
+/>
+
+<Nota titulo="La recomendación de CONDUSEF" fuente="CONDUSEF, Proteja su Dinero">
+	Evita operaciones financieras en Wi-Fi público. Nunca envíes tu <Termino id="codigos-y-nip">NIP ni tus claves</Termino> por esas redes.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Mariana está en el aeropuerto y quiere pagarle a Emi su parte del viaje. Solo hay Wi-Fi gratis. ¿Qué hace?"
+	opciones={['Usa sus datos, o espera a llegar a casa', 'Usa el Wi-Fi, porque su app pide contraseña', 'Usa el Wi-Fi, pero rápido']}
+	correcta={0}
+	porque={['Así evita la red pública.', 'La red sigue siendo pública.', 'Rápido no es seguro.']}
+>
+	Para tu banco, usa tu casa o tus datos, no el <Termino id="wifi-publico">Wi-Fi público</Termino>.
+</Ejercicio>

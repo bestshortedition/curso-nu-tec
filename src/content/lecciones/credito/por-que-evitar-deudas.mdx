@@ -1,0 +1,109 @@
+---
+numero: "4.1"
+descripcion: Pedir prestado no te da más dinero. Le quitas dinero a tu "yo" del próximo mes.
+minutos: 2
+duda:
+  pregunta: ¿Un crédito es dinero extra?
+  tema: Una tarjeta o un préstamo te dejan comprar hoy, con dinero que no es tuyo.
+  cifra:
+    texto: 96% les cree a sus papás cuando se habla de dinero, pero solo 2 de 17 aprendieron algo de crédito en casa.
+    n: 15
+    de: 17
+accion: "Elige algo que quieras. ¿En cuántas semanas lo juntas?"
+resumen:
+  - Un crédito no es dinero extra. Es dinero de tu "yo" del próximo mes.
+  - Que te presten no significa que puedas pagarlo.
+palabras:
+  - credito
+  - limite-de-credito
+  - interes
+  - tarjeta-de-credito
+fuentes:
+  - nombre: CONDUSEF, Proteja su Dinero, Que el crédito fácil no te saque un grito (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/que-el-credito-facil-no-te-saque-un-grito/
+  - nombre: Banxico, Términos financieros de tarjetas de crédito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo recibe **$1,000 al mes**. Quiere unos audífonos de **$600**.
+
+<VideoReel archivo="por-que-evitar-deudas" segundos={31} titulo="Video: qué pasa con tu próximo mes si pides prestado hoy">
+	Ejemplo ilustrativo. Un crédito no es dinero extra. Leo recibe $1,000 al mes y pide $600 para unos audífonos. El mes siguiente, $600 ya tienen dueño: le quedan $400. Si mejor ahorra $300 al mes, le quedan $700 y en 2 meses los compra. Antes de pedir prestado: es dinero de tu próximo mes, ¿cuánto puedes pagar? Si puedes esperar, ahorra. Pedir prestado no te da más dinero: le quitas dinero a tu próximo mes. Primero, haz cuentas.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Cómo compra Leo sus audífonos de $600?"
+	icono="calendar-check"
+	opciones={[
+		{
+			boton: 'Prestado', sub: 'hoy mismo',
+			titulo: 'Su próximo mes queda en', destacado: '$400',
+			cuentas: [{ icono: 'hand-coins', etq: 'Debe', valor: '$600' }],
+			barra: [{ valor: 400, tono: 'morado' }, { valor: 600, tono: 'tinta' }],
+			idea: 'Con intereses, aún menos.',
+		},
+		{
+			boton: '$300', sub: 'ahorra al mes',
+			titulo: 'Los compra en', destacado: '2 meses',
+			cuentas: [{ icono: 'coins', etq: 'Le queda al mes', valor: '$700' }],
+			barra: [{ valor: 700, tono: 'morado' }, { valor: 300, tono: 'verde' }],
+			idea: 'Y no le debe a nadie.', buena: true,
+		},
+		{
+			boton: '$200', sub: 'ahorra al mes',
+			titulo: 'Los compra en', destacado: '3 meses',
+			cuentas: [{ icono: 'coins', etq: 'Le queda al mes', valor: '$800' }],
+			barra: [{ valor: 800, tono: 'morado' }, { valor: 200, tono: 'verde' }],
+			idea: 'Más lento, más holgado.', buena: true,
+		},
+	]}
+	leyenda={[{ tono: 'morado', texto: 'Para gastar' }, { tono: 'tinta', texto: 'Deuda' }, { tono: 'verde', texto: 'Ahorro' }]}
+	como={['Sin intereses ni comisiones.']}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'x-circle', tono: 'mal', titulo: 'No es dinero extra', texto: 'Es dinero del futuro que devuelves.' },
+		{ icono: 'calendar-x', tono: 'mal', titulo: 'Tu próximo mes ya tiene dueño', texto: 'Lo que pides hoy se resta después.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Úsalo con un plan', texto: 'Para algo necesario que sabes pagar.' },
+	]}
+/>
+
+<Nota titulo="Lo que dicen Banxico y CONDUSEF" fuente="Banxico; CONDUSEF, Proteja su Dinero (2026)">
+	Una <Termino id="tarjeta-de-credito">tarjeta de crédito</Termino> no es un ingreso extra: es un préstamo. Que te autoricen un <Termino id="credito">crédito</Termino> no significa que puedas pagarlo.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="A Sofi le dan una tarjeta con límite de $3,000. Recibe $800 al mes. ¿Qué es cierto?"
+	opciones={[
+		'Ahora tiene $3,800 para gastar cada mes',
+		'Puede gastar $3,000 que tendrá que devolver',
+		'Esos $3,000 son un regalo del banco',
+	]}
+	correcta={1}
+	porque={[
+		'El límite no se suma: es prestado.',
+		'Exacto. Lo que use, lo paga con sus próximos $800.',
+		'El banco presta, no regala.',
+	]}
+>
+	Tu <Termino id="limite-de-credito">límite de crédito</Termino> es lo máximo que te prestan, no dinero tuyo.
+</Ejercicio>

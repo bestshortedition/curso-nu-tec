@@ -321,7 +321,7 @@ export const temario: Modulo[] = [
 				icono: 'shield-check',
 				titulo: 'Cómo empezar a invertir fácil y seguro',
 				resumen:
-					'Opciones reguladas y de bajo riesgo en México donde puedes empezar con poco dinero.',
+					'Cómo elegir un lugar regulado y protegido para que tus ahorros den rendimiento, aunque empieces con poco.',
 			},
 			{
 				numero: '5.6',

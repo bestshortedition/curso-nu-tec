@@ -1,0 +1,50 @@
+{
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Antes de guardar,",
+      "b": "revisa dónde."
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.6,
+      "sobre": "3 cosas que revisar:",
+      "numerada": true,
+      "items": [
+        {
+          "texto": "¿Está en el SIPRES de la CONDUSEF?"
+        },
+        {
+          "texto": "¿Tiene el seguro del IPAB?"
+        },
+        {
+          "texto": "¿Cuál es su GAT real?"
+        }
+      ]
+    },
+    {
+      "tipo": "chat",
+      "dur": 5.5,
+      "de": "Anuncio en redes",
+      "texto": "Gana 20% al mes, garantizado. Solo hoy. Escríbeme por DM.",
+      "alerta": "Señal de alerta"
+    },
+    {
+      "tipo": "cifra",
+      "dur": 5.5,
+      "sobre": "En bancos, el IPAB protege hasta",
+      "valor": "400",
+      "pie": "mil UDIS por persona y por banco",
+      "color": "morado"
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Rendimiento sí,",
+      "b": "pero en lugar seguro.",
+      "c": "Autorizado, protegido y con GAT clara.",
+      "destacado": "Revisa antes de guardar"
+    }
+  ]
+}

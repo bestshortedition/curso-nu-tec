@@ -1,0 +1,66 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Tu estado de cuenta",
+      "b": "en 30 segundos."
+    },
+    {
+      "tipo": "lista",
+      "dur": 7.1,
+      "sobre": "Busca estos 4 datos",
+      "numerada": true,
+      "items": [
+        {
+          "texto": "Saldo: lo que debes en total"
+        },
+        {
+          "texto": "Fecha límite: hasta cuándo pagas"
+        },
+        {
+          "texto": "Pago para no generar intereses"
+        },
+        {
+          "texto": "Movimientos: revisa cada compra"
+        }
+      ]
+    },
+    {
+      "tipo": "comparar",
+      "dur": 6,
+      "sobre": "Vale: compras y tenis a meses",
+      "columnas": [
+        {
+          "valor": 3000,
+          "texto": "$3,000",
+          "etq": "Saldo total"
+        },
+        {
+          "valor": 1800,
+          "texto": "$1,800",
+          "etq": "Sin intereses",
+          "resaltar": true
+        }
+      ],
+      "remate": "Este es el que conviene."
+    },
+    {
+      "tipo": "chat",
+      "dur": 5.5,
+      "sobre": "En tus movimientos",
+      "de": "Cargo del 3 de noviembre",
+      "texto": "App de música: $199. Nunca la contrataste.",
+      "alerta": "Reclama a tu banco"
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Cuatro datos,",
+      "b": "treinta segundos.",
+      "c": "Revísalo cada mes, antes de la fecha límite.",
+      "destacado": "Paga sin intereses"
+    }
+  ]
+}

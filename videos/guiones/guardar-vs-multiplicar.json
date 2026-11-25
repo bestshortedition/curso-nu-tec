@@ -1,0 +1,17 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Ahorrar es bueno.", "b": "¿Pero dónde?" },
+    { "tipo": "cifra", "dur": 4.6, "sobre": "Mariana guarda", "valor": "$5,000", "pie": "y no los toca en 3 años" },
+    { "tipo": "comparar", "dur": 6.5, "sobre": "En 3 años, con precios +4%, compran:", "columnas": [
+      { "valor": 4445, "texto": "$4,445", "etq": "En el cajón" },
+      { "valor": 5146, "texto": "$5,146", "etq": "Con rendimiento 5%", "resaltar": true }
+    ], "remate": "El dinero quieto encoge" },
+    { "tipo": "lista", "dur": 6, "items": [
+      { "tono": "neutro", "texto": "Meta cercana: ahorro a la mano" },
+      { "tono": "bien", "texto": "Meta lejana: que genere rendimiento" },
+      { "tono": "neutro", "texto": "Compara la GAT real" }
+    ] },
+    { "tipo": "cierre", "dur": 5.5, "a": "Guardar cuida tu dinero.", "b": "Multiplicar lo hace crecer.", "c": "Busca rendimiento que le gane a la inflación.", "destacado": "Mira la GAT real" }
+  ]
+}

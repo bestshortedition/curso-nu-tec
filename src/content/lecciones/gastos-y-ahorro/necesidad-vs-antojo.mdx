@@ -1,0 +1,82 @@
+---
+numero: "1.2"
+descripcion: ¿Lo necesitas o solo se te antojó por un reel? Esperar 24 horas antes de pagar te ayuda a decidir.
+minutos: 2
+duda:
+  pregunta: ¿Cómo sabes si algo lo necesitas o solo es un antojo?
+  tema: Las redes están llenas de ofertas de "solo hoy". Aquí ves cómo separar necesidad de antojo.
+accion: "La próxima vez que quieras algo que no planeaste, espera 24 horas antes de pagar."
+resumen:
+  - Una necesidad no puede esperar. Un antojo sí.
+  - "Los antojos no son malos: solo hay que planearlos."
+  - Si no estaba planeado, espera 24 horas antes de comprarlo.
+palabras:
+  - presupuesto
+  - gasto-hormiga
+fuentes:
+  - nombre: Profeco, Regla de las 24 horas. La espera que te hace ahorrar (2026)
+    url: https://www.gob.mx/profeco/es/articulos/regla-de-las-24-horas-la-espera-que-te-hace-ahorrar?idiom=es
+  - nombre: CONDUSEF, Cuidado con las compras de último minuto
+    url: https://www.condusef.gob.mx/index.php/guias-de-educacion-financiera?p=contenido&idc=2682&idcat=3
+  - nombre: CONDUSEF, Revista Proteja su Dinero 272, Cuidado con los gastos fantasma, hormiga y vampiro
+    url: https://revista.condusef.gob.mx/wp-content/uploads/2022/10/gastos_272.pdf
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Sofi ve unos tenis en un reel que dice "solo hoy". Los quiere ya.
+
+<VideoReel archivo="necesidad-vs-antojo" segundos={26} titulo="Video: necesidad o antojo y la regla de las 24 horas">
+	Lo viste en un reel. Lo quieres ya. Un anuncio dice: "Últimas piezas. Solo hoy, 40% de descuento en estos tenis". ¿Lo necesitas o no? Necesidad: sin eso no puedes. Antojo: lo quieres, pero puede esperar. Un antojo no es malo: solo planéalo. Espera 24 horas antes de pagar. ¿Mañana lo sigues queriendo? Si sí, y te alcanza, cómpralo. Regla de las 24 horas.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Necesidad o antojo?
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Necesidad', icono: 'check-circle' }, { texto: 'Antojo', icono: 'sparkle' }]}
+	items={[
+		{ frase: 'El pasaje para llegar a la prepa.', correcta: 0, explicacion: 'Sin él no llegas a clases.' },
+		{ frase: 'Unos tenis de edición limitada que viste en un reel.', correcta: 1, explicacion: 'Puede esperar.' },
+		{ frase: 'El material para tu proyecto de la escuela.', correcta: 0, explicacion: 'Lo necesitas para cumplir.' },
+		{ frase: 'Una skin nueva para tu videojuego.', correcta: 1, explicacion: 'Es un gusto: planéalo.' },
+		{ frase: 'Una sudadera porque el anuncio dice "solo hoy".', correcta: 1, explicacion: 'La prisa la puso el anuncio.' },
+	]}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'megaphone', tono: 'mal', titulo: 'Los anuncios te apuran', texto: 'Quieren que no lo pienses.' },
+		{ icono: 'clock', tono: 'bien', titulo: 'Esperar enfría la emoción', texto: 'Mañana ves si de verdad lo quieres.' },
+		{ icono: 'check-circle', tono: 'neutro', titulo: 'Los antojos se planean', texto: 'Si te alcanza, disfrútalo sin culpa.' },
+	]}
+/>
+
+<Nota titulo="La regla de las 24 horas" fuente="Profeco y CONDUSEF">
+	Si algo no estaba planeado, piénsalo un día antes de comprar.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Ana ve unos audífonos de $900 'solo por hoy'. No los tenía planeados. ¿Qué hace?"
+	opciones={['Comprarlos ya', 'Esperar 24 horas y ver si le alcanza', 'Pedir prestado para no perderlos']}
+	correcta={1}
+	porque={['La prisa viene del anuncio.', 'Si mañana los quiere y le alcanza, los compra sin culpa.', 'Endeudarse por un antojo cuesta más.']}
+>
+	Si lo sigues queriendo, hazle espacio en tu <Termino id="presupuesto">presupuesto</Termino>.
+</Ejercicio>

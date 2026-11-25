@@ -1,0 +1,18 @@
+{
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "¿Perdiste tu tarjeta?", "b": "Apágala en segundos." },
+    { "tipo": "lista", "dur": 6.5, "sobre": "4 candados en tu app", "numerada": true, "items": [
+      { "texto": "Huella o rostro para entrar" },
+      { "texto": "Apaga tu tarjeta si no la usas" },
+      { "texto": "Límite de gasto en línea" },
+      { "texto": "Alertas de cada movimiento" }
+    ] },
+    { "tipo": "cifra", "dur": 5, "sobre": "No le escribiría solo al banco", "valor": "48%", "pie": "de 25 jóvenes entrevistados.", "color": "morado" },
+    { "tipo": "lista", "dur": 6, "sobre": "¿Algo raro? Tú solo puedes:", "numerada": true, "items": [
+      { "texto": "Bloquear la tarjeta en la app" },
+      { "texto": "Avisar a tu banco por canal oficial" },
+      { "texto": "Pedir tu folio de aclaración" }
+    ] },
+    { "tipo": "cierre", "dur": 5, "a": "Tu cuenta,", "b": "tus candados.", "c": "Si algo sale mal, avisa a tu banco ya.", "destacado": "Tienes derecho a reclamar" }
+  ]
+}

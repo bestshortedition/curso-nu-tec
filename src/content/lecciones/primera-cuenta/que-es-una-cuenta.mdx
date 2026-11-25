@@ -1,0 +1,92 @@
+---
+numero: "2.1"
+descripcion: Tu dinero en una cuenta no está en una caja con tu nombre. Así sabes si la institución está autorizada y si tu dinero tiene seguro.
+minutos: 2
+duda:
+  pregunta: ¿Tu dinero está seguro en un banco o en una app?
+  tema: Aquí vas a ver quién vigila tu cuenta y qué protección tiene tu dinero.
+  cita:
+    texto: No hay como el efectivo.
+    quien: Joven sin cuenta
+  cifra:
+    texto: 48% cree que los bancos digitales son menos seguros o no sabe.
+    n: 12
+    de: 25
+accion: "Busca en el SIPRES la institución donde piensas abrir tu cuenta."
+resumen:
+  - Elige una institución autorizada por la CNBV y vigente en el SIPRES.
+  - En un banco, el IPAB protege hasta 400 mil UDIS por persona.
+  - Una Sofipo protege menos. Otras fintech no tienen garantía oficial.
+palabras:
+  - sipres
+  - ipab
+  - sofipo
+fuentes:
+  - nombre: CONDUSEF, ¿Vas a contratar un servicio financiero? (SIPRES)
+    url: https://www.gob.mx/condusef/articulos/vas-a-contratar-un-servicio-financiero?idiom=es
+  - nombre: CONDUSEF, Conoce los seguros de depósito del sector financiero
+    url: https://www.condusef.gob.mx/?p=contenido&idc=709&idcat=1
+  - nombre: CNBV, Seguro de depósito
+    url: https://www.gob.mx/cnbv/acciones-y-programas/ipab-seguro-de-deposito
+  - nombre: CNBV, ¿Qué hacemos?
+    url: https://www.gob.mx/cnbv/que-hacemos
+  - nombre: IPAB, Preguntas frecuentes de ahorradores
+    url: https://www.gob.mx/ipab/acciones-y-programas/preguntas-frecuentes-ahorradores
+  - nombre: CONDUSEF, Fintech e Instituciones de Tecnología Financiera
+    url: https://www.condusef.gob.mx/index.php/material-educativo?p=contenido&idc=1671&idcat=1
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo cumple 18 y le van a pagar por transferencia. Su abuela le dice: "Mejor en efectivo".
+
+<VideoReel archivo="que-es-una-cuenta" segundos={27} titulo="Video: cómo saber si tu dinero está seguro en una cuenta">
+	¿Tu dinero en una app? ¿Está seguro? Antes de abrir tu cuenta, revisa: que la CNBV la autorice, que aparezca en el SIPRES y qué tipo de institución es. En un banco te protege el IPAB: hasta 400 mil UDIS por persona y banco, más de 3 millones de pesos. En una Sofipo, hasta 25 mil UDIS. Otras fintech, sin garantía oficial. Búscala en el SIPRES de CONDUSEF: es gratis y en línea.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Clasifica
+	opciones={[{ texto: 'Mito', icono: 'x-circle' }, { texto: 'Realidad', icono: 'check-circle' }]}
+	items={[
+		{ frase: 'Mi dinero está en una caja con mi nombre.', correcta: 0, explicacion: 'Queda registrado a tu nombre en una institución regulada.' },
+		{ frase: 'Si mi banco quiebra, pierdo todo.', correcta: 0, explicacion: 'El IPAB te regresa hasta 400 mil UDIS.', fuente: 'CONDUSEF' },
+		{ frase: 'Todas las apps de dinero tienen la misma protección.', correcta: 0, explicacion: 'Una Sofipo protege hasta 25 mil UDIS. Otras fintech, sin garantía oficial.', fuente: 'CONDUSEF' },
+		{ frase: 'Puedo revisar gratis si una institución está registrada.', correcta: 1, explicacion: 'En el SIPRES de CONDUSEF.', fuente: 'CONDUSEF' },
+	]}
+/>
+
+---
+
+## ¿Qué la hace segura?
+
+<ListaIconos
+	items={[
+		{ icono: 'bank', tono: 'neutro', titulo: 'Autorizada', texto: 'La CNBV la supervisa.' },
+		{ icono: 'magnifying-glass', tono: 'bien', titulo: 'Registrada', texto: 'Aparece vigente en el SIPRES.' },
+		{ icono: 'shield-check', tono: 'bien', titulo: 'Con seguro', texto: 'Depende de si es banco, Sofipo u otra.' },
+	]}
+/>
+
+<Nota titulo="El seguro de los bancos" fuente="CONDUSEF y CNBV">
+	El <Termino id="ipab">IPAB</Termino> protege hasta 400 mil UDIS (más de 3 millones de pesos) por persona y por banco.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Sofi vio en redes una app para abrir su cuenta. ¿Qué revisa primero?"
+	opciones={['Sus seguidores.', 'Que esté en el SIPRES y qué tipo de institución es.', 'Si regala dinero al abrir.']}
+	correcta={1}
+	porque={['No dicen si está autorizada.', 'Así sabe si es real y qué protección tiene.', 'Un regalo no la hace segura.']}
+>
+	Si no aparece en el <Termino id="sipres">SIPRES</Termino> o no está vigente, mejor no.
+</Ejercicio>

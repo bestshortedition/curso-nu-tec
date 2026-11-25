@@ -1,0 +1,118 @@
+---
+numero: "4.7"
+descripcion: "Si no pagas tu tarjeta: comisiones, intereses moratorios, cobranza y un atraso en tu historial. Y qué hacer si no te alcanza."
+minutos: 2
+duda:
+  pregunta: ¿Qué pasa si no pagas tu tarjeta de crédito?
+  tema: Atrasarte tiene consecuencias, pero tiene solución.
+  cita:
+    texto: Solo las personas que no pagan están en el buró.
+    quien: Joven con cuenta y tarjeta de crédito
+accion: "Platica en casa qué harían si un mes no alcanza para pagar una tarjeta."
+resumen:
+  - Atrasarte puede costar comisiones e intereses moratorios, y queda hasta 6 años en tu historial.
+  - Si no te alcanza, habla con tu banco antes de la fecha límite.
+palabras:
+  - intereses-moratorios
+  - despacho-de-cobranza
+  - historial-crediticio
+  - buro-de-credito
+  - pago-minimo
+fuentes:
+  - nombre: Banxico, Términos financieros de tarjetas de crédito (pago mínimo y comisiones)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+  - nombre: CONDUSEF, Consulta el REDECO (lo que pueden y no pueden hacer los despachos de cobranza)
+    url: https://www.condusef.gob.mx/?p=contenido&idc=1622&idcat=1
+  - nombre: CONDUSEF, Disposiciones en materia de Despachos de Cobranza (DOF, 07/10/2014)
+    url: https://www.condusef.gob.mx/documentos/marco_legal/disp_despachos_cobranza.pdf
+  - nombre: Ley para Regular las Sociedades de Información Crediticia, artículo 23 (Cámara de Diputados)
+    url: https://www.diputados.gob.mx/LeyesBiblio/pdf_mov/Ley_para_Regular_las_Sociedades_de_Informacion_Crediticia.pdf
+  - nombre: CONDUSEF, Alerta sobre página web que ofrece borrar el historial del Buró de Crédito
+    url: https://www.gob.mx/condusef/prensa/alerta-condusef-sobre-pagina-web-que-ofrece-borrar-el-historial-del-buro-de-credito
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+En el <Termino id="buro-de-credito">buró</Termino> están todos los que tienen crédito, paguen o no. Lo que cambia es cómo se ve su historial. Este mes, Leo no pagó su tarjeta.
+
+<VideoReel archivo="si-no-pagas-tu-tarjeta" segundos={27} titulo="Video: qué pasa si no pagas tu tarjeta de crédito">
+	¿Y si no pagas tu tarjeta? Si no pagas a tiempo, pueden cobrarte una comisión por atraso, y también intereses moratorios. El atraso queda en tu historial. Si te llaman de cobranza, deben tratarte con respeto, llamar de 7:00 a 22:00 y nunca amenazarte. Un atraso puede quedarse en tu historial hasta 6 años: 72 meses. ¿No te alcanza? Habla con tu banco. Pregunta tus opciones antes de atrasarte. No lo ignores.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Leo no pagó a tiempo. ¿Cuánto tarda en pagar?"
+	icono="seal-warning"
+	etiqueta="Qué puede pasar"
+	opciones={[
+		{
+			boton: 'Unos días', sub: 'tarde',
+			titulo: 'Su pago va', destacado: 'tarde',
+			cuentas: [{ icono: 'receipt', etq: 'Comisión por pago tardío', valor: 'Posible' }],
+			idea: 'Y paga intereses.',
+		},
+		{
+			boton: 'Un mes', sub: 'pasa otro corte',
+			titulo: 'Ya es', destacado: 'falta de pago',
+			cuentas: [
+				{ icono: 'percent', etq: 'Intereses moratorios', valor: 'Posibles' },
+				{ icono: 'file-text', etq: 'Atraso en su historial', valor: 'Posible', tono: 'morado' },
+			],
+			idea: 'Ya no está al corriente.',
+		},
+		{
+			boton: 'Meses', sub: 'sin pagar',
+			titulo: 'Llega', destacado: 'la cobranza',
+			cuentas: [
+				{ icono: 'credit-card', etq: 'Le cancelan la tarjeta', valor: 'Posible' },
+				{ icono: 'file-text', etq: 'Atraso en su historial', valor: 'Hasta 6 años', tono: 'morado' },
+			],
+			idea: 'Mejor hablar antes.',
+		},
+	]}
+	como={['Los costos dependen del contrato de cada tarjeta.']}
+/>
+
+---
+
+## ¿Qué reglas hay?
+
+<ListaIconos
+	items={[
+		{ icono: 'check-circle', tono: 'bien', titulo: 'La cobranza tiene reglas', texto: 'Con respeto y solo de 7:00 a 22:00.' },
+		{ icono: 'x-circle', tono: 'mal', titulo: 'No pueden amenazarte', texto: 'Ni cobrarle a tus amigos.' },
+		{ icono: 'file-text', tono: 'neutro', titulo: 'No es para siempre', texto: 'Por ley, se borra a los 72 meses.' },
+	]}
+/>
+
+<Nota titulo="Si un despacho te trata mal" fuente="CONDUSEF, REDECO">
+	Un <Termino id="despacho-de-cobranza">despacho de cobranza</Termino> no puede recibir tu pago. Si te amenaza, quéjate en el REDECO de CONDUSEF.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Este mes a Leo no le alcanza para pagar su tarjeta. ¿Qué le conviene?"
+	opciones={[
+		'No contestar las llamadas',
+		'Llamar a su banco antes de la fecha límite',
+		'Pagarle en efectivo al cobrador',
+	]}
+	correcta={1}
+	porque={[
+		'Ignorarlo no frena la deuda.',
+		'Exacto. Su banco le dice qué opciones tiene.',
+		'Se paga solo a la institución.',
+	]}
+>
+	Atrasarte puede costar <Termino id="intereses-moratorios">moratorios</Termino>. Habla a tiempo.
+</Ejercicio>

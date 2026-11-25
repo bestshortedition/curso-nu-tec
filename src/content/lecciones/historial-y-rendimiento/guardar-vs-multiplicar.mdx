@@ -1,0 +1,97 @@
+---
+numero: "5.4"
+descripcion: "Guardar tu dinero lo cuida. Ponerlo donde genere rendimiento lo hace crecer y le puede ganar a la inflación."
+minutos: 2
+duda:
+  pregunta: ¿Da igual guardar tu dinero en casa o donde te dé rendimiento?
+  tema: El dinero quieto pierde valor por la inflación. Aquí vas a ver la diferencia entre guardarlo y hacerlo crecer.
+  cita:
+    texto: Es mejor ahorrar que invertir.
+    quien: Joven con cuenta y tarjeta de crédito
+  cifra:
+    texto: 68% (17 de 25) no sabe que ahorrar en el banco genera dinero.
+    n: 17
+    de: 25
+accion: "Pregunta en casa si sus ahorros generan rendimiento."
+resumen:
+  - El dinero quieto pierde poder de compra.
+  - Con rendimiento crece. Si la GAT real es positiva, le gana a la inflación.
+  - Metas cercanas, dinero a la mano. Metas lejanas, déjalo crecer.
+palabras:
+  - rendimiento
+  - gat
+  - inflacion
+  - apartado-de-ahorro
+  - poder-de-compra
+fuentes:
+  - nombre: Banxico, Circular 12/2014, que modifica la Circular 35/2010 sobre la GAT (DOF, 28/07/2014)
+    url: https://www.banxico.org.mx/marco-normativo/normativa-emitida-por-el-banco-de-mexico/circular-35-2010/%7B112004D4-5601-BDC9-2335-2BE3FC5F4A67%7D.pdf
+  - nombre: CONDUSEF, No pongas en riesgo tu dinero, ahorra en mecanismos formales
+    url: https://www.gob.mx/condusef/prensa/no-pongas-en-riesgo-tu-dinero-ahorra-en-mecanismos-formales
+  - nombre: Banxico, Glosario
+    url: https://www.banxico.org.mx/divulgacion/glosario/glosario.html
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Mariana juntó **$5,000** de su trabajo de fin de semana. No los usará en 3 años.
+
+<VideoReel archivo="guardar-vs-multiplicar" segundos={26} titulo="Video: guardar $5,000 en un cajón o donde generen rendimiento">
+	Ejemplo ilustrativo, con precios que suben 4% al año. Ahorrar es bueno, pero ¿dónde? Mariana guarda $5,000 y no los toca en 3 años. En 3 años, sus $5,000 compran: en el cajón, lo que hoy cuesta $4,445; con rendimiento de 5%, lo que hoy cuesta $5,146. El dinero quieto encoge. Para metas cercanas, ten tu ahorro a la mano. Para metas lejanas, que genere rendimiento. Compara la GAT real. Guardar cuida tu dinero. Multiplicar lo hace crecer. Busca rendimiento que le gane a la inflación. Mira la GAT real.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Dónde deja Mariana sus $5,000 por 3 años?"
+	icono="piggy-bank"
+	opciones={[
+		{ boton: 'Cajón', sub: 'sin rendimiento', titulo: 'En 3 años tiene', destacado: '$5,000',
+			cuentas: [{ icono: 'coins', etq: 'Poder de compra', valor: '$4,445' }],
+			idea: 'Mismos billetes, compran menos.' },
+		{ boton: '3%', sub: 'de rendimiento', titulo: 'En 3 años tiene', destacado: '$5,464',
+			cuentas: [{ icono: 'coins', etq: 'Poder de compra', valor: '$4,857' }],
+			idea: 'Crece menos que los precios.' },
+		{ boton: '5%', sub: 'de rendimiento', titulo: 'En 3 años tiene', destacado: '$5,788',
+			cuentas: [{ icono: 'coins', etq: 'Poder de compra', valor: '$5,146', tono: 'verde' }],
+			buena: true, idea: 'Le gana a la inflación.' },
+	]}
+	como={['Ejemplo ilustrativo: precios que suben 4% al año. Tasas inventadas, sin impuestos.']}
+/>
+
+---
+
+## Guardar o multiplicar
+
+<ListaIconos
+	items={[
+		{ icono: 'piggy-bank', tono: 'neutro', titulo: 'Para metas cercanas', texto: 'Ahorro a la mano, en un apartado.' },
+		{ icono: 'plant', tono: 'bien', titulo: 'Para metas lejanas', texto: 'Que genere rendimiento.' },
+		{ icono: 'percent', tono: 'neutro', titulo: 'Compara la GAT real', texto: 'Ya descuenta la inflación.' },
+	]}
+/>
+
+En una institución formal, tu ahorro puede generar <Termino id="rendimiento">rendimiento</Termino>.
+
+<Nota titulo="GAT nominal y GAT real" fuente="Banxico, Circular 35/2010">
+	La <Termino id="gat">GAT</Termino> nominal es lo que gana tu ahorro al año, antes de impuestos. La real descuenta la <Termino id="inflacion">inflación</Termino> estimada.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Emi guarda $3,000 para su graduación, en 2 años. ¿Qué le conviene?"
+	opciones={['Una caja en su cuarto', 'Donde generen rendimiento, comparando la GAT real', 'Gastarlos ya']}
+	correcta={1}
+	porque={['Ahí no crecen.', 'Crece y sabe si le gana a la inflación.', 'Se queda sin meta.']}
+>
+	Con <Termino id="rendimiento">rendimiento</Termino>, tu ahorro puede crecer más que los precios.
+</Ejercicio>

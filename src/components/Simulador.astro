@@ -1,0 +1,347 @@
+---
+/**
+ * Simulador de opciones, con el mismo diseño que "El mínimo no alcanza" (lección 4.5).
+ * Eliges una opción y ves su resultado. Los resultados se escriben ya calculados en la
+ * lección (así el equipo los revisa a mano). Funciona sin JavaScript: son radios + CSS.
+ *
+ *   <Simulador
+ *     planteo="Te dan $500 a la semana. ¿Cuánto apartas primero?"
+ *     icono="target"
+ *     opciones={[
+ *       { boton: '$50', sub: 'a la semana', titulo: 'Juntas $1,500 en', destacado: '30 semanas',
+ *         cuentas: [{ icono: 'coins', etq: 'En un año', valor: '$2,600' }],
+ *         barra: [{ valor: 50, tono: 'morado' }, { valor: 450, tono: 'tinta' }],
+ *         idea: 'Poco a poco también se llega.' },
+ *       …hasta 4 opciones
+ *     ]}
+ *     leyenda={[{ tono: 'morado', texto: 'Ahorro' }, { tono: 'tinta', texto: 'Gasto' }]}
+ *     como={['Es un ejemplo para aprender…']}
+ *   />
+ *
+ * `etiqueta` por defecto es "Ejemplo ilustrativo". `buena: true` pinta la idea en verde.
+ * En `cuentas`, `tono: 'morado' | 'verde'` resalta un valor.
+ */
+import Icono, { type NombreIcono } from './Icono.astro';
+
+interface Cuenta {
+	icono: NombreIcono;
+	etq: string;
+	valor: string;
+	tono?: 'morado' | 'verde';
+}
+interface Opcion {
+	boton: string;
+	sub?: string;
+	titulo: string;
+	destacado: string;
+	cuentas?: Cuenta[];
+	barra?: { valor: number; tono: 'morado' | 'tinta' | 'verde' | 'lila' }[];
+	idea?: string;
+	buena?: boolean;
+}
+interface Props {
+	planteo: string;
+	opciones: Opcion[];
+	etiqueta?: string | null;
+	icono?: NombreIcono;
+	leyenda?: { tono: 'morado' | 'tinta' | 'verde' | 'lila'; texto: string }[];
+	como?: string[];
+}
+const { planteo, opciones, etiqueta = 'Ejemplo ilustrativo', icono = 'hourglass-medium', leyenda, como } = Astro.props;
+if (opciones.length < 2 || opciones.length > 4) throw new Error('El simulador necesita de 2 a 4 opciones.');
+const id = `sim-${Math.random().toString(36).slice(2, 8)}`;
+const maxBarra = Math.max(...opciones.map((o) => (o.barra ?? []).reduce((n, b) => n + b.valor, 0)), 1);
+---
+
+<figure class="sim">
+	{etiqueta && <p class="etiqueta">{etiqueta}</p>}
+	<p class="planteo">{planteo}</p>
+
+	<fieldset class="grupo">
+		<legend class="sr-only">{planteo}</legend>
+		{opciones.map((o, i) => (
+			<input class="radio sr-only" type="radio" name={id} id={`${id}-${i}`} checked={i === 0} aria-label={`${o.boton} ${o.sub ?? ''}`} />
+		))}
+
+		<div class:list={['botones', { tres: opciones.length === 3 }]} aria-hidden="true">
+			{opciones.map((o, i) => (
+				<label for={`${id}-${i}`} class="op">
+					<span class="op-t">{o.boton}</span>
+					{o.sub && <span class="op-s">{o.sub}</span>}
+				</label>
+			))}
+		</div>
+
+		<div class="resultados" aria-live="polite">
+			{opciones.map((o) => (
+				<div class="panel">
+					<p class="tiempo">
+						<Icono nombre={icono} tamano={22} />
+						<span>
+							{o.titulo} <strong>{o.destacado}</strong>
+						</span>
+					</p>
+					{o.cuentas && (
+						<dl class="cuentas">
+							{o.cuentas.map((c) => (
+								<div>
+									<dt><Icono nombre={c.icono} tamano={18} /> {c.etq}</dt>
+									<dd class:list={['cifra', c.tono]}>{c.valor}</dd>
+								</div>
+							))}
+						</dl>
+					)}
+					{o.barra && (
+						<div class="barra" aria-hidden="true">
+							{o.barra.map((b) => (
+								<span class={`b-${b.tono}`} style={`width:${(b.valor / maxBarra) * 100}%`} />
+							))}
+						</div>
+					)}
+					{o.barra && leyenda && (
+						<p class="leyenda" aria-hidden="true">
+							{leyenda.map((l) => (
+								<span><i class={`b-${l.tono}`} />{l.texto}</span>
+							))}
+						</p>
+					)}
+					{o.idea && <p class:list={['idea', { buena: o.buena }]}>{o.idea}</p>}
+				</div>
+			))}
+		</div>
+	</fieldset>
+
+	{como && (
+		<details class="como">
+			<summary>¿Cómo se calcula?</summary>
+			<ul>{como.map((c) => <li>{c}</li>)}</ul>
+		</details>
+	)}
+</figure>
+
+<style>
+	.sim {
+		margin: 1.25rem 0 0;
+		padding: 1.25rem;
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		background: #fff;
+	}
+	.etiqueta {
+		display: inline-block;
+		padding: 0.15rem 0.6rem;
+		border-radius: 999px;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		font-size: 0.75rem !important;
+		font-weight: 600;
+		color: var(--gris) !important;
+	}
+	.planteo {
+		margin-top: 0.75rem;
+		font-family: var(--f-titulo);
+		font-size: 1.25rem !important;
+		font-weight: 600;
+		line-height: 1.3 !important;
+		letter-spacing: -0.02em;
+		color: var(--tinta) !important;
+	}
+	.grupo {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		min-width: 0;
+	}
+	.botones {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+	.botones.tres {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+	.op {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 3.75rem;
+		padding: 0.6rem 0.875rem;
+		border-radius: var(--radio-chico);
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		cursor: pointer;
+		transition:
+			box-shadow 0.15s,
+			background 0.15s;
+	}
+	.op:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.op-t {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.2;
+	}
+	.op-s {
+		font-size: 0.8125rem;
+		color: var(--gris);
+		line-height: 1.3;
+	}
+	/* La opción elegida y su resultado (hasta 4 opciones). */
+	.radio:nth-of-type(1):checked ~ .botones .op:nth-child(1),
+	.radio:nth-of-type(2):checked ~ .botones .op:nth-child(2),
+	.radio:nth-of-type(3):checked ~ .botones .op:nth-child(3),
+	.radio:nth-of-type(4):checked ~ .botones .op:nth-child(4) {
+		background: var(--morado-claro);
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.radio:nth-of-type(1):focus-visible ~ .botones .op:nth-child(1),
+	.radio:nth-of-type(2):focus-visible ~ .botones .op:nth-child(2),
+	.radio:nth-of-type(3):focus-visible ~ .botones .op:nth-child(3),
+	.radio:nth-of-type(4):focus-visible ~ .botones .op:nth-child(4) {
+		outline: 3px solid var(--morado);
+		outline-offset: 2px;
+	}
+	.panel {
+		display: none;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--linea);
+		animation: aparecer 0.25s ease-out;
+	}
+	.radio:nth-of-type(1):checked ~ .resultados .panel:nth-child(1),
+	.radio:nth-of-type(2):checked ~ .resultados .panel:nth-child(2),
+	.radio:nth-of-type(3):checked ~ .resultados .panel:nth-child(3),
+	.radio:nth-of-type(4):checked ~ .resultados .panel:nth-child(4) {
+		display: block;
+	}
+	@keyframes aparecer {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+	.tiempo {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		font-size: 1.0625rem !important;
+		color: var(--tinta-2) !important;
+	}
+	.tiempo :global(.icono) {
+		color: var(--morado);
+		margin-top: 0.1rem;
+	}
+	.tiempo strong {
+		display: block;
+		font-family: var(--f-titulo);
+		font-size: 1.625rem;
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1.15;
+		color: var(--tinta);
+	}
+	.cuentas {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
+		margin: 1rem 0 0;
+	}
+	.cuentas div {
+		padding: 0.75rem;
+		border-radius: var(--radio-chico);
+		background: var(--fondo-2);
+	}
+	.cuentas div:only-child {
+		grid-column: 1 / -1;
+	}
+	.cuentas dt {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.cuentas dd {
+		margin: 0.2rem 0 0;
+		font-size: 1.375rem;
+		font-weight: 600;
+		color: var(--tinta);
+	}
+	.cuentas dd.morado {
+		color: var(--morado);
+	}
+	.cuentas dd.verde {
+		color: var(--verde);
+	}
+	.barra {
+		display: flex;
+		height: 12px;
+		margin-top: 1rem;
+		border-radius: 999px;
+		overflow: hidden;
+		background: var(--fondo-2);
+	}
+	.b-tinta {
+		background: var(--tinta);
+	}
+	.b-morado {
+		background: var(--morado);
+	}
+	.b-verde {
+		background: var(--verde);
+	}
+	.b-lila {
+		background: #c79af0;
+	}
+	.leyenda {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.25rem;
+		margin-top: 0.5rem;
+		font-size: 0.8125rem !important;
+		color: var(--gris) !important;
+	}
+	.leyenda span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.leyenda i {
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 3px;
+	}
+	.idea {
+		margin-top: 0.875rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem !important;
+		color: var(--morado-oscuro) !important;
+	}
+	.idea.buena {
+		color: var(--verde) !important;
+	}
+	.como {
+		margin-top: 0.75rem;
+		font-size: 0.9375rem;
+	}
+	.como summary {
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--tinta-2);
+	}
+	.como ul {
+		margin: 0.25rem 0 0;
+		padding-left: 1.1rem;
+		color: var(--gris);
+	}
+	.como li + li {
+		margin-top: 0.4rem;
+	}
+</style>

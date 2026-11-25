@@ -1,0 +1,88 @@
+---
+numero: "5.6"
+descripcion: "Lo que gana tu ahorro también gana. Por eso empezar a los 18 con poco puede rendir más que empezar a los 35 con el doble."
+minutos: 2
+duda:
+  pregunta: ¿Por qué empezar a ahorrar a los 18 hace tanta diferencia?
+  tema: Cuando tu ahorro genera rendimiento, ese rendimiento también genera. Es el interés compuesto, y el tiempo es su mejor aliado.
+accion: "Anota cuánto podrías apartar cada mes desde los 18, aunque sea poco."
+resumen:
+  - Lo que gana tu ahorro también empieza a ganar.
+  - "En el ejemplo, $300 al mes desde los 18 juntan casi el doble que $600 desde los 35."
+  - Empieza con poco, pero empieza pronto.
+palabras:
+  - interes-compuesto
+  - rendimiento
+  - gat
+fuentes:
+  - nombre: Banxico, Glosario (interés compuesto)
+    url: https://www.banxico.org.mx/divulgacion/glosario/glosario.html
+  - nombre: Banxico, Circular 12/2014, que modifica la Circular 35/2010 sobre la GAT (DOF, 28/07/2014)
+    url: https://www.banxico.org.mx/marco-normativo/normativa-emitida-por-el-banco-de-mexico/circular-35-2010/%7B112004D4-5601-BDC9-2335-2BE3FC5F4A67%7D.pdf
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo aparta **$300** al mes desde los 18. Su prima Ana, **$600** al mes desde los 35.
+
+<VideoReel archivo="interes-compuesto" segundos={26} titulo="Video: empezar a ahorrar a los 18 contra empezar a los 35">
+	Ejemplo ilustrativo, con un rendimiento de 6% al año. Empezar a los 18 le gana al doble. Leo aparta $300 al mes desde los 18. Ana aparta $600 al mes desde los 35. A los 50 años, Leo tiene $347,304 y Ana $174,491. Mitad al mes, doble al final. De lo que tiene Leo, 33% lo puso él y 67% lo ganó su dinero. Lo ganado también gana, y el tiempo multiplica. Empieza con poco, pero empieza pronto. El tiempo pesa más que la cantidad.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Aparta cada mes hasta los 50. ¿Cuándo empieza?"
+	icono="trend-up"
+	opciones={[
+		{ boton: 'A los 18', sub: '$300 al mes', titulo: 'A los 50 tiene', destacado: '$347,304',
+			cuentas: [{ icono: 'coins', etq: 'Puso', valor: '$115,200' }, { icono: 'trend-up', etq: 'Ganó su dinero', valor: '$232,104', tono: 'verde' }],
+			barra: [{ valor: 115200, tono: 'tinta' }, { valor: 232104, tono: 'verde' }],
+			buena: true, idea: 'El tiempo hizo casi todo.' },
+		{ boton: 'A los 25', sub: '$300 al mes', titulo: 'A los 50 tiene', destacado: '$207,898',
+			cuentas: [{ icono: 'coins', etq: 'Puso', valor: '$90,000' }, { icono: 'trend-up', etq: 'Ganó su dinero', valor: '$117,898', tono: 'verde' }],
+			barra: [{ valor: 90000, tono: 'tinta' }, { valor: 117898, tono: 'verde' }],
+			idea: 'Siete años después: $139,406 menos.' },
+		{ boton: 'A los 35', sub: '$600 al mes', titulo: 'A los 50 tiene', destacado: '$174,491',
+			cuentas: [{ icono: 'coins', etq: 'Puso', valor: '$108,000' }, { icono: 'trend-up', etq: 'Ganó su dinero', valor: '$66,491', tono: 'verde' }],
+			barra: [{ valor: 108000, tono: 'tinta' }, { valor: 66491, tono: 'verde' }],
+			idea: 'Pone el doble y junta como la mitad.' },
+	]}
+	leyenda={[{ tono: 'tinta', texto: 'Puso' }, { tono: 'verde', texto: 'Ganó su dinero' }]}
+	como={['Ejemplo ilustrativo: 6% al año, sumado cada mes. Sin impuestos ni inflación.']}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'coins', tono: 'neutro', titulo: 'Tu dinero gana', texto: 'Se suma a tu ahorro.' },
+		{ icono: 'trend-up', tono: 'bien', titulo: 'Lo ganado también gana', texto: 'Cada mes ganas sobre más.' },
+		{ icono: 'hourglass-medium', tono: 'neutro', titulo: 'El tiempo es la clave', texto: 'Más años, más crece.' },
+	]}
+/>
+
+<Nota titulo="Interés compuesto" fuente="Banxico, Glosario">
+	El <Termino id="interes-compuesto">interés compuesto</Termino> se suma al dinero que lo produjo y genera nuevos intereses.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Vale tiene 18 y puede apartar $200 al mes. ¿Qué le conviene?"
+	opciones={['Esperar a los 30 para apartar más', 'Empezar ya, donde genere rendimiento', 'Guardar efectivo']}
+	correcta={1}
+	porque={['Pierde 12 años de crecimiento.', 'Más tiempo, más crece.', 'No genera rendimiento.']}
+>
+	El tiempo es lo que más ayuda al <Termino id="interes-compuesto">interés compuesto</Termino>.
+</Ejercicio>

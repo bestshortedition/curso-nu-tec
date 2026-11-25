@@ -1,0 +1,83 @@
+---
+numero: "1.5"
+descripcion: "\"Quiero ahorrar\" no es una meta. Ponle nombre, precio y fecha, y sabrás cuánto apartar cada semana."
+minutos: 2
+duda:
+  pregunta: ¿Cómo no perder las ganas de ahorrar a la mitad?
+  tema: Ahorrar "para algo" se olvida rápido. Una meta con nombre, precio y fecha te dice cuánto apartar y cuándo llegas.
+accion: "Escribe una meta con nombre, precio y fecha. Divide el precio entre las semanas que faltan."
+resumen:
+  - Una buena meta tiene nombre, precio y fecha.
+  - Divide el precio entre las semanas que faltan y sabrás cuánto apartar.
+  - Si no llegas, aparta un poco más o mueve la fecha.
+palabras:
+  - apartado-de-ahorro
+  - presupuesto
+fuentes:
+  - nombre: CONDUSEF, Presupuesto. Toma el control de tu dinero (cuaderno de educación financiera)
+    url: https://www.condusef.gob.mx/documentos/275532_PRESUPUESTO_versi_n_electr_nica__4_hojas_menos_.pdf
+  - nombre: CONDUSEF, Ahorro. El primer paso para alcanzar tus metas (cuaderno de educación financiera)
+    url: https://www.condusef.gob.mx/documentos/275536_AHORRO.PDF
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Sofi quiere ir a un concierto. El boleto cuesta **$1,800** y faltan **12 semanas**.
+
+<VideoReel archivo="metas-de-ahorro" segundos={26} titulo="Video: cómo armar una meta de ahorro para un boleto de $1,800">
+	Ejemplo ilustrativo. "Quiero ahorrar" no es una meta. Una meta dice qué: un boleto para el concierto; cuánto: $1,800; y cuándo: en 12 semanas. $1,800 entre 12 semanas son $150 a la semana. 12 semanas de $150: boleto listo. Ponle nombre, precio y fecha. Divide el precio entre las semanas. Meta entre semanas.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Boleto de $1,800 en 12 semanas. ¿Cuánto aparta Sofi cada semana?"
+	icono="target"
+	opciones={[
+		{ boton: '$100', sub: 'a la semana', titulo: 'Junta $1,800 en', destacado: '18 semanas',
+			cuentas: [{ icono: 'calendar-check', etq: 'En 12 semanas tiene', valor: '$1,200' }],
+			idea: 'No llega a tiempo: le faltan $600.' },
+		{ boton: '$150', sub: 'a la semana', titulo: 'Junta $1,800 en', destacado: '12 semanas',
+			cuentas: [{ icono: 'calendar-check', etq: 'En 12 semanas tiene', valor: '$1,800', tono: 'verde' }],
+			buena: true, idea: 'Llega justo a tiempo.' },
+		{ boton: '$200', sub: 'a la semana', titulo: 'Junta $1,800 en', destacado: '9 semanas',
+			cuentas: [{ icono: 'calendar-check', etq: 'Antes de la fecha', valor: '3 semanas', tono: 'verde' }],
+			buena: true, idea: 'Llega antes, si le alcanza para lo demás.' },
+	]}
+	como={['Semanas = $1,800 entre lo que aparta cada semana.']}
+/>
+
+---
+
+## ¿Qué hace una buena meta?
+
+<ListaIconos
+	items={[
+		{ icono: 'ticket', tono: 'neutro', titulo: 'Nombre', texto: 'Qué quieres: un boleto, unos tenis, un viaje.' },
+		{ icono: 'money', tono: 'neutro', titulo: 'Precio', texto: 'Cuánto cuesta, investigado de verdad.' },
+		{ icono: 'calendar-check', tono: 'bien', titulo: 'Fecha', texto: 'Cuándo lo quieres. Así sabes cuánto apartar.' },
+	]}
+/>
+
+<Nota titulo="Cómo es una meta" fuente="CONDUSEF, cuaderno Presupuesto">
+	Clara, realista y medible. Escribe qué quieres, cuánto cuesta y en cuánto tiempo.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Leo quiere unos tenis de $1,200 en 8 semanas. ¿Cuál es su mejor plan?"
+	opciones={['Ahorrar lo más que pueda', 'Apartar $150 cada semana durante 8 semanas', 'Esperar a ver si le sobra algo']}
+	correcta={1}
+	porque={['Sin una cantidad fija, no sabe si llegará.', '$1,200 entre 8 semanas son $150. Así llega a tiempo.', 'Casi nunca sobra: así no llega.']}
+>
+	Pon cada semana tu ahorro en un <Termino id="apartado-de-ahorro">apartado</Termino> con el nombre de tu meta.
+</Ejercicio>

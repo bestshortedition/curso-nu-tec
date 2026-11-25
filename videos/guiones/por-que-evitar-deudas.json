@@ -1,0 +1,83 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Un crédito",
+      "b": "no es dinero extra."
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 5,
+      "sobre": "Leo recibe al mes",
+      "etiqueta": "Domingo y trabajo",
+      "monto": "$1,000",
+      "pie": "Pide $600 para unos audífonos."
+    },
+    {
+      "tipo": "barra",
+      "dur": 5.5,
+      "sobre": "El mes siguiente recibe $1,000, pero…",
+      "total": "$1,000",
+      "partes": [
+        {
+          "valor": 600,
+          "texto": "$600",
+          "etq": "ya tienen dueño"
+        },
+        {
+          "valor": 400,
+          "texto": "$400",
+          "etq": "para todo el mes"
+        }
+      ]
+    },
+    {
+      "tipo": "comparar",
+      "dur": 5.5,
+      "sobre": "Lo que le queda el próximo mes",
+      "columnas": [
+        {
+          "valor": 400,
+          "texto": "$400",
+          "etq": "Pide prestado"
+        },
+        {
+          "valor": 700,
+          "texto": "$700",
+          "etq": "Ahorra $300",
+          "resaltar": true
+        }
+      ],
+      "remate": "Y en 2 meses, los compra."
+    },
+    {
+      "tipo": "lista",
+      "dur": 6.6,
+      "sobre": "Antes de pedir prestado:",
+      "items": [
+        {
+          "tono": "mal",
+          "texto": "Es dinero de tu próximo mes"
+        },
+        {
+          "tono": "neutro",
+          "texto": "¿Cuánto puedes pagar al mes?"
+        },
+        {
+          "tono": "bien",
+          "texto": "Si puedes esperar, ahorra"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "Pedir prestado",
+      "b": "no te da más dinero.",
+      "c": "Le quitas dinero a tu próximo mes.",
+      "destacado": "Primero, haz cuentas"
+    }
+  ]
+}

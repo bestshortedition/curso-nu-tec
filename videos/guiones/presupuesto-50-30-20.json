@@ -1,0 +1,18 @@
+{
+  "aviso": "Ejemplo ilustrativo",
+  "escenas": [
+    { "tipo": "gancho", "dur": 3.4, "a": "Te dan $500.", "b": "¿Cómo lo repartes?" },
+    { "tipo": "barra", "dur": 6, "sobre": "La regla 50/30/20", "total": "$500", "partes": [
+      { "valor": 50, "texto": "$250", "etq": "Básicos" },
+      { "valor": 30, "texto": "$150", "etq": "Gustos" },
+      { "valor": 20, "texto": "$100", "etq": "Ahorro" }
+    ] },
+    { "tipo": "lista", "dur": 6.6, "items": [
+      { "tono": "neutro", "texto": "50%: pasajes y comida en la prepa" },
+      { "tono": "neutro", "texto": "30%: salidas, cine y juegos" },
+      { "tono": "bien", "texto": "20%: ahorro, antes de gastar" }
+    ] },
+    { "tipo": "cifra", "dur": 5, "sobre": "Con $100 a la semana, en un año:", "valor": "$5,200", "pie": "solo con tu 20%", "color": "morado" },
+    { "tipo": "cierre", "dur": 5, "a": "Básicos, gustos", "b": "y ahorro.", "c": "Ajusta los números a tu vida.", "destacado": "50 · 30 · 20" }
+  ]
+}

@@ -1,0 +1,80 @@
+---
+numero: "2.6"
+descripcion: Algunas cuentas cobran por tenerlas o por no dejar un saldo mínimo. Así detectas esas comisiones y cómo evitarlas.
+minutos: 2
+duda:
+  pregunta: ¿Por qué baja tu saldo si no gastaste nada?
+  tema: Algunas cuentas cobran por tenerlas o usarlas. Aquí vas a ver qué preguntar antes de abrir la tuya.
+accion: "Antes de abrir tu cuenta, pregunta: ¿cobra manejo de cuenta o pide saldo mínimo?"
+resumen:
+  - Las más comunes son manejo de cuenta, saldo mínimo y cajero de otro banco.
+  - Por ley, todo banco debe ofrecer una cuenta básica sin comisiones.
+  - Antes de abrir una cuenta, pregunta qué te cobran.
+palabras:
+  - comision
+  - cuenta-basica
+  - saldo-promedio-minimo
+  - tarjeta-de-debito
+fuentes:
+  - nombre: Banxico, Términos de cuentas de débito (cuentas básicas y comisiones más comunes)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-cuentas-deposito.jsp
+  - nombre: Banxico, Cuentas bancarias básicas (artículo 48 Bis 2 de la Ley de Instituciones de Crédito)
+    url: https://www.banxico.org.mx/CuentasBasicas/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Santi dejó **$500** en su cuenta. Seis meses después, sin gastar nada, tiene menos.
+
+<VideoReel archivo="comisiones" segundos={31} titulo="Video: cómo las comisiones bajan tu saldo">
+	Ejemplo ilustrativo. Tu saldo bajó y no gastaste nada. Santi dejó $500 y no usó su cuenta en 6 meses. Sin comisiones, tiene $500. Con $50 al mes, le quedan $200. La diferencia: comisiones. Cobros comunes: manejo de cuenta, no tener el saldo mínimo, cajero de otro banco y reponer tu tarjeta perdida. Una cuenta básica, por ley, no cobra por abrirla ni tenerla, trae tarjeta de débito y retiros gratis en cajeros de tu banco. Antes de abrir tu cuenta, pregunta qué te cobran. Todo banco debe ofrecer una cuenta básica.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Santi no usa su cuenta en 6 meses. ¿Qué cuenta tiene?"
+	icono="coins"
+	opciones={[
+		{ boton: 'Sin comisiones', sub: 'cuenta básica', titulo: 'Tiene', destacado: '$500', cuentas: [{ icono: 'receipt', etq: 'Comisiones', valor: '$0', tono: 'verde' }], barra: [{ valor: 500, tono: 'morado' }], buena: true },
+		{ boton: '$50 al mes', sub: 'manejo de cuenta', titulo: 'Tiene', destacado: '$200', cuentas: [{ icono: 'receipt', etq: 'Comisiones', valor: '$300', tono: 'morado' }], barra: [{ valor: 200, tono: 'morado' }, { valor: 300, tono: 'tinta' }] },
+		{ boton: '$40 al mes', sub: 'sin saldo mínimo', titulo: 'Tiene', destacado: '$260', cuentas: [{ icono: 'receipt', etq: 'Comisiones', valor: '$240', tono: 'morado' }], barra: [{ valor: 260, tono: 'morado' }, { valor: 240, tono: 'tinta' }] },
+	]}
+	leyenda={[{ tono: 'morado', texto: 'Le queda' }, { tono: 'tinta', texto: 'Comisiones' }]}
+	como={['Comisiones inventadas: las reales cambian.', '$500 − 6 × $50 = $200. $500 − 6 × $40 = $260.']}
+/>
+
+---
+
+## ¿Cómo evitarlas?
+
+<ListaIconos
+	items={[
+		{ icono: 'magnifying-glass', tono: 'mal', titulo: 'Las más comunes', texto: 'Manejo de cuenta, saldo mínimo, cajero de otro banco, reponer tarjeta.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Cuenta básica', texto: 'Gratis abrirla y tenerla, con tarjeta de débito.' },
+		{ icono: 'warning-circle', tono: 'neutro', titulo: 'Letra chica', texto: 'Algunas piden saldo mínimo.' },
+	]}
+/>
+
+<Nota titulo="Lo que dice la ley" fuente="Banxico, artículo 48 Bis 2 de la Ley de Instituciones de Crédito">
+	Los bancos deben ofrecer una <Termino id="cuenta-basica">cuenta básica</Termino> sin <Termino id="comision">comisiones</Termino>.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Mariana va a sacar $300. El cajero de su banco está a 10 minutos y el de otro banco, enfrente. ¿Cuál usa?"
+	opciones={['El de enfrente.', 'El de su banco.', 'Saca $150 en cada uno.']}
+	correcta={1}
+	porque={['Puede cobrarle comisión.', 'Diez minutos le ahorran un cobro.', 'Igual pagaría comisión en uno.']}
+>
+	Si una cuenta pide <Termino id="saldo-promedio-minimo">saldo promedio mínimo</Termino>, pregunta cuánto es.
+</Ejercicio>

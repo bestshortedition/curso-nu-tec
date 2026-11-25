@@ -1,0 +1,109 @@
+---
+numero: "4.3"
+descripcion: Meses sin intereses no es lo mismo que pagos chiquitos. Suma todos los pagos antes de aceptar.
+minutos: 2
+duda:
+  pregunta: ¿Meses sin intereses y pagos chiquitos son lo mismo?
+  tema: Muchas tiendas te dejan pagar en partes. A veces sin intereses y a veces con intereses escondidos.
+accion: "Elige algo a pagos. Multiplica el pago por el número de pagos y compáralo con el precio."
+resumen:
+  - "Pagos chiquitos: pago × número de pagos = lo que pagas de verdad."
+  - La mensualidad de los MSI no viene en el pago mínimo. Págala aparte.
+palabras:
+  - meses-sin-intereses
+  - pago-minimo
+  - interes
+  - limite-de-credito
+fuentes:
+  - nombre: Banxico, Términos financieros de tarjetas de crédito (meses sin intereses y pago mínimo)
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+  - nombre: CONDUSEF, Proteja su Dinero, Meses ¿sin intereses?
+    url: https://revista.condusef.gob.mx/credito/tarjeta/2012/05/meses-sin-intereses/
+  - nombre: CONDUSEF, Proteja su Dinero, Que el crédito fácil no te saque un grito (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/que-el-credito-facil-no-te-saque-un-grito/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Sofi quiere una consola de **$6,000**. ¿<Termino id="meses-sin-intereses">Meses sin intereses</Termino> o pagos chiquitos?
+
+<VideoReel archivo="msi-vs-pagos-chiquitos" segundos={30} titulo="Video: meses sin intereses contra pagos chiquitos">
+	Ejemplo ilustrativo. ¿Sin intereses o pagos chiquitos? Sofi quiere una consola de $6,000 de contado. A 6 meses sin intereses paga $6,000 en total: $1,000 al mes, completo y a tiempo. Con $180 a la semana paga $9,360: $3,360 de más. Ojo con los meses sin intereses: no vienen en el pago mínimo y, si no pagas uno, genera intereses. Suma todas tus mensualidades. Un pago chiquito puede salir caro: pago por plazo es igual al total.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="¿Cómo paga Sofi la consola de $6,000?"
+	icono="calendar-dots"
+	opciones={[
+		{
+			boton: '6 MSI', sub: '$1,000 al mes',
+			titulo: 'Paga en total', destacado: '$6,000',
+			cuentas: [{ icono: 'percent', etq: 'De más', valor: '$0', tono: 'verde' }],
+			barra: [{ valor: 6000, tono: 'tinta' }],
+			idea: 'Si paga cada mes completo y a tiempo.', buena: true,
+		},
+		{
+			boton: 'Pagos chiquitos', sub: '$180 a la semana',
+			titulo: 'Paga en total', destacado: '$9,360',
+			cuentas: [{ icono: 'percent', etq: 'De más', valor: '$3,360', tono: 'morado' }],
+			barra: [{ valor: 6000, tono: 'tinta' }, { valor: 3360, tono: 'morado' }],
+			idea: '$180 por 52 semanas.',
+		},
+		{
+			boton: 'Ahorra', sub: '$1,000 al mes',
+			titulo: 'Paga en total', destacado: '$6,000',
+			cuentas: [{ icono: 'calendar-check', etq: 'La compra en', valor: '6 meses' }],
+			barra: [{ valor: 6000, tono: 'verde' }],
+			idea: 'Espera, pero no debe nada.', buena: true,
+		},
+	]}
+	como={[
+		'Pagos inventados, de ninguna tienda real.',
+		'$180 × 52 = $9,360. $9,360 − $6,000 = $3,360.',
+	]}
+/>
+
+---
+
+## ¿Cuál es la diferencia?
+
+<ListaIconos
+	items={[
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Meses sin intereses', texto: 'El precio de contado, en partes.' },
+		{ icono: 'x-circle', tono: 'mal', titulo: 'Pagos chiquitos', texto: 'El pago es chico, el total no.' },
+		{ icono: 'calendar-dots', tono: 'neutro', titulo: 'Se van sumando', texto: 'Revisa si te alcanzan todas juntas.' },
+	]}
+/>
+
+<Nota titulo="Ojo con el pago mínimo" fuente="Banxico, Términos de tarjetas de crédito">
+	La mensualidad de los meses sin intereses no viene en el <Termino id="pago-minimo">pago mínimo</Termino>. Si no la pagas completa, lo que falta genera <Termino id="interes">intereses</Termino>.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Emi compró tenis a 6 meses sin intereses. Este mes paga solo el mínimo. ¿Qué pasa?"
+	opciones={[
+		'Nada: el mínimo ya incluye la mensualidad',
+		'La mensualidad que no pagó genera intereses',
+		'Ya no debe esa mensualidad: se la perdonan',
+	]}
+	correcta={1}
+	porque={[
+		'El mínimo no la incluye.',
+		'Exacto.',
+		'Nadie la perdona: sigue como deuda.',
+	]}
+>
+	Paga al menos el mínimo más tus mensualidades. Mejor aún: todo.
+</Ejercicio>

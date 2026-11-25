@@ -1,0 +1,108 @@
+---
+numero: "4.2"
+descripcion: El interés es la renta que pagas por usar dinero prestado. Entre más tardas en devolverlo, más pagas.
+minutos: 2
+duda:
+  pregunta: ¿Qué son los intereses y por qué crece lo que debes?
+  tema: Cuando usas dinero prestado, pagas una renta por él. Aquí vas a ver cuánto cuesta.
+accion: "Busca el CAT en un anuncio de tarjeta o préstamo."
+resumen:
+  - El interés es la renta del dinero prestado, más IVA en la tarjeta.
+  - Para comparar créditos, usa el CAT. Entre más bajo, más barato.
+palabras:
+  - interes
+  - cat
+  - fecha-limite-de-pago
+  - pago-para-no-generar-intereses
+  - comision
+fuentes:
+  - nombre: Banxico, Términos financieros de tarjetas de crédito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+  - nombre: Banxico, Calculadora del Costo Anual Total (CAT)
+    url: https://www.banxico.org.mx/CAT/
+  - nombre: CONDUSEF, Proteja su Dinero, Que el crédito fácil no te saque un grito (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/que-el-credito-facil-no-te-saque-un-grito/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Diego no pagó completo su tarjeta. Debe **$2,000** y le cobran renta por usarlos: los <Termino id="interes">intereses</Termino>.
+
+<VideoReel archivo="que-son-los-intereses" segundos={30} titulo="Video: cuánto cuesta la renta de $2,000 prestados">
+	Ejemplo ilustrativo: 45% anual más IVA. Pedir prestado cuesta renta. Diego debe $2,000 en su tarjeta, lo que no pagó completo. Su renta del primer mes es de $87: $75 de intereses y $12 de IVA. Si lo paga en partes iguales, la renta total es de $176 en 3 meses y de $608 en 12 meses. Más tiempo, más renta. Para comparar créditos, busca el CAT: entre más bajo, más barato. El interés es la renta del dinero. Si pagas todo antes de la fecha límite: $0 de intereses.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Diego ya no usa la tarjeta. ¿En cuánto tiempo paga los $2,000?"
+	icono="hourglass-medium"
+	opciones={[
+		{
+			boton: 'Todo', sub: 'antes de la fecha límite',
+			titulo: 'Paga de renta', destacado: '$0',
+			idea: 'Sin renta: lo devolvió a tiempo.', buena: true,
+		},
+		{
+			boton: '3 meses', sub: '$726 al mes',
+			titulo: 'Paga de renta', destacado: '$176',
+			cuentas: [{ icono: 'coins', etq: 'Paga en total', valor: '$2,176' }],
+			idea: 'Poco tiempo, poca renta.',
+		},
+		{
+			boton: '6 meses', sub: '$386 al mes',
+			titulo: 'Paga de renta', destacado: '$315',
+			cuentas: [{ icono: 'coins', etq: 'Paga en total', valor: '$2,315' }],
+			idea: 'Casi el doble de renta.',
+		},
+		{
+			boton: '12 meses', sub: '$218 al mes',
+			titulo: 'Paga de renta', destacado: '$608',
+			cuentas: [{ icono: 'coins', etq: 'Paga en total', valor: '$2,608' }],
+			idea: 'Pago chico, renta grande.',
+		},
+	]}
+	como={[
+		'Tasa ilustrativa de 45% anual más IVA (16%), sin comisiones ni compras nuevas.',
+		'Pagos iguales, redondeados al peso. El último es un poco menor.',
+	]}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'percent', tono: 'neutro', titulo: 'Es una renta', texto: 'En la tarjeta, más IVA.' },
+		{ icono: 'trend-up', tono: 'mal', titulo: 'Crece con el tiempo', texto: 'Cada mes que debes, pagas renta.' },
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Se puede evitar', texto: 'Paga todo antes de la fecha límite.' },
+	]}
+/>
+
+<Nota titulo="Para comparar, usa el CAT" fuente="Banxico, Calculadora del CAT">
+	El <Termino id="cat">CAT</Termino> junta en un porcentaje anual los costos de un crédito, sin IVA. El CAT más bajo cuesta menos.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Santi compara dos préstamos de $5,000 a 12 meses: CAT de 45% o de 80%. ¿Cuál cuesta menos?"
+	opciones={['El de CAT de 45%', 'El de CAT de 80%', 'Cuestan igual: los dos son de $5,000']}
+	correcta={0}
+	porque={[
+		'Exacto. Menor CAT, menor costo.',
+		'Un CAT más alto es más caro.',
+		'Prestan igual, pero no cobran igual.',
+	]}
+>
+	El <Termino id="cat">CAT</Termino> junta intereses y comisiones. Ejemplo ilustrativo.
+</Ejercicio>

@@ -1,0 +1,82 @@
+---
+numero: "1.6"
+descripcion: Un fondo de emergencia es dinero solo para imprevistos reales. Te ayuda a no pedir prestado cuando algo sale mal.
+minutos: 2
+duda:
+  pregunta: ¿Qué haces si de pronto necesitas dinero que no tenías planeado?
+  tema: Los imprevistos no avisan. Aquí ves qué es un fondo de emergencia, cuánto juntar y cuándo usarlo.
+accion: "Suma tus gastos básicos de un mes y multiplícalos por 3: esa es tu meta."
+resumen:
+  - Tu fondo de emergencia es solo para imprevistos reales.
+  - CONDUSEF recomienda juntar de 3 a 6 meses de tus gastos básicos.
+  - Empieza poco a poco y guárdalo separado de tu dinero diario.
+palabras:
+  - fondo-de-emergencia
+  - apartado-de-ahorro
+fuentes:
+  - nombre: CONDUSEF, ¿Un fondo de ahorro para emergencias?
+    url: https://www.condusef.gob.mx/?p=contenido&idc=2345&idcat=3
+  - nombre: CONDUSEF, Fondo de emergencia, tu mejor aliado en los momentos difíciles
+    url: https://www.condusef.gob.mx/index.php/?p=contenido&idc=2729&idcat=3
+  - nombre: CONDUSEF, Revista Proteja su Dinero, ¡Que tu cartera no dé el grito! (2024)
+    url: https://revista.condusef.gob.mx/ahorro-general/2024/09/fondo-de-emergencia/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+A Emi se le descompone el celular y lo necesita para la escuela. No tiene ahorro.
+
+<VideoReel archivo="fondo-de-emergencia" segundos={26} titulo="Video: cómo armar tu primer fondo de emergencia">
+	Ejemplo ilustrativo. Se descompuso tu celular. ¿Y ahora qué? Un fondo de emergencia sí es para: una consulta médica que no esperabas, o el celular que usas para la escuela. No es para: una consola en oferta, o boletos para un concierto. Emi gasta $800 al mes en básicos. Por 3 meses: $2,400, la meta de su fondo. Recibe $2,000 al mes y aparta $200, el 10%. Llega a $2,400 en 12 meses. Poco a poco también se llega. Solo para imprevistos. Guárdalo separado de tu dinero diario. Tu colchón.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Es emergencia o no?
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Emergencia', icono: 'lifebuoy' }, { texto: 'No es', icono: 'x-circle' }]}
+	items={[
+		{ frase: 'Una consulta médica que no esperabas.', correcta: 0, explicacion: 'Es imprevista y necesaria.' },
+		{ frase: 'Una consola de videojuegos en oferta.', correcta: 1, explicacion: 'Es un antojo.' },
+		{ frase: 'Se descompuso el celular que usas para la escuela.', correcta: 0, explicacion: 'No lo esperabas y lo necesitas.' },
+		{ frase: 'La preventa de boletos para tu banda favorita.', correcta: 1, explicacion: 'Es un gusto: dale otra meta.' },
+		{ frase: 'El regalo para el cumpleaños de tu mejor amigo.', correcta: 1, explicacion: 'Sabías la fecha. Se planea.' },
+	]}
+/>
+
+---
+
+## ¿Cómo se arma?
+
+<ListaIconos
+	items={[
+		{ icono: 'lifebuoy', tono: 'neutro', titulo: 'Solo para imprevistos', texto: 'Lo urgente y necesario.' },
+		{ icono: 'lock-simple', tono: 'bien', titulo: 'Separado', texto: 'Lejos de tu dinero diario.' },
+		{ icono: 'steps', tono: 'neutro', titulo: 'Poco a poco', texto: 'Aparta un poco cada vez que te pagan.' },
+	]}
+/>
+
+<Nota titulo="Cuánto juntar" fuente="CONDUSEF">
+	De 3 a 6 meses de tus gastos básicos. Aparta al menos 10% de lo que recibes hasta llegar.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Santi tiene $1,500 en su fondo de emergencia. Ve unos audífonos de $1,200 en oferta. ¿Qué hace?"
+	opciones={['Usar el fondo y reponerlo después', 'Dejar el fondo y ahorrar aparte', 'Pedir prestado']}
+	correcta={1}
+	porque={['Si llega una emergencia, se queda sin colchón.', 'El fondo sigue listo y los audífonos tienen su meta.', 'Endeudarse por un antojo cuesta más.']}
+>
+	Tu <Termino id="fondo-de-emergencia">fondo de emergencia</Termino> es para imprevistos. Los antojos van en otra meta.
+</Ejercicio>

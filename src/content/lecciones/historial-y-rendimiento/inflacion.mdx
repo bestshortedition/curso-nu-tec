@@ -1,0 +1,92 @@
+---
+numero: "5.3"
+descripcion: "Los precios suben poco a poco. Por eso $500 guardados en un cajón alcanzan para menos cada año."
+minutos: 2
+duda:
+  pregunta: ¿Por qué tus $500 guardados alcanzan para menos con el tiempo?
+  tema: Los precios suben poco a poco. A eso se le llama inflación. Aquí vas a ver qué le pasa al dinero quieto.
+accion: "Pregunta en casa cuánto costaba hace 5 años una torta o un refresco."
+resumen:
+  - La inflación es cuánto suben los precios. Banxico busca que sea de 3% al año.
+  - Tu billete sigue diciendo $500, pero compra menos.
+  - "En el ejemplo, en 3 años tus $500 valen como $444 de hoy."
+palabras:
+  - inflacion
+  - poder-de-compra
+  - rendimiento
+fuentes:
+  - nombre: Banxico, Política monetaria (material educativo, objetivo de inflación)
+    url: https://educa.banxico.org.mx/recursos/pdf/%7B444C789D-42FD-F521-24C3-5C1B56C6D569%7D.pdf
+  - nombre: Banxico, Glosario (inflación e INPC)
+    url: https://www.banxico.org.mx/divulgacion/glosario/glosario.html
+  - nombre: INEGI, Boletín del Índice Nacional de Precios al Consumidor, septiembre de 2026 (8/10/2026)
+    url: https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/inpc/inpc_2q2026_10.pdf
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Simulador from '../../../components/Simulador.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo guarda **$500** en un cajón para unos audífonos de $500. Los deja ahí 3 años.
+
+<VideoReel archivo="inflacion" segundos={25} titulo="Video: qué le pasa a $500 guardados en un cajón por 3 años">
+	Ejemplo ilustrativo, con precios que suben 4% al año. Guardas $500 y alcanzan para menos. Unos audífonos de $500, en 3 años, cuestan $562, y tus billetes siguen siendo $500. Tienes $500 y cuestan $562: te faltan $62. Banxico busca que la inflación sea de 3% al año. INEGI mide cuánto suben los precios. El dinero quieto pierde poder de compra. Tu billete no cambia, los precios sí. Guardar sin rendimiento te hace perder.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<Simulador
+	planteo="Leo deja $500 en un cajón. ¿Cuántos años?"
+	icono="trend-down"
+	opciones={[
+		{ boton: '1 año', titulo: 'Sus $500 ya valen como', destacado: '$481',
+			cuentas: [{ icono: 'trend-up', etq: 'Los audífonos cuestan', valor: '$520' }],
+			barra: [{ valor: 481, tono: 'morado' }, { valor: 19, tono: 'lila' }],
+			idea: 'Casi no se nota.' },
+		{ boton: '3 años', titulo: 'Sus $500 ya valen como', destacado: '$444',
+			cuentas: [{ icono: 'trend-up', etq: 'Los audífonos cuestan', valor: '$562', tono: 'morado' }],
+			barra: [{ valor: 444, tono: 'morado' }, { valor: 56, tono: 'lila' }],
+			idea: 'Ya no le alcanza.' },
+		{ boton: '5 años', titulo: 'Sus $500 ya valen como', destacado: '$411',
+			cuentas: [{ icono: 'trend-up', etq: 'Los audífonos cuestan', valor: '$608', tono: 'morado' }],
+			barra: [{ valor: 411, tono: 'morado' }, { valor: 89, tono: 'lila' }],
+			idea: 'Entre más tiempo, más pierde.' },
+	]}
+	leyenda={[{ tono: 'morado', texto: 'Lo que vale' }, { tono: 'lila', texto: 'Lo que perdió' }]}
+	como={['Ejemplo ilustrativo: los precios suben 4% cada año.']}
+/>
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'trend-up', tono: 'neutro', titulo: 'Los precios suben', texto: 'En promedio, un poco cada año.' },
+		{ icono: 'chart-line-up', tono: 'neutro', titulo: 'INEGI lo mide', texto: 'Con los precios de lo que compran los hogares.' },
+		{ icono: 'coins', tono: 'mal', titulo: 'El dinero quieto pierde', texto: 'El billete es el mismo, pero compra menos.' },
+	]}
+/>
+
+Eso es la <Termino id="inflacion">inflación</Termino>: baja tu <Termino id="poder-de-compra">poder de compra</Termino>.
+
+<Nota titulo="La meta de Banxico" fuente="Banxico e INEGI">
+	Banxico busca una inflación de 3% al año, con un punto de margen. En septiembre de 2026 fue de 3.45%.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Sofi guardó $1,000 en su cuarto hace dos años. Los precios subieron. ¿Qué pasó?"
+	opciones={['Tiene $1,000, pero compran menos', 'Tiene menos de $1,000', 'Compran lo mismo']}
+	correcta={0}
+	porque={['Los billetes son iguales; las cosas cuestan más.', 'Los billetes no cambian.', 'Los precios subieron.']}
+>
+	La inflación no te quita billetes: hace que compren menos. Por eso conviene que tu ahorro genere <Termino id="rendimiento">rendimiento</Termino>.
+</Ejercicio>

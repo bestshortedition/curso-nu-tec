@@ -1,0 +1,86 @@
+---
+numero: "5.2"
+descripcion: "Sin historial, nadie sabe cómo pagas. Pasos seguros para empezar tu historial crediticio apenas cumples 18."
+minutos: 2
+duda:
+  pregunta: ¿Cómo empiezas un historial si nunca has tenido un crédito?
+  tema: Para que te presten, ayuda que vean cómo has pagado antes. Aquí vas a ver cómo empezar tu historial desde cero, sin meterte en problemas.
+  cita:
+    texto: Yo pensaba que al buró nomás entrabas cuando quedabas debiendo.
+    quien: Joven de 17 años, sin cuenta
+accion: "Escribe tu regla para tu primer crédito: compro solo lo que puedo pagar completo y a tiempo."
+resumen:
+  - No tener historial no es una ventaja. Tu historial empieza con tu primer crédito.
+  - Empieza con poco, paga el total a tiempo y revisa tu reporte.
+  - Una tarjeta garantizada es una opción si aún no tienes historial.
+palabras:
+  - historial-crediticio
+  - tarjeta-garantizada
+  - buro-de-credito
+  - fecha-limite-de-pago
+  - reporte-de-credito-especial
+fuentes:
+  - nombre: CONDUSEF, Revista Proteja su Dinero, Desmitificando el Buró (septiembre de 2026)
+    url: https://revista.condusef.gob.mx/credito/2026/09/desmitificando-el-buro/
+  - nombre: CONDUSEF, Revista Proteja su Dinero, Buen historial crediticio
+    url: https://revista.condusef.gob.mx/usuario-inteligente/ponlo-en-la-balanza/2017/01/buen-historial-crediticio/
+  - nombre: CONDUSEF, Revista Proteja su Dinero, ¿Cuál tarjeta me conviene? (tarjeta garantizada)
+    url: https://revista.condusef.gob.mx/credito/tarjeta/2012/08/cual-tarjeta-me-conviene/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Diego cumple 18 y no tiene <Termino id="historial-crediticio">historial crediticio</Termino>. ¿Por dónde empieza?
+
+<VideoReel archivo="historial-desde-cero" segundos={27} titulo="Video: cuatro pasos para empezar tu historial crediticio desde cero">
+	Sin historial, nadie sabe cómo pagas: es como un currículum sin experiencia. Para empezar: un crédito pequeño o tarjeta garantizada, usa solo lo que puedes pagar, paga el total a tiempo y revisa tu reporte cada año. Lo que daña: atrasarte, aunque sean pocos días, y liquidar una deuda con descuento. Cada pago a tiempo suma.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Esto ayuda a tu historial o no?
+
+<Clasifica
+	opciones={[{ texto: 'Ayuda', icono: 'check-circle' }, { texto: 'No ayuda', icono: 'x-circle' }]}
+	items={[
+		{ frase: 'Pagar el total de tu tarjeta antes de la fecha límite.', correcta: 0, explicacion: 'Cada pago puntual cuenta a tu favor.' },
+		{ frase: 'Pagar 3 días tarde, porque “no pasa nada”.', correcta: 1, explicacion: 'Evita atrasarte, aunque sean pocos días.' },
+		{ frase: 'Nunca pedir un crédito para no “caer” en el buró.', correcta: 1, explicacion: 'Sin historial, nadie ve cómo pagas.' },
+		{ frase: 'Liquidar una deuda con descuento.', correcta: 1, explicacion: 'Pagar menos de lo que debías afecta tu historial.' },
+	]}
+/>
+
+---
+
+## ¿Cómo empezar?
+
+<ListaIconos
+	items={[
+		{ icono: 'steps', tono: 'neutro', titulo: 'Empieza con poco', texto: 'Crédito pequeño o tarjeta garantizada.' },
+		{ icono: 'calendar-check', tono: 'bien', titulo: 'Paga completo y a tiempo', texto: 'Cada pago puntual cuenta.' },
+		{ icono: 'magnifying-glass', tono: 'neutro', titulo: 'Revisa tu reporte', texto: 'Si algo está mal, pide aclaración.' },
+	]}
+/>
+
+<Nota titulo="Tarjeta garantizada" fuente="CONDUSEF">
+	Dejas un depósito como respaldo. Si pagas bien, después te lo regresan.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Diego tiene su primera tarjeta garantizada. ¿Qué le ayuda más a su historial?"
+	opciones={['Usarla toda y pagar el mínimo', 'Comprar poco y pagar el total a tiempo', 'No usarla nunca']}
+	correcta={1}
+	porque={['El mínimo genera intereses.', 'Paga a tiempo y sin intereses.', 'Sin pagos, no hay historial.']}
+>
+	Tu historial crece pagando completo antes de la <Termino id="fecha-limite-de-pago">fecha límite de pago</Termino>.
+</Ejercicio>

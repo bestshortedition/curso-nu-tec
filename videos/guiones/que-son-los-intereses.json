@@ -1,0 +1,79 @@
+{
+  "aviso": "Ejemplo ilustrativo: 45% anual + IVA",
+  "escenas": [
+    {
+      "tipo": "gancho",
+      "dur": 3.4,
+      "a": "Pedir prestado",
+      "b": "cuesta renta."
+    },
+    {
+      "tipo": "tarjeta",
+      "dur": 5,
+      "sobre": "Diego debe en su tarjeta",
+      "etiqueta": "Lo que no pagó completo",
+      "monto": "$2,000",
+      "pie": "Cada mes, eso genera intereses."
+    },
+    {
+      "tipo": "barra",
+      "dur": 5.5,
+      "sobre": "Su renta del primer mes",
+      "total": "$87",
+      "partes": [
+        {
+          "valor": 75,
+          "texto": "$75",
+          "etq": "de intereses"
+        },
+        {
+          "valor": 12,
+          "texto": "$12",
+          "etq": "de IVA"
+        }
+      ]
+    },
+    {
+      "tipo": "comparar",
+      "dur": 5.5,
+      "sobre": "Renta total si paga en partes iguales",
+      "columnas": [
+        {
+          "valor": 176,
+          "texto": "$176",
+          "etq": "En 3 meses"
+        },
+        {
+          "valor": 608,
+          "texto": "$608",
+          "etq": "En 12 meses",
+          "resaltar": true
+        }
+      ],
+      "remate": "Más tiempo, más renta."
+    },
+    {
+      "tipo": "lista",
+      "dur": 5.6,
+      "sobre": "Para comparar créditos:",
+      "items": [
+        {
+          "tono": "neutro",
+          "texto": "Busca el CAT de cada uno"
+        },
+        {
+          "tono": "bien",
+          "texto": "Entre más bajo, más barato"
+        }
+      ]
+    },
+    {
+      "tipo": "cierre",
+      "dur": 5,
+      "a": "El interés es",
+      "b": "la renta del dinero.",
+      "c": "Paga todo antes de la fecha límite.",
+      "destacado": "$0 de intereses"
+    }
+  ]
+}

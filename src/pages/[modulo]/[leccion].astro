@@ -48,7 +48,15 @@ const base = import.meta.env.BASE_URL;
 const urlModulo = `${base}${modulo.clave}/`;
 const urlPublica = new URL(Astro.url.pathname, Astro.site).href;
 const whatsapp = `https://wa.me/?text=${encodeURIComponent(`${leccion.titulo}\n${d.descripcion}\n${urlPublica}`)}`;
-const og = ['credito'].includes(modulo.clave) ? modulo.clave : 'general';
+// Imagen de vista previa (WhatsApp) de cada módulo, en public/og/.
+const ogPorModulo: Record<string, string> = {
+	'gastos-y-ahorro': 'ahorro',
+	'primera-cuenta': 'primera-cuenta',
+	'pagar-y-transferir': 'seguridad',
+	credito: 'credito',
+	'historial-y-rendimiento': 'general',
+};
+const og = ogPorModulo[modulo.clave] ?? 'general';
 const otroModulo = siguiente && siguiente.modulo !== modulo.clave;
 const palabras = d.palabras.map(buscarPalabra);
 ---
@@ -117,6 +125,13 @@ const palabras = d.palabras.map(buscarPalabra);
 				</div>
 
 				<p class="tema">{d.duda.tema}</p>
+
+				{d.duda.cita && (
+					<figure class="cita">
+						<blockquote>“{d.duda.cita.texto}”</blockquote>
+						<figcaption>{d.duda.cita.quien}</figcaption>
+					</figure>
+				)}
 
 				<div class="duda">
 					<p class="duda-etq"><Icono nombre="question" tamano={20} /> La duda que vas a resolver</p>
@@ -494,6 +509,25 @@ const palabras = d.palabras.map(buscarPalabra);
 		line-height: 1.55;
 		color: var(--tinta-2);
 	}
+	.cita {
+		margin: 1.5rem 0 0;
+		padding-left: 1.125rem;
+		border-left: 3px solid var(--morado);
+	}
+	.cita blockquote {
+		margin: 0;
+		font-family: var(--f-display);
+		font-size: clamp(1.625rem, 7vw, 2rem);
+		font-style: italic;
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+		color: var(--tinta);
+	}
+	.cita figcaption {
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
 	.duda {
 		margin-top: 1.25rem;
 		padding: 1.25rem;
@@ -644,15 +678,25 @@ const palabras = d.palabras.map(buscarPalabra);
 		letter-spacing: -0.035em;
 		margin-bottom: 1rem;
 	}
-	.contenido :global(p:not(.sobretitulo)) {
+	/* Solo los párrafos del texto de la lección, no los de los componentes (simuladores, juegos). */
+	.contenido > :global(p:not(.sobretitulo)),
+	.contenido :global(.pantalla > p:not(.sobretitulo)) {
 		font-size: 1.1875rem;
 		line-height: 1.55;
 		color: var(--tinta-2);
 	}
-	.contenido :global(p + p) {
+	.contenido > :global(p + p),
+	.contenido :global(.pantalla > p + p) {
 		margin-top: 1rem;
 	}
-	.contenido :global(strong) {
+	/* Espacio entre el texto y un componente que le sigue. */
+	.contenido :global(.pantalla > p + .mr),
+	.contenido :global(.pantalla > p + .lista),
+	.contenido > :global(p + .mr) {
+		margin-top: 1.25rem;
+	}
+	.contenido > :global(p strong),
+	.contenido :global(.pantalla > p strong) {
 		color: var(--tinta);
 		font-weight: 650;
 	}

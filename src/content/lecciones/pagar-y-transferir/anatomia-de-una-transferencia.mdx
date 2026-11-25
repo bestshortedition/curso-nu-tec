@@ -1,0 +1,86 @@
+---
+numero: "3.1"
+descripcion: Antes de mandar dinero, revisa tres cosas. Así transfieres sin miedo y guardas tu comprobante.
+minutos: 2
+duda:
+  pregunta: ¿Cómo mando una transferencia sin equivocarme?
+  tema: Con una transferencia SPEI mandas dinero a otra cuenta, aunque sea de otro banco. Aquí ves qué revisar.
+  cifra:
+    texto: 60% teme equivocarse al transferir.
+    n: 15
+    de: 25
+accion: "La próxima vez que transfieras, pide la CLABE por escrito y revísala antes de confirmar."
+resumen:
+  - El dinero llega al número que escribes. Pídelo por escrito.
+  - Antes de confirmar, revisa número, monto y nombre.
+  - Guarda tu clave de rastreo para bajar tu CEP en Banxico.
+palabras:
+  - spei
+  - clabe
+  - cep
+fuentes:
+  - nombre: Banxico, ¿Qué es una transferencia? (Mi SPEI)
+    url: https://www.banxico.org.mx/servicios/mi-spei_-transferencias-ban.html
+  - nombre: Banxico, SPEI
+    url: https://www.banxico.org.mx/servicios/spei_-informacion-banco-mex.html
+  - nombre: Banxico, Comprobante Electrónico de Pago (CEP)
+    url: https://www.banxico.org.mx/cep/
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import Clasifica from '../../../components/Clasifica.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Leo le debe a Sofi **$250** del cine. Se los manda por <Termino id="spei">transferencia</Termino>.
+
+<VideoReel archivo="anatomia-de-una-transferencia" segundos={30} titulo="Video: qué revisar antes de mandar una transferencia">
+	Ejemplo ilustrativo. 60% de 25 jóvenes teme equivocarse al transferir. Antes de confirmar, revisa: el número (CLABE, tarjeta o celular), el monto ($250, no $2,500) y el nombre de quien recibe. Leo le manda $250 a Sofi: "Boletos cine". SPEI funciona 24/7. Después, guarda la clave de rastreo y baja tu CEP en banxico.org.mx/cep. ¿Error? Avisa ya a tu banco. El dinero sigue al número: número, monto y nombre.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+¿Leo lo envía o revisa otra vez?
+
+<Clasifica
+	comillas={false}
+	opciones={[{ texto: 'Envíalo', icono: 'paper-plane-tilt' }, { texto: 'Revisa otra vez', icono: 'magnifying-glass' }]}
+	items={[
+		{ frase: 'La CLABE que copió tiene 17 dígitos.', correcta: 1, explicacion: 'Una CLABE tiene 18 dígitos.', fuente: 'Banxico' },
+		{ frase: 'Escribió $2,500 en lugar de $250.', correcta: 1, explicacion: 'Un cero de más cambia todo.' },
+		{ frase: 'Copió la CLABE de un mensaje de Sofi. Todo coincide.', correcta: 0, explicacion: 'Revisó todo. Ya puede confirmar.' },
+		{ frase: 'En el concepto escribió "Boletos cine".', correcta: 0, explicacion: 'Así los dos saben de qué fue el pago.' },
+	]}
+/>
+
+---
+
+## ¿Qué revisar?
+
+<ListaIconos
+	items={[
+		{ icono: 'hash', tono: 'neutro', titulo: 'El número manda', texto: 'Llega a la CLABE, tarjeta o celular que escribes.' },
+		{ icono: 'magnifying-glass', tono: 'neutro', titulo: 'Revisa antes de confirmar', texto: 'Número, monto y nombre.' },
+		{ icono: 'receipt', tono: 'bien', titulo: 'Guarda tu comprobante', texto: 'Con la clave de rastreo bajas tu CEP en Banxico.' },
+	]}
+/>
+
+<Nota titulo="Si algo salió mal" fuente="Banxico, CEP">
+	Avisa de inmediato a tu banco, con tu clave de rastreo y tu <Termino id="cep">CEP</Termino>.
+</Nota>
+
+---
+
+<Ejercicio
+	pregunta="Diego le transfirió $300 a su primo, pero se equivocó en un dígito de la CLABE. ¿Qué hace?"
+	opciones={['Avisa a su banco, con su clave de rastreo', 'Espera a que el dinero regrese solo', 'Manda otra vez $300 a la misma CLABE']}
+	correcta={0}
+	porque={['Su banco revisa el caso.', 'Esperar no ayuda.', 'Repetiría el error.']}
+>
+	Revisa la <Termino id="clabe">CLABE</Termino> antes de confirmar. Si algo sale mal, avisa a tu banco.
+</Ejercicio>
