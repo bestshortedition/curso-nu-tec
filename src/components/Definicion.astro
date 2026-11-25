@@ -1,0 +1,120 @@
+---
+/**
+ * Tarjeta de una palabra del glosario: definición + ejemplo + fuente.
+ * La usan <Termino>, el botón "Palabras" de cada lección y la página /glosario/.
+ * Si recibe `cerrar` (id de un popover), muestra el botón para cerrarlo.
+ *
+ * Todo son <span> para que se pueda poner dentro de un párrafo.
+ */
+import Icono from './Icono.astro';
+import type { Palabra } from '../data/glosario';
+
+interface Props {
+	palabra: Palabra;
+	cerrar?: string;
+	/** En la página del glosario el título es un encabezado. */
+	encabezado?: boolean;
+}
+const { palabra: p, cerrar, encabezado = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+// En la página del glosario cada palabra es un <article> con su <h2>; dentro de un texto, todo es <span>.
+const Raiz = encabezado ? 'article' : 'span';
+const Arriba = encabezado ? 'div' : 'span';
+---
+
+<Raiz class="def" id={encabezado ? p.id : undefined}>
+	<Arriba class="def-arriba">
+		{encabezado ? <h2 class="def-tit">{p.palabra}</h2> : <span class="def-tit">{p.palabra}</span>}
+		{cerrar && (
+			<button type="button" class="def-cerrar" popovertarget={cerrar} popovertargetaction="hide" aria-label="Cerrar">
+				<Icono nombre="x" tamano={20} />
+			</button>
+		)}
+	</Arriba>
+	<span class="def-txt">{p.definicion}</span>
+	<span class="def-ej">
+		<span class="def-ej-etq"><Icono nombre="lightbulb" tamano={16} /> Por ejemplo</span>
+		<span>{p.ejemplo}</span>
+	</span>
+	<span class="def-pie">
+		<span>Fuente: <a href={p.fuente.url} target="_blank" rel="noopener">{p.fuente.nombre}</a></span>
+		{!encabezado && <a class="def-todo" href={`${base}glosario/#${p.id}`}>Ver todo el glosario</a>}
+	</span>
+</Raiz>
+
+<style>
+	.def {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		text-align: start;
+	}
+	.def-arriba {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.def-tit {
+		margin: 0;
+		font-family: var(--f-titulo);
+		font-size: 1.25rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.25;
+		color: var(--tinta);
+	}
+	.def-cerrar {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		margin: -0.5rem -0.5rem 0 0;
+		border: 0;
+		border-radius: 50%;
+		background: var(--fondo-2);
+		cursor: pointer;
+	}
+	.def-cerrar:hover {
+		background: var(--linea);
+	}
+	.def-txt {
+		font-size: 1.0625rem;
+		line-height: 1.55;
+		color: var(--tinta-2);
+	}
+	.def-ej {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 0.875rem 1rem;
+		border-radius: var(--radio-chico);
+		background: var(--morado-tenue);
+		font-size: 1rem;
+		line-height: 1.5;
+		color: var(--tinta);
+	}
+	.def-ej-etq {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-family: var(--f-titulo);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: var(--morado-oscuro);
+	}
+	.def-pie {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.def-pie a {
+		color: var(--morado);
+		font-weight: 600;
+	}
+</style>

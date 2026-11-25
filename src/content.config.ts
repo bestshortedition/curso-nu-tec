@@ -1,43 +1,49 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { docsLoader } from '@astrojs/starlight/loaders';
-import { docsSchema } from '@astrojs/starlight/schema';
+import { glob } from 'astro/loaders';
 
 /**
- * Campos extra que puede llevar cada página.
- * Si a un byte le falta algo obligatorio, `npm run build` falla y dice qué falta.
+ * Cada lección es un archivo .mdx en src/content/lecciones/<modulo>/<slug>.mdx
+ * El nombre del archivo debe ser el mismo `slug` que tiene en src/data/temario.ts.
+ * Si falta un campo obligatorio, `npm run build` falla y dice cuál.
  */
-const fuente = z.object({
-	nombre: z.string(),
-	url: z.string().url(),
+const lecciones = defineCollection({
+	loader: glob({ pattern: '**/*.mdx', base: './src/content/lecciones' }),
+	schema: z.object({
+		/** Número de la lección en el temario, por ejemplo "4.5". */
+		numero: z.string().regex(/^[1-5]\.\d+$/, 'Usa el formato "4.5"'),
+		/** Una frase para la vista previa de WhatsApp. */
+		descripcion: z.string().max(160),
+		/** Minutos de lectura: 1 o 2. */
+		minutos: z.union([z.literal(1), z.literal(2)]),
+		/** La primera pantalla: de qué trata el tema y qué duda se va a resolver. */
+		duda: z.object({
+			/** La duda, como pregunta corta. */
+			pregunta: z.string().max(90),
+			/** El tema en general, en 1 o 2 frases. */
+			tema: z.string().max(220),
+			/** Cuántos de los 25 entrevistados tienen esta duda. Texto EXACTO de CLAUDE.md, sección 3. */
+			cifra: z
+				.object({
+					texto: z.string(),
+					/** Cuántos tienen la duda (para dibujar las personas). */
+					n: z.number().int().min(0),
+					/** De cuántos. */
+					de: z.number().int().min(1),
+				})
+				.optional(),
+		}),
+		/** La acción concreta de hoy. */
+		accion: z.string(),
+		/** "En corto": lo más importante de la lección en 2 o 3 frases cortas. Va al final. */
+		resumen: z.array(z.string().max(120)).min(2).max(3),
+		/** Palabras del glosario (src/data/glosario.ts) que se pueden consultar en cualquier pantalla. */
+		palabras: z.array(z.string()).default([]),
+		/** Fuentes oficiales de los datos técnicos (Banxico, CONDUSEF, DOF, IPAB). */
+		fuentes: z
+			.array(z.object({ nombre: z.string(), url: z.string().url() }))
+			.min(1, 'Cada lección necesita al menos una fuente oficial.'),
+	}),
 });
 
-// Las reglas propias de los bytes (campos obligatorios, 1 a 2 minutos de lectura)
-// las revisa scripts/revisar-bytes.mjs antes de cada build.
-const extension = z.object({
-		/** byte = lección de 1 a 2 minutos; tema = portada de un tema; pagina = todo lo demás. */
-		tipo: z.enum(['byte', 'tema', 'pagina']).default('pagina'),
-		/** Clave del tema: credito, buro, seguridad, ahorro, primera-cuenta. */
-		tema: z.enum(['credito', 'buro', 'seguridad', 'ahorro', 'primera-cuenta']).optional(),
-		/** Número del byte, como en contenido/bytes.md (por ejemplo "1.3"). */
-		numero: z.string().optional(),
-		/** Minutos de lectura (1 o 2). */
-		minutos: z.number().int().min(1).max(2).optional(),
-		/** La duda real con la que abre el byte: una cita de las entrevistas o un dato. */
-		duda: z
-			.object({
-				texto: z.string(),
-				/** Quién lo dijo (cita) o de dónde sale el dato. */
-				quien: z.string(),
-				clase: z.enum(['cita', 'dato']).default('cita'),
-			})
-			.optional(),
-		/** La acción concreta de hoy. Se muestra como "Hoy: …". */
-		accion: z.string().optional(),
-		/** Fuentes oficiales de cada dato técnico del byte. */
-		fuentes: z.array(fuente).optional(),
-});
-
-export const collections = {
-	docs: defineCollection({ loader: docsLoader(), schema: docsSchema({ extend: extension }) }),
-};
+export const collections = { lecciones };

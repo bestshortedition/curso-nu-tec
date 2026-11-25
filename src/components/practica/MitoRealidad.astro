@@ -1,0 +1,318 @@
+---
+/**
+ * Juego "¿Mito o realidad?". Una frase a la vez; eliges y ves por qué.
+ * Las frases viven en src/data/practica.ts.
+ * Sin JavaScript: se ven todas las frases con un "Ver respuesta".
+ */
+import Icono from '../Icono.astro';
+import { mitoRealidad } from '../../data/practica';
+
+const total = mitoRealidad.length;
+---
+
+<div class="mr" data-mr>
+	<div class="mr-arriba solo-js">
+		<span class="mr-cuenta cifra" data-mr-cuenta>1 de {total}</span>
+		<span class="mr-puntos" data-mr-puntos aria-live="polite">0 aciertos</span>
+	</div>
+	<div class="mr-barra solo-js" aria-hidden="true"><span data-mr-barra></span></div>
+
+	<ol class="mr-cartas">
+		{mitoRealidad.map((a, i) => (
+			<li class="mr-carta" data-carta={i} data-mito={String(a.esMito)}>
+				<p class="mr-frase">“{a.frase}”</p>
+				<div class="mr-botones solo-js" role="group" aria-label="¿Mito o realidad?">
+					<button type="button" class="mr-op" data-elige="mito">
+						<Icono nombre="x-circle" tamano={22} /> Mito
+					</button>
+					<button type="button" class="mr-op" data-elige="realidad">
+						<Icono nombre="check-circle" tamano={22} /> Realidad
+					</button>
+				</div>
+				<details class="mr-resp" data-resp>
+					<summary class="sin-js">Ver respuesta</summary>
+					<p class="mr-veredicto" data-veredicto></p>
+					<p class="mr-es">
+						<strong>Es {a.esMito ? 'mito' : 'realidad'}.</strong> {a.explicacion}
+					</p>
+					<p class="mr-fuente">Fuente: {a.fuente}</p>
+					<button type="button" class="boton boton--morado boton--ancho mr-sig solo-js" data-sig>
+						{i < total - 1 ? 'Siguiente' : 'Ver resultado'} <Icono nombre="arrow-right" tamano={20} />
+					</button>
+				</details>
+			</li>
+		))}
+	</ol>
+
+	<div class="mr-final solo-js" data-mr-final hidden tabindex="-1">
+		<Icono nombre="trophy" tamano={36} />
+		<p class="mr-f-num"><span class="cifra" data-mr-final-num></span> de {total}</p>
+		<p class="mr-f-txt" data-mr-final-txt></p>
+		<button type="button" class="boton boton--borde" data-mr-otra>
+			<Icono nombre="arrow-counter-clockwise" tamano={20} /> Jugar otra vez
+		</button>
+	</div>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-mr]').forEach((juego) => {
+		const cartas = [...juego.querySelectorAll<HTMLElement>('[data-carta]')];
+		const cuenta = juego.querySelector<HTMLElement>('[data-mr-cuenta]')!;
+		const puntosEl = juego.querySelector<HTMLElement>('[data-mr-puntos]')!;
+		const barra = juego.querySelector<HTMLElement>('[data-mr-barra]')!;
+		const final = juego.querySelector<HTMLElement>('[data-mr-final]')!;
+		let actual = 0;
+		let puntos = 0;
+		juego.classList.add('jugando');
+
+		const mostrar = (i: number) => {
+			actual = i;
+			cartas.forEach((c, j) => (c.hidden = j !== i));
+			cuenta.textContent = `${i + 1} de ${cartas.length}`;
+			barra.style.width = `${(i / cartas.length) * 100}%`;
+		};
+
+		const empezar = () => {
+			puntos = 0;
+			puntosEl.textContent = '0 aciertos';
+			final.hidden = true;
+			cartas.forEach((c) => {
+				c.classList.remove('bien', 'mal');
+				c.querySelectorAll<HTMLButtonElement>('.mr-op').forEach((b) => {
+					b.disabled = false;
+					b.classList.remove('elegida');
+				});
+				c.querySelector<HTMLDetailsElement>('[data-resp]')!.open = false;
+			});
+			mostrar(0);
+		};
+
+		cartas.forEach((carta) => {
+			const esMito = carta.dataset.mito === 'true';
+			carta.querySelectorAll<HTMLButtonElement>('.mr-op').forEach((b) =>
+				b.addEventListener('click', () => {
+					const bien = (b.dataset.elige === 'mito') === esMito;
+					if (bien) puntos++;
+					puntosEl.textContent = `${puntos} ${puntos === 1 ? 'acierto' : 'aciertos'}`;
+					carta.classList.add(bien ? 'bien' : 'mal');
+					b.classList.add('elegida');
+					carta.querySelectorAll<HTMLButtonElement>('.mr-op').forEach((x) => (x.disabled = true));
+					carta.querySelector('[data-veredicto]')!.textContent = bien ? '¡Bien!' : 'Casi.';
+					const resp = carta.querySelector<HTMLDetailsElement>('[data-resp]')!;
+					resp.open = true;
+					resp.querySelector<HTMLButtonElement>('[data-sig]')!.focus({ preventScroll: true });
+				}),
+			);
+			carta.querySelector('[data-sig]')!.addEventListener('click', () => {
+				if (actual < cartas.length - 1) {
+					mostrar(actual + 1);
+					cartas[actual].querySelector<HTMLButtonElement>('.mr-op')!.focus({ preventScroll: true });
+				} else {
+					cartas.forEach((c) => (c.hidden = true));
+					barra.style.width = '100%';
+					juego.querySelector('[data-mr-final-num]')!.textContent = String(puntos);
+					juego.querySelector('[data-mr-final-txt]')!.textContent =
+						puntos === cartas.length
+							? 'Perfecto. Ya no te cuentan cuentos con tu dinero.'
+							: puntos >= cartas.length - 2
+								? 'Muy bien. Repasa las que fallaste y vuelve a jugar.'
+								: 'Vas empezando. Juega otra vez: la segunda sale mejor.';
+					final.hidden = false;
+					final.focus();
+				}
+			});
+		});
+		juego.querySelector('[data-mr-otra]')!.addEventListener('click', empezar);
+		empezar();
+	});
+</script>
+
+<style>
+	.mr {
+		padding: 1.25rem;
+		border-radius: var(--radio);
+		background: var(--tinta);
+		color: #fff;
+	}
+	.mr-arriba {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #d8b8f5;
+	}
+	.mr-barra {
+		height: 4px;
+		margin-top: 0.625rem;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.15);
+		overflow: hidden;
+	}
+	.mr-barra span {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: #c995f0;
+		transition: width 0.3s;
+	}
+	.mr-cartas {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1.5rem;
+	}
+	.jugando .mr-cartas {
+		margin-top: 1.25rem;
+	}
+	.mr-carta[hidden] {
+		display: none;
+	}
+	.mr-carta {
+		animation: carta 0.3s ease-out;
+	}
+	@keyframes carta {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+	}
+	.mr-frase {
+		font-family: var(--f-titulo);
+		font-size: clamp(1.375rem, 6vw, 1.75rem);
+		font-weight: 600;
+		line-height: 1.25;
+		letter-spacing: -0.025em;
+		min-height: 4.5em;
+	}
+	html:not(.js) .mr-frase {
+		min-height: 0;
+	}
+	.mr-botones {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.625rem;
+		margin-top: 1.25rem;
+	}
+	.mr-op {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.45rem;
+		min-height: 3.5rem;
+		border: 0;
+		border-radius: var(--radio);
+		background: rgb(255 255 255 / 0.1);
+		box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.2);
+		color: #fff;
+		font-family: var(--f-titulo);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.15s;
+	}
+	.mr-op:hover:not(:disabled) {
+		background: rgb(255 255 255 / 0.18);
+	}
+	.mr-op:disabled {
+		cursor: default;
+		opacity: 0.45;
+	}
+	.mr-op.elegida {
+		opacity: 1;
+	}
+	.bien .mr-op.elegida {
+		background: #e7f4ec;
+		color: var(--verde);
+		box-shadow: none;
+	}
+	.mal .mr-op.elegida {
+		background: #fbeaeb;
+		color: var(--rojo);
+		box-shadow: none;
+	}
+	.mr-resp summary {
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+		color: #d8b8f5;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	html.js .mr-resp:not([open]) {
+		display: none;
+	}
+	.mr-veredicto {
+		margin-top: 1.25rem;
+		font-family: var(--f-titulo);
+		font-size: 1.125rem;
+		font-weight: 600;
+	}
+	.bien .mr-veredicto {
+		color: #8fdcae;
+	}
+	.mal .mr-veredicto {
+		color: #ffb3b8;
+	}
+	.mr-veredicto:empty {
+		display: none;
+	}
+	.mr-es {
+		margin-top: 0.5rem;
+		font-size: 1.0625rem;
+		line-height: 1.55;
+		color: rgb(255 255 255 / 0.88);
+	}
+	.mr-es strong {
+		color: #fff;
+	}
+	.mr-fuente {
+		margin-top: 0.5rem;
+		font-size: 0.8125rem;
+		color: rgb(255 255 255 / 0.6);
+	}
+	.mr-sig {
+		margin-top: 1.25rem;
+		background: #fff;
+		color: var(--tinta);
+	}
+	.mr-sig:hover {
+		background: var(--morado-claro);
+		color: var(--tinta);
+	}
+	.mr-final {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1.5rem 0 0.5rem;
+		text-align: center;
+		outline: none;
+		color: #f1e4fc;
+	}
+	.mr-final[hidden] {
+		display: none;
+	}
+	.mr-f-num {
+		font-family: var(--f-titulo);
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: #fff;
+	}
+	.mr-f-num .cifra {
+		font-size: 3rem;
+	}
+	.mr-f-txt {
+		max-width: 22rem;
+		color: rgb(255 255 255 / 0.85);
+	}
+	.mr-final .boton {
+		margin-top: 0.75rem;
+		color: #fff;
+		box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.35);
+	}
+	.mr-final .boton:hover {
+		background: rgb(255 255 255 / 0.1);
+		color: #fff;
+	}
+</style>

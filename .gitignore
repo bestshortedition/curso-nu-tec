@@ -14,3 +14,6 @@ PROMPT_INICIAL.md
 
 # Copia del zip original de contexto (incluye entrevistas y presentaciones)
 contexto/
+
+# Caché de la herramienta de video
+.hyperframes/

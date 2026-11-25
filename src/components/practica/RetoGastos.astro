@@ -1,0 +1,472 @@
+---
+/**
+ * Reto "3 días anotando tus gastos". Se guarda SOLO en este navegador (localStorage):
+ * montos y categorías, nada personal. Al final muestra en qué se va tu dinero.
+ * Sin JavaScript: se explica el reto y se ofrece la plantilla para descargar.
+ */
+import Icono from '../Icono.astro';
+import { categoriasGasto } from '../../data/practica';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<div class="rg" data-rg data-categorias={JSON.stringify(categoriasGasto.map(({ id, nombre }) => ({ id, nombre })))}>
+	<p class="rg-txt">
+		Durante 3 días anota cada cosa que compres, aunque sea un chicle. Al final vas a ver en qué se va tu dinero.
+	</p>
+	<p class="sin-js rg-sinjs">
+		Para anotar aquí necesitas JavaScript. También puedes usar la <a href={`${base}plantillas/ingresos-y-gastos.csv`} download>plantilla de ingresos y gastos</a>.
+	</p>
+
+	<div class="solo-js">
+		<div class="rg-dias" role="tablist" aria-label="Días del reto">
+			{[1, 2, 3].map((n) => (
+				<button type="button" role="tab" class="rg-dia" data-dia={n - 1} aria-selected={n === 1 ? 'true' : 'false'}>
+					<span class="rg-dia-check" aria-hidden="true"><Icono nombre="check" tamano={14} /></span>
+					Día {n}
+				</button>
+			))}
+		</div>
+
+		<form class="rg-form" data-rg-form>
+			<label class="rg-monto">
+				<span class="sr-only">¿Cuánto gastaste?</span>
+				<span class="rg-signo" aria-hidden="true">$</span>
+				<input type="number" inputmode="decimal" min="1" max="100000" step="any" placeholder="¿Cuánto?" required data-rg-monto />
+			</label>
+			<fieldset class="rg-cats">
+				<legend class="sr-only">¿En qué?</legend>
+				{categoriasGasto.map((c, i) => (
+					<label class="rg-cat">
+						<input type="radio" name="rg-cat" value={c.id} checked={i === 0} class="sr-only" />
+						<span><Icono nombre={c.icono} tamano={18} /> {c.nombre}</span>
+					</label>
+				))}
+			</fieldset>
+			<button type="submit" class="boton boton--morado boton--ancho">
+				<Icono nombre="plus" tamano={20} /> Anotar gasto
+			</button>
+		</form>
+
+		<ul class="rg-lista" data-rg-lista aria-live="polite"></ul>
+		<button type="button" class="rg-nada" data-rg-nada>Hoy no gasté nada</button>
+
+		<div class="rg-resumen" data-rg-resumen hidden>
+			<p class="rg-r-tit"><Icono nombre="chart-pie-slice" tamano={20} /> Así va tu dinero</p>
+			<p class="rg-r-total">
+				<span class="cifra" data-rg-total></span> en <span data-rg-dias></span>
+			</p>
+			<ul class="rg-barras" data-rg-barras></ul>
+			<p class="rg-r-idea" data-rg-idea></p>
+		</div>
+
+		<div class="rg-listo" data-rg-listo hidden>
+			<Icono nombre="trophy" tamano={28} />
+			<div>
+				<p class="rg-l-tit">¡Reto cumplido!</p>
+				<p>Ya sabes a dónde se va tu dinero. Elige una categoría y ponle un límite para la próxima semana.</p>
+			</div>
+		</div>
+
+		<p class="rg-priv">
+			<Icono nombre="device-mobile" tamano={16} /> Se guarda solo en este celular.
+			<button type="button" class="rg-borrar" data-rg-borrar>Empezar de nuevo</button>
+		</p>
+	</div>
+</div>
+
+<script>
+	const CLAVE = 'bytes-de-dinero:reto-gastos';
+	type Gasto = { monto: number; cat: string };
+	type Dia = { gastos: Gasto[]; nada: boolean };
+	const vacio = (): Dia[] => [0, 1, 2].map(() => ({ gastos: [], nada: false }));
+	const leer = (): Dia[] => {
+		try {
+			const d = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+			return Array.isArray(d) && d.length === 3 ? d : vacio();
+		} catch {
+			return vacio();
+		}
+	};
+	const guardar = (d: Dia[]) => {
+		try {
+			localStorage.setItem(CLAVE, JSON.stringify(d));
+		} catch {
+			/* sin almacenamiento: el reto funciona mientras la página esté abierta */
+		}
+	};
+	const pesos = (n: number) => `$${n.toLocaleString('es-MX', { maximumFractionDigits: 2 })}`;
+
+	document.querySelectorAll<HTMLElement>('[data-rg]').forEach((reto) => {
+		const categorias: { id: string; nombre: string }[] = JSON.parse(reto.dataset.categorias!);
+		const nombre = (id: string) => categorias.find((c) => c.id === id)?.nombre ?? id;
+		const tabs = [...reto.querySelectorAll<HTMLButtonElement>('[data-dia]')];
+		const form = reto.querySelector<HTMLFormElement>('[data-rg-form]')!;
+		const monto = reto.querySelector<HTMLInputElement>('[data-rg-monto]')!;
+		const lista = reto.querySelector<HTMLElement>('[data-rg-lista]')!;
+		const nada = reto.querySelector<HTMLButtonElement>('[data-rg-nada]')!;
+		let dias = leer();
+		let dia = Math.max(0, dias.findIndex((d) => !d.gastos.length && !d.nada));
+		if (dias.every((d) => d.gastos.length || d.nada)) dia = 2;
+
+		const hecho = (d: Dia) => d.gastos.length > 0 || d.nada;
+
+		const pintar = () => {
+			tabs.forEach((t, i) => {
+				t.setAttribute('aria-selected', String(i === dia));
+				t.classList.toggle('hecho', hecho(dias[i]));
+			});
+			const d = dias[dia];
+			lista.replaceChildren(
+				...d.gastos.map((g, i) => {
+					const li = document.createElement('li');
+					li.innerHTML = `<span class="rg-g-cat"></span><span class="rg-g-monto cifra"></span><button type="button" class="rg-quitar" aria-label="Quitar">×</button>`;
+					li.querySelector('.rg-g-cat')!.textContent = nombre(g.cat);
+					li.querySelector('.rg-g-monto')!.textContent = pesos(g.monto);
+					li.querySelector('button')!.addEventListener('click', () => {
+						d.gastos.splice(i, 1);
+						guardar(dias);
+						pintar();
+					});
+					return li;
+				}),
+			);
+			nada.hidden = d.gastos.length > 0;
+			nada.setAttribute('aria-pressed', String(d.nada));
+			nada.textContent = d.nada ? 'Hoy no gasté nada ✓' : 'Hoy no gasté nada';
+
+			// Resumen
+			const todos = dias.flatMap((x) => x.gastos);
+			const diasHechos = dias.filter(hecho).length;
+			const resumen = reto.querySelector<HTMLElement>('[data-rg-resumen]')!;
+			resumen.hidden = todos.length === 0;
+			if (todos.length) {
+				const total = todos.reduce((n, g) => n + g.monto, 0);
+				const porCat = categorias
+					.map((c) => ({ ...c, suma: todos.filter((g) => g.cat === c.id).reduce((n, g) => n + g.monto, 0) }))
+					.filter((c) => c.suma > 0)
+					.sort((a, b) => b.suma - a.suma);
+				reto.querySelector('[data-rg-total]')!.textContent = pesos(total);
+				reto.querySelector('[data-rg-dias]')!.textContent = diasHechos === 1 ? '1 día' : `${diasHechos} días`;
+				reto.querySelector('[data-rg-barras]')!.replaceChildren(
+					...porCat.map((c) => {
+						const li = document.createElement('li');
+						li.innerHTML = `<span class="rg-b-fila"><span></span><span class="cifra"></span></span><span class="rg-b-barra"><i></i></span>`;
+						li.querySelector('.rg-b-fila span')!.textContent = c.nombre;
+						li.querySelector('.rg-b-fila .cifra')!.textContent = pesos(c.suma);
+						li.querySelector<HTMLElement>('i')!.style.width = `${(c.suma / porCat[0].suma) * 100}%`;
+						return li;
+					}),
+				);
+				const alMes = Math.round((total / Math.max(1, diasHechos)) * 30);
+				reto.querySelector('[data-rg-idea]')!.textContent =
+					`Donde más gastas: ${porCat[0].nombre.toLowerCase()}. Si gastaras así todos los días, al mes serían unos ${pesos(alMes)}.`;
+			}
+			reto.querySelector<HTMLElement>('[data-rg-listo]')!.hidden = diasHechos < 3;
+		};
+
+		tabs.forEach((t, i) =>
+			t.addEventListener('click', () => {
+				dia = i;
+				pintar();
+			}),
+		);
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			const n = Number(monto.value);
+			if (!(n > 0)) return;
+			const cat = form.querySelector<HTMLInputElement>('input[name="rg-cat"]:checked')?.value ?? 'otro';
+			dias[dia].gastos.push({ monto: Math.round(n * 100) / 100, cat });
+			dias[dia].nada = false;
+			guardar(dias);
+			monto.value = '';
+			pintar();
+			monto.focus();
+		});
+		nada.addEventListener('click', () => {
+			dias[dia].nada = !dias[dia].nada;
+			guardar(dias);
+			pintar();
+		});
+		reto.querySelector('[data-rg-borrar]')!.addEventListener('click', () => {
+			if (!confirm('¿Borrar lo que llevas del reto y empezar de nuevo?')) return;
+			dias = vacio();
+			dia = 0;
+			guardar(dias);
+			pintar();
+		});
+		pintar();
+	});
+</script>
+
+<style>
+	.rg-txt {
+		font-size: 1.0625rem;
+		line-height: 1.5;
+		color: var(--tinta-2);
+	}
+	.rg-sinjs {
+		margin-top: 0.75rem;
+		color: var(--gris);
+	}
+	.rg-dias {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.5rem;
+		margin-top: 1.25rem;
+	}
+	.rg-dia {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.35rem;
+		min-height: 2.75rem;
+		border: 0;
+		border-radius: 999px;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.rg-dia[aria-selected='true'] {
+		background: var(--tinta);
+		color: #fff;
+		box-shadow: none;
+	}
+	.rg-dia-check {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		width: 1.125rem;
+		height: 1.125rem;
+		border-radius: 50%;
+		background: var(--verde);
+		color: #fff;
+	}
+	.rg-dia-check :global(svg) {
+		width: 0.7rem;
+		height: 0.7rem;
+	}
+	.rg-dia.hecho .rg-dia-check {
+		display: inline-flex;
+	}
+	.rg-form {
+		display: grid;
+		gap: 0.875rem;
+		margin-top: 1rem;
+	}
+	.rg-monto {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		min-height: 3.5rem;
+		padding: 0 1rem;
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-family: var(--f-cifra);
+		font-size: 1.375rem;
+	}
+	.rg-monto:focus-within {
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.rg-signo {
+		color: var(--gris);
+	}
+	.rg-monto input {
+		flex: 1;
+		min-width: 0;
+		border: 0;
+		outline: 0;
+		background: none;
+		font: inherit;
+		color: var(--tinta);
+	}
+	.rg-monto input::placeholder {
+		font-family: var(--f-texto);
+		font-size: 1.0625rem;
+		color: var(--gris-claro);
+	}
+	.rg-cats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	.rg-cat span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		min-height: 2.5rem;
+		padding: 0 0.875rem;
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-size: 0.9375rem;
+		font-weight: 500;
+		cursor: pointer;
+	}
+	.rg-cat input:checked + span {
+		background: var(--morado-claro);
+		box-shadow: inset 0 0 0 2px var(--morado);
+		color: var(--morado-oscuro);
+		font-weight: 600;
+	}
+	.rg-cat input:focus-visible + span {
+		outline: 3px solid var(--morado);
+		outline-offset: 2px;
+	}
+	.rg-lista {
+		list-style: none;
+		margin: 1rem 0 0;
+		padding: 0;
+	}
+	.rg-lista:empty {
+		display: none;
+	}
+	.rg-lista :global(li) {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-height: 3rem;
+		border-bottom: 1px solid var(--linea);
+	}
+	.rg-lista :global(.rg-g-cat) {
+		flex: 1;
+		color: var(--tinta-2);
+	}
+	.rg-lista :global(.rg-g-monto) {
+		font-weight: 600;
+	}
+	.rg-lista :global(.rg-quitar) {
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 0;
+		border-radius: 50%;
+		background: none;
+		font-size: 1.375rem;
+		color: var(--gris);
+		cursor: pointer;
+	}
+	.rg-lista :global(.rg-quitar:hover) {
+		background: var(--fondo-2);
+	}
+	.rg-nada {
+		margin-top: 0.75rem;
+		min-height: 2.75rem;
+		padding: 0 1rem;
+		border: 0;
+		border-radius: 999px;
+		background: none;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-weight: 600;
+		color: var(--tinta-2);
+		cursor: pointer;
+	}
+	.rg-nada[aria-pressed='true'] {
+		background: var(--verde-claro);
+		box-shadow: inset 0 0 0 2px var(--verde);
+		color: var(--verde);
+	}
+	.rg-nada[hidden] {
+		display: none;
+	}
+	.rg-resumen {
+		margin-top: 1.5rem;
+		padding: 1.125rem;
+		border-radius: var(--radio);
+		background: var(--fondo-2);
+	}
+	.rg-resumen[hidden],
+	.rg-listo[hidden] {
+		display: none;
+	}
+	.rg-r-tit {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.rg-r-total {
+		margin-top: 0.25rem;
+		font-family: var(--f-titulo);
+		font-size: 1.125rem;
+		font-weight: 600;
+	}
+	.rg-r-total .cifra {
+		font-size: 1.75rem;
+	}
+	.rg-barras {
+		list-style: none;
+		margin: 0.75rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.625rem;
+	}
+	.rg-barras :global(.rg-b-fila) {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.9375rem;
+	}
+	.rg-barras :global(.rg-b-barra) {
+		display: block;
+		height: 8px;
+		margin-top: 0.25rem;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.rg-barras :global(.rg-b-barra i) {
+		display: block;
+		height: 100%;
+		border-radius: 999px;
+		background: var(--morado);
+	}
+	.rg-r-idea {
+		margin-top: 0.875rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		color: var(--tinta-2);
+	}
+	.rg-listo {
+		display: flex;
+		gap: 0.875rem;
+		align-items: flex-start;
+		margin-top: 1rem;
+		padding: 1.125rem;
+		border-radius: var(--radio);
+		background: var(--verde-claro);
+		color: var(--verde);
+	}
+	.rg-listo p {
+		color: var(--tinta-2);
+		font-size: 1rem;
+	}
+	.rg-listo .rg-l-tit {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.125rem;
+		color: var(--verde);
+	}
+	.rg-priv {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem;
+		margin-top: 1rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.rg-borrar {
+		margin-left: auto;
+		min-height: 2.75rem;
+		border: 0;
+		background: none;
+		font-weight: 600;
+		color: var(--morado);
+		cursor: pointer;
+	}
+</style>

@@ -1,0 +1,820 @@
+---
+/**
+ * Bienvenida forzosa la PRIMERA vez que alguien entra al curso:
+ *   1. Hook: 4 pantallas animadas que avanzan solas (no se pueden saltar).
+ *   2. Encuesta inicial: 5 preguntas + confianza. Sirve para comparar al final
+ *      (ver src/data/diagnostico.ts y la página /resultados/).
+ * Después se cierra y se ve el inicio.
+ *
+ * Se muestra si el navegador no tiene guardada la encuesta (la clase `sin-diagnostico`
+ * la pone Base.astro antes de pintar la página). Para volver a verla (por ejemplo, en una presentación):
+ *   ?demo=1        → modo presentación: borra el avance y empieza desde cero
+ *   ?hook=1        → hook + encuesta otra vez (sin borrar el avance)
+ *   ?diagnostico=1 → solo la encuesta
+ * Sin JavaScript no aparece y el curso funciona normal.
+ *
+ * Los textos del hook usan cifras de CLAUDE.md (entrevistas) y del simulador
+ * "El mínimo no alcanza" (ejemplo ilustrativo, 45% anual + IVA).
+ */
+import Icono from './Icono.astro';
+import Foto from './Foto.astro';
+import { fotoInicio, fotosModulo, fotoHookTarjetas } from '../data/fotos';
+import { preguntasDiagnostico, preguntaConfianza } from '../data/diagnostico';
+
+const total = preguntasDiagnostico.length + 1;
+const letras = 'ABCD';
+---
+
+<div class="bienvenida" data-bienvenida role="dialog" aria-modal="true" aria-label="Bienvenida al curso">
+	<!-- 1. HOOK -->
+	<section class="hook" data-hook aria-live="polite">
+		<div class="barras" aria-hidden="true">
+			{[0, 1, 2, 3].map(() => <span><i></i></span>)}
+		</div>
+
+		<div class="slide s-morado" data-slide data-dur="5200">
+			<div class="s-foto" aria-hidden="true"><Foto foto={fotoInicio} anchos={[480, 800, 1200]} tamanos="100vw" /></div>
+			<div class="s-dentro">
+				<p class="s-kicker a1">Antes de empezar</p>
+				<p class="s-grande a2">Pagar solo el mínimo de tu tarjeta suena <em>responsable.</em></p>
+			</div>
+		</div>
+
+		<div class="slide s-oscuro" data-slide data-dur="6000">
+			<div class="s-foto" aria-hidden="true"><Foto foto={fotosModulo.credito} anchos={[480, 800, 1200]} tamanos="100vw" /></div>
+			<div class="s-dentro">
+				<p class="s-kicker a1">Pero si debes $3,000 y solo pagas el mínimo…</p>
+				<p class="s-cifra a2"><span data-cuenta="8">8</span> años</p>
+				<p class="s-medio a3">y 5 meses para terminar de pagar.</p>
+				<p class="s-nota a4">Ejemplo ilustrativo con una tasa de 45% anual más IVA.</p>
+			</div>
+		</div>
+
+		<div class="slide s-oscuro" data-slide data-dur="5600">
+			<div class="s-foto" aria-hidden="true"><Foto foto={fotoHookTarjetas} anchos={[480, 800, 1200]} tamanos="100vw" /></div>
+			<div class="s-dentro">
+				<p class="s-kicker a1">Al final, habrías pagado</p>
+				<p class="s-cifra a2">$<span data-cuenta="9531" data-miles>9,531</span></p>
+				<p class="s-medio a3">Más del <em>triple</em> de lo que debías.</p>
+				<p class="s-nota a4">Mismo ejemplo ilustrativo. Sin compras nuevas.</p>
+			</div>
+		</div>
+
+		<div class="slide s-morado s-foto-chica" data-slide data-dur="7000">
+			<div class="s-foto" aria-hidden="true"><Foto foto={fotosModulo['primera-cuenta']} anchos={[480, 800, 1200]} tamanos="100vw" /></div>
+			<div class="s-dentro">
+				<div class="gente a1" aria-hidden="true">
+					{Array.from({ length: 25 }, (_, i) => (
+						<span class:list={{ si: i < 16 }} style={`--k:${i}`}><Icono nombre="user-fill" tamano={22} /></span>
+					))}
+				</div>
+				<p class="s-cifra s-cifra--chica a2">64%</p>
+				<p class="s-medio a3">de los jóvenes que entrevistamos no sabía que pagar solo el mínimo genera intereses.</p>
+				<p class="s-cierre a4">Aquí lo aprendes en <em>2 minutos.</em></p>
+				<p class="s-nota a4">Entrevistas del equipo a 25 jóvenes de 15 a 18 años, noviembre de 2026.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- 2. ENCUESTA INICIAL -->
+	<section class="encuesta" data-encuesta>
+		<div class="enc-barra" data-enc-barra hidden>
+			<button type="button" class="enc-atras" data-atras aria-label="Pregunta anterior">
+				<Icono nombre="arrow-left" tamano={20} />
+			</button>
+			<div class="enc-avance" aria-hidden="true"><span data-enc-avance></span></div>
+			<p class="enc-cuenta cifra" data-enc-cuenta></p>
+		</div>
+
+		<div class="enc-paso" data-enc-paso="intro">
+			<span class="enc-ico"><Icono nombre="list-checks" tamano={30} /></span>
+			<p class="sobretitulo">Antes de empezar</p>
+			<h2 class="enc-tit" tabindex="-1">{preguntasDiagnostico.length} preguntas rápidas.</h2>
+			<p class="enc-txt">
+				No es examen. Contesta lo que sepas; si no sabes, elige «No sé». Al final te mostramos cuánto aprendiste.
+			</p>
+			<ul class="enc-datos">
+				<li><Icono nombre="clock" tamano={18} /> Menos de 1 minuto</li>
+				<li><Icono nombre="device-mobile" tamano={18} /> Tus respuestas se quedan en tu celular</li>
+			</ul>
+			<button type="button" class="boton boton--morado enc-empezar" data-siguiente>
+				Empezar <Icono nombre="arrow-right" tamano={20} />
+			</button>
+		</div>
+
+		{preguntasDiagnostico.map((p, n) => (
+			<div class="enc-paso" data-enc-paso="pregunta" data-id={p.id} data-n={n + 1} hidden>
+				<p class="enc-tema"><Icono nombre={p.icono} tamano={18} /> {p.tema}</p>
+				<h2 class="enc-preg" id={`enc-${p.id}`} tabindex="-1">{p.pregunta}</h2>
+				<div class="enc-opciones" role="group" aria-labelledby={`enc-${p.id}`}>
+					{p.opciones.map((o, i) => (
+						<button type="button" class="enc-op" data-valor={i}>
+							<span class="letra cifra" aria-hidden="true">{letras[i]}</span>
+							<span>{o}</span>
+						</button>
+					))}
+					<button type="button" class="enc-op enc-op--nose" data-valor="-1">
+						<span class="letra" aria-hidden="true"><Icono nombre="question" tamano={16} /></span>
+						<span>No sé</span>
+					</button>
+				</div>
+			</div>
+		))}
+
+		<div class="enc-paso" data-enc-paso="confianza" data-n={total} hidden>
+			<p class="enc-tema"><Icono nombre="hand-palm" tamano={18} /> Cómo te sientes</p>
+			<h2 class="enc-preg" id="enc-confianza" tabindex="-1">{preguntaConfianza.pregunta}</h2>
+			<div class="escala" role="group" aria-labelledby="enc-confianza">
+				{preguntaConfianza.etiquetas.map((e, i) => (
+					<button type="button" class="esc-op" data-valor={i + 1} aria-label={`${i + 1}: ${e}`}>
+						<span class="cifra">{i + 1}</span>
+					</button>
+				))}
+			</div>
+			<p class="esc-etq" aria-hidden="true">
+				<span>{preguntaConfianza.etiquetas[0]}</span>
+				<span>{preguntaConfianza.etiquetas[4]}</span>
+			</p>
+		</div>
+
+		<div class="enc-paso enc-fin" data-enc-paso="fin" hidden>
+			<span class="fin-ico"><Icono nombre="check" tamano={34} /></span>
+			<h2 class="fin-tit" tabindex="-1">Listo.</h2>
+			<p class="enc-txt">
+				Guardamos tus respuestas solo en este celular. Al avanzar en las lecciones vas a ver cuánto aprendiste.
+			</p>
+			<button type="button" class="boton boton--morado" data-entrar>
+				Entrar al curso <Icono nombre="arrow-right" tamano={20} />
+			</button>
+		</div>
+	</section>
+</div>
+
+<script>
+	import { leer, marcarHookVisto, guardarDiagnostico } from '../lib/progreso';
+
+	const raiz = document.documentElement;
+	const caja = document.querySelector<HTMLElement>('[data-bienvenida]');
+
+	if (caja && raiz.classList.contains('sin-diagnostico')) iniciar(caja);
+
+	function iniciar(caja: HTMLElement) {
+		const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const hook = caja.querySelector<HTMLElement>('[data-hook]')!;
+		const encuesta = caja.querySelector<HTMLElement>('[data-encuesta]')!;
+		const verHook = /[?&](hook|demo)=1/.test(location.search);
+		const repetir = verHook || /[?&]diagnostico=1/.test(location.search);
+
+		// ---------- Hook ----------
+		const slides = [...hook.querySelectorAll<HTMLElement>('[data-slide]')];
+		const barras = [...hook.querySelectorAll<HTMLElement>('.barras > span')];
+
+		const contar = (el: HTMLElement) => {
+			const fin = Number(el.dataset.cuenta);
+			const miles = el.hasAttribute('data-miles');
+			const fmt = (n: number) => (miles ? n.toLocaleString('es-MX') : String(n));
+			if (quieto) return void (el.textContent = fmt(fin));
+			const t0 = performance.now();
+			const dur = 1100;
+			const paso = (t: number) => {
+				const p = Math.min(1, (t - t0) / dur);
+				el.textContent = fmt(Math.round(fin * (1 - Math.pow(1 - p, 3))));
+				if (p < 1) requestAnimationFrame(paso);
+			};
+			el.textContent = fmt(0);
+			setTimeout(() => requestAnimationFrame(paso), 350);
+		};
+
+		const mostrarSlide = (i: number) => {
+			if (i >= slides.length) return terminarHook();
+			slides.forEach((s, j) => s.classList.toggle('activa', j === i));
+			barras.forEach((b, j) => {
+				b.classList.toggle('llena', j < i);
+				b.classList.toggle('corre', j === i);
+				b.style.setProperty('--dur', `${slides[i].dataset.dur}ms`);
+			});
+			slides[i].querySelectorAll<HTMLElement>('[data-cuenta]').forEach(contar);
+			setTimeout(() => mostrarSlide(i + 1), Number(slides[i].dataset.dur));
+		};
+
+		const terminarHook = () => {
+			marcarHookVisto();
+			hook.classList.add('sale');
+			setTimeout(() => {
+				hook.hidden = true;
+				abrirEncuesta();
+			}, quieto ? 0 : 600);
+		};
+
+		// ---------- Encuesta ----------
+		const pasos = [...encuesta.querySelectorAll<HTMLElement>('[data-enc-paso]')];
+		const barra = encuesta.querySelector<HTMLElement>('[data-enc-barra]')!;
+		const avance = encuesta.querySelector<HTMLElement>('[data-enc-avance]')!;
+		const cuenta = encuesta.querySelector<HTMLElement>('[data-enc-cuenta]')!;
+		const total = pasos.filter((p) => p.dataset.n).length;
+		const respuestas: Record<string, number> = {};
+		let confianza = 0;
+		let actual = 0;
+
+		const ir = (i: number, atras = false) => {
+			actual = Math.max(0, Math.min(pasos.length - 1, i));
+			const paso = pasos[actual];
+			pasos.forEach((p) => {
+				p.hidden = p !== paso;
+				p.classList.remove('entra', 'entra-atras');
+			});
+			if (!quieto) void paso.offsetWidth, paso.classList.add(atras ? 'entra-atras' : 'entra');
+			const n = Number(paso.dataset.n || 0);
+			barra.hidden = !n;
+			if (n) {
+				avance.style.width = `${((n - 1) / total) * 100}%`;
+				cuenta.textContent = `${n} de ${total}`;
+			}
+			encuesta.scrollTop = 0;
+			paso.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+		};
+
+		const abrirEncuesta = () => {
+			encuesta.classList.add('visible');
+			ir(0);
+		};
+
+		encuesta.addEventListener('click', (ev) => {
+			const b = (ev.target as HTMLElement).closest('button');
+			if (!b) return;
+			const paso = pasos[actual];
+			if (b.hasAttribute('data-siguiente')) return ir(actual + 1);
+			if (b.hasAttribute('data-atras')) return ir(actual - 1, true);
+			if (b.hasAttribute('data-entrar')) return cerrar();
+			if (b.dataset.valor === undefined) return;
+			paso.querySelectorAll('button[data-valor]').forEach((x) => {
+				x.classList.toggle('elegida', x === b);
+				x.setAttribute('aria-pressed', String(x === b));
+			});
+			const valor = Number(b.dataset.valor);
+			if (paso.dataset.encPaso === 'pregunta') respuestas[paso.dataset.id!] = valor;
+			if (paso.dataset.encPaso === 'confianza') {
+				confianza = valor;
+				guardarDiagnostico(respuestas, confianza);
+				avance.style.width = '100%';
+			}
+			setTimeout(() => ir(actual + 1), quieto ? 150 : 380);
+		});
+
+		const cerrar = () => {
+			caja.classList.add('cierra');
+			if (repetir) history.replaceState(null, '', location.pathname);
+			setTimeout(() => {
+				raiz.classList.remove('sin-diagnostico', 'hook-visto', 'ver-hook');
+				caja.remove();
+				document.dispatchEvent(new CustomEvent('diagnostico-listo'));
+			}, quieto ? 0 : 700);
+		};
+
+		// ---------- Arranque ----------
+		if (!verHook && (leer().hookVisto || repetir)) {
+			hook.hidden = true;
+			abrirEncuesta();
+		} else {
+			mostrarSlide(0);
+		}
+	}
+</script>
+
+<style>
+	.bienvenida {
+		display: none;
+	}
+	:global(html.sin-diagnostico) .bienvenida {
+		display: block;
+		position: fixed;
+		inset: 0;
+		z-index: 80;
+		background: #fff;
+		clip-path: inset(0 0 0 0);
+		transition: clip-path 0.7s cubic-bezier(0.7, 0, 0.2, 1);
+	}
+	:global(html.sin-diagnostico body) {
+		overflow: hidden;
+	}
+	.bienvenida.cierra {
+		clip-path: inset(0 0 100% 0);
+	}
+	:global(html.hook-visto:not(.ver-hook)) .hook {
+		display: none;
+	}
+
+	/* ---------- Hook ---------- */
+	.hook {
+		position: absolute;
+		inset: 0;
+		background: var(--morado);
+		color: #fff;
+		overflow: hidden;
+		transition: opacity 0.6s ease;
+	}
+	.hook.sale {
+		opacity: 0;
+	}
+	.barras {
+		position: absolute;
+		z-index: 2;
+		top: max(1rem, env(safe-area-inset-top));
+		left: var(--margen);
+		right: var(--margen);
+		display: flex;
+		gap: 6px;
+	}
+	.barras span {
+		flex: 1;
+		height: 3px;
+		border-radius: 3px;
+		background: rgb(255 255 255 / 0.3);
+		overflow: hidden;
+	}
+	.barras i {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: #fff;
+	}
+	.barras .llena i {
+		width: 100%;
+	}
+	.barras .corre i {
+		animation: barra var(--dur, 3s) linear forwards;
+	}
+	@keyframes barra {
+		to {
+			width: 100%;
+		}
+	}
+
+	.slide {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		padding: 4rem var(--margen) 3rem;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.45s ease,
+			visibility 0.45s;
+	}
+	.slide.activa {
+		opacity: 1;
+		visibility: visible;
+	}
+	/* Foto arriba que se funde con el color de la pantalla; el texto queda abajo. */
+	.slide {
+		align-items: flex-end;
+		padding-bottom: max(3rem, env(safe-area-inset-bottom));
+	}
+	.s-foto {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 52%;
+		overflow: hidden;
+	}
+	.s-foto-chica .s-foto {
+		height: 34%;
+	}
+	.s-foto :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transform: scale(1.12);
+	}
+	.activa .s-foto :global(img) {
+		animation: acerca 8s ease-out forwards;
+	}
+	@keyframes acerca {
+		from {
+			transform: scale(1.12);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
+	.s-foto::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, transparent 35%, var(--fondo-slide) 98%);
+	}
+	.s-morado {
+		--fondo-slide: var(--morado);
+	}
+	.s-oscuro {
+		--fondo-slide: var(--tinta);
+	}
+	.s-oscuro .s-foto :global(img) {
+		filter: brightness(0.82);
+	}
+	.s-dentro {
+		position: relative;
+	}
+	@media (min-width: 60rem) {
+		.s-foto {
+			inset: 0 0 0 auto;
+			width: 50%;
+			height: 100%;
+		}
+		.s-foto-chica .s-foto {
+			height: 100%;
+		}
+		.s-foto::after {
+			background: linear-gradient(to right, var(--fondo-slide) 0%, transparent 45%);
+		}
+		.slide {
+			align-items: center;
+		}
+		.s-dentro {
+			margin-left: max(var(--margen), calc(50% - 36rem));
+			max-width: min(40rem, 46%);
+		}
+	}
+	.s-morado {
+		background: var(--morado);
+	}
+	.s-oscuro {
+		background: var(--tinta);
+	}
+	.s-dentro {
+		width: 100%;
+		max-width: 40rem;
+		margin-inline: auto;
+	}
+	.s-kicker {
+		font-size: 1.125rem;
+		font-weight: 600;
+		line-height: 1.4;
+		color: #e4cdf8;
+		max-width: 26ch;
+	}
+	.s-oscuro .s-kicker {
+		color: #d8b8f5;
+	}
+	.s-grande {
+		margin-top: 1rem;
+		font-family: var(--f-display);
+		font-size: clamp(3rem, 14vw, 6.5rem);
+		line-height: 0.98;
+		letter-spacing: -0.02em;
+		text-wrap: balance;
+	}
+	.s-cifra {
+		margin-top: 0.75rem;
+		font-family: var(--f-display);
+		font-size: clamp(5.5rem, 30vw, 12rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		font-variant-numeric: tabular-nums;
+	}
+	.s-cifra--chica {
+		font-size: clamp(4.5rem, 24vw, 9rem);
+	}
+	.s-medio {
+		margin-top: 1rem;
+		font-family: var(--f-display);
+		font-size: clamp(1.875rem, 8.5vw, 3.25rem);
+		line-height: 1.08;
+		max-width: 18ch;
+		text-wrap: balance;
+	}
+	.s-cierre {
+		margin-top: 1.75rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgb(255 255 255 / 0.3);
+		font-size: 1.25rem;
+		font-weight: 600;
+	}
+	.s-cierre em,
+	.s-medio em,
+	.s-grande em {
+		font-family: var(--f-display);
+		font-style: italic;
+		font-weight: 400;
+		color: #f1e4fc;
+	}
+	.s-cierre em {
+		font-size: 1.5em;
+	}
+	.s-nota {
+		margin-top: 1.5rem;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: rgb(255 255 255 / 0.72);
+		max-width: 34ch;
+	}
+	.gente {
+		display: grid;
+		grid-template-columns: repeat(9, 1.5rem);
+		gap: 0.3rem 0.35rem;
+		color: rgb(255 255 255 / 0.35);
+	}
+	.gente span {
+		display: inline-flex;
+	}
+	.activa .gente .si {
+		animation: prende 0.3s calc(0.5s + var(--k) * 0.07s) ease-out forwards;
+	}
+	@keyframes prende {
+		to {
+			color: #fff;
+			transform: scale(1.08);
+		}
+	}
+
+	/* Entrada escalonada de cada elemento de la pantalla */
+	.activa .a1,
+	.activa .a2,
+	.activa .a3,
+	.activa .a4 {
+		animation: sube 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+	.activa .a2 {
+		animation-delay: 0.15s;
+	}
+	.activa .a3 {
+		animation-delay: 0.6s;
+	}
+	.activa .a4 {
+		animation-delay: 1.1s;
+	}
+	@keyframes sube {
+		from {
+			opacity: 0;
+			transform: translateY(1.75rem);
+		}
+	}
+
+	/* ---------- Encuesta ---------- */
+	.encuesta {
+		position: absolute;
+		inset: 0;
+		overflow-y: auto;
+		background: #fff;
+		color: var(--tinta);
+		padding: max(1rem, env(safe-area-inset-top)) var(--margen) 2.5rem;
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+	.encuesta.visible {
+		opacity: 1;
+	}
+	.enc-barra {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		max-width: 36rem;
+		margin: 0 auto;
+	}
+	.enc-barra[hidden],
+	.enc-paso[hidden] {
+		display: none;
+	}
+	.enc-atras {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		flex: none;
+		border: 0;
+		border-radius: 50%;
+		background: var(--fondo-2);
+		color: var(--tinta);
+		cursor: pointer;
+	}
+	.enc-avance {
+		flex: 1;
+		height: 6px;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.enc-avance span {
+		display: block;
+		height: 100%;
+		width: 0;
+		border-radius: 999px;
+		background: var(--morado);
+		transition: width 0.4s ease;
+	}
+	.enc-cuenta {
+		font-size: 0.875rem;
+		color: var(--gris);
+		white-space: nowrap;
+	}
+
+	.enc-paso {
+		max-width: 36rem;
+		margin: 0 auto;
+		padding-top: clamp(1.75rem, 7vh, 4rem);
+	}
+	.enc-paso.entra {
+		animation: paso 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+	.enc-paso.entra-atras {
+		animation: paso-atras 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+	@keyframes paso {
+		from {
+			opacity: 0;
+			transform: translateX(2rem);
+		}
+	}
+	@keyframes paso-atras {
+		from {
+			opacity: 0;
+			transform: translateX(-2rem);
+		}
+	}
+	.enc-paso[data-enc-paso='intro'],
+	.enc-fin {
+		padding-top: clamp(3rem, 14vh, 7rem);
+	}
+	.enc-ico,
+	.fin-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		margin-bottom: 1.25rem;
+		border-radius: 1.125rem;
+		background: var(--morado-claro);
+		color: var(--morado);
+	}
+	.fin-ico {
+		border-radius: 50%;
+		background: var(--morado);
+		color: #fff;
+	}
+	.enc-tit,
+	.fin-tit {
+		margin-top: 0.5rem;
+		font-family: var(--f-display);
+		font-weight: 400;
+		font-size: clamp(3rem, 14vw, 4.5rem);
+		line-height: 0.98;
+		letter-spacing: -0.02em;
+	}
+	.enc-txt {
+		margin-top: 1rem;
+		font-size: 1.125rem;
+		color: var(--tinta-2);
+		max-width: 32rem;
+	}
+	.enc-datos {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.5rem;
+		font-size: 0.9375rem;
+		color: var(--gris);
+	}
+	.enc-datos li {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.enc-datos :global(.icono) {
+		color: var(--morado);
+	}
+	.enc-paso .boton {
+		margin-top: 2rem;
+	}
+	.enc-tema {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.7rem;
+		border-radius: 999px;
+		background: var(--morado-claro);
+		color: var(--morado-oscuro);
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+	.enc-paso h2:focus {
+		outline: none;
+	}
+	.enc-preg {
+		margin-top: 1rem;
+		font-family: var(--f-titulo);
+		font-size: clamp(1.5rem, 6.5vw, 1.875rem);
+		font-weight: 600;
+		line-height: 1.22;
+		letter-spacing: -0.025em;
+	}
+	.enc-opciones {
+		display: grid;
+		gap: 0.625rem;
+		margin-top: 1.5rem;
+	}
+	.enc-op {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		min-height: 3.5rem;
+		padding: 0.75rem 1rem;
+		text-align: start;
+		font: inherit;
+		font-size: 1.0625rem;
+		font-weight: 500;
+		line-height: 1.35;
+		color: var(--tinta);
+		background: #fff;
+		border: 0;
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		cursor: pointer;
+		transition:
+			box-shadow 0.15s,
+			background 0.15s;
+	}
+	.enc-op:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.enc-op .letra {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 8px;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.enc-op--nose {
+		color: var(--tinta-2);
+		background: var(--fondo-2);
+		box-shadow: none;
+	}
+	.enc-op.elegida {
+		background: var(--morado-claro);
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.enc-op.elegida .letra {
+		background: var(--morado);
+		color: #fff;
+		box-shadow: none;
+	}
+	.escala {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 0.5rem;
+		margin-top: 1.75rem;
+	}
+	.esc-op {
+		aspect-ratio: 1;
+		max-height: 4.25rem;
+		border: 0;
+		border-radius: var(--radio);
+		background: #fff;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-size: 1.375rem;
+		color: var(--tinta);
+		cursor: pointer;
+		transition:
+			box-shadow 0.15s,
+			background 0.15s;
+	}
+	.esc-op.elegida {
+		background: var(--morado);
+		color: #fff;
+		box-shadow: none;
+	}
+	.esc-etq {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 0.6rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.activa .a1,
+		.activa .a2,
+		.activa .a3,
+		.activa .a4,
+		.activa .gente .si {
+			animation-duration: 0.01s;
+			animation-delay: 0s;
+		}
+		:global(html.sin-diagnostico) .bienvenida {
+			transition: none;
+		}
+		.activa .s-foto :global(img) {
+			animation: none;
+			transform: none;
+		}
+	}
+</style>

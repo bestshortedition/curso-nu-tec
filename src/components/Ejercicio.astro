@@ -1,166 +1,324 @@
 ---
 /**
- * Mini ejercicio de opción múltiple (o verdadero/falso).
+ * Mini ejercicio de opción múltiple o verdadero/falso.
  *
- * Uso en un byte (.mdx):
- *   <Ejercicio pregunta="¿El límite es tu dinero?" opciones={['Verdadero', 'Falso']} correcta={1}>
- *     Explicación corta que aparece al contestar.
+ *   <Ejercicio pregunta="¿…?" opciones={['A', 'B']} correcta={1}>
+ *     Explicación corta. `correcta` empieza a contar en 0.
  *   </Ejercicio>
  *
- * Sin JavaScript: se ven las opciones y un "Ver respuesta" que se abre.
- * Con JavaScript: se toca una opción y aparece si acertaste y la explicación.
+ * Si la pregunta es del banco de la encuesta inicial, usa `diagnostico` y no escribas
+ * pregunta ni opciones: se toman de src/data/diagnostico.ts y la respuesta cuenta para
+ * comparar antes y después.
+ *
+ *   <Ejercicio diagnostico="pago-minimo">Explicación corta.</Ejercicio>
+ *
+ * `porque` (opcional) explica en una frase por qué cada opción está bien o mal.
+ * Al contestar se ve por qué acertaste o fallaste, y se puede intentar otra vez.
+ * Sin JavaScript: se ven las opciones y un "Ver respuesta".
  */
+import { buscarPregunta } from '../data/diagnostico';
+import Icono from './Icono.astro';
+
 interface Props {
-	pregunta: string;
-	opciones: string[];
-	/** Posición de la respuesta correcta, empezando en 0. */
-	correcta: number;
-	/** Texto pequeño arriba de la pregunta. */
+	pregunta?: string;
+	opciones?: string[];
+	correcta?: number;
+	porque?: string[];
 	titulo?: string;
+	diagnostico?: string;
 }
-const { pregunta, opciones, correcta, titulo = 'Mini ejercicio' } = Astro.props;
+const { diagnostico, titulo = 'Pon a prueba lo que aprendiste' } = Astro.props;
+const banco = diagnostico ? buscarPregunta(diagnostico) : undefined;
+if (diagnostico && !banco) throw new Error(`No existe la pregunta "${diagnostico}" en src/data/diagnostico.ts`);
+const pregunta = banco?.pregunta ?? Astro.props.pregunta ?? '';
+const opciones = banco?.opciones ?? Astro.props.opciones ?? [];
+const correcta = banco?.correcta ?? Astro.props.correcta ?? 0;
+const porque = banco?.porque ?? Astro.props.porque ?? [];
 const id = `ej-${Math.random().toString(36).slice(2, 8)}`;
+const letras = 'ABCDEFG';
 ---
 
-<section class="ejercicio not-content" data-ejercicio data-correcta={correcta} aria-labelledby={`${id}-p`}>
-	<p class="etiqueta">{titulo}</p>
-	<p class="pregunta" id={`${id}-p`}>{pregunta}</p>
+<div class="ejercicio" data-ejercicio data-correcta={correcta} data-diagnostico={diagnostico}>
+	<p class="sobretitulo">{titulo}</p>
+	{diagnostico && (
+		<p class="repetida solo-js" data-repetida hidden>
+			<Icono nombre="arrow-counter-clockwise" tamano={16} /> Es la misma pregunta del inicio. ¿Cambió tu respuesta?
+		</p>
+	)}
+	<p class="pregunta" id={id}>{pregunta}</p>
 
-	<div class="opciones solo-js" role="group" aria-labelledby={`${id}-p`}>
+	<div class="opciones solo-js" role="group" aria-labelledby={id}>
 		{opciones.map((o, i) => (
-			<button type="button" class="opcion" data-i={i}>{o}</button>
+			<button type="button" class="opcion" data-i={i} data-porque={porque[i] ?? ''}>
+				<span class="letra cifra" aria-hidden="true">{letras[i]}</span>
+				<span>{o}</span>
+			</button>
 		))}
 	</div>
-	<ul class="opciones-texto sin-js">
+	<ol class="opciones-sinjs sin-js" type="A">
 		{opciones.map((o) => <li>{o}</li>)}
-	</ul>
+	</ol>
 
-	<p class="resultado" role="status" aria-live="polite"></p>
+	<p class="veredicto" role="status" aria-live="polite"></p>
 
-	<details class="explicacion">
-		<summary>Ver respuesta</summary>
-		<p class="correcta"><strong>Respuesta:</strong> {opciones[correcta]}</p>
-		<div class="texto"><slot /></div>
+	<details class="explicacion" data-explicacion>
+		<summary class="sin-js">Ver respuesta</summary>
+		<div class="caja">
+			<p class="elegida solo-js" data-elegida hidden>
+				<Icono nombre="x-circle" tamano={20} />
+				<span><strong>Por qué no:</strong> <span data-elegida-txt></span></span>
+			</p>
+			<p class="correcta">
+				<Icono nombre="check-circle" tamano={20} />
+				<span>
+					<strong>Respuesta: {opciones[correcta]}.</strong>
+					{porque[correcta] && <> {porque[correcta]}</>}
+				</span>
+			</p>
+			<div class="porque"><slot /></div>
+		</div>
+		<button type="button" class="otra-vez solo-js" data-otra-vez hidden>
+			<Icono nombre="arrow-counter-clockwise" tamano={18} /> Intentar otra vez
+		</button>
 	</details>
-</section>
+</div>
 
 <script>
+	import { leer, responder } from '../lib/progreso';
+
 	document.querySelectorAll<HTMLElement>('[data-ejercicio]').forEach((caja) => {
 		const correcta = Number(caja.dataset.correcta);
-		const resultado = caja.querySelector<HTMLElement>('.resultado')!;
-		const detalles = caja.querySelector<HTMLDetailsElement>('.explicacion')!;
-		const botones = caja.querySelectorAll<HTMLButtonElement>('.opcion');
-		detalles.hidden = true;
+		const veredicto = caja.querySelector<HTMLElement>('.veredicto')!;
+		const explicacion = caja.querySelector<HTMLDetailsElement>('[data-explicacion]')!;
+		const elegida = caja.querySelector<HTMLElement>('[data-elegida]')!;
+		const otraVez = caja.querySelector<HTMLButtonElement>('[data-otra-vez]')!;
+		const botones = [...caja.querySelectorAll<HTMLButtonElement>('.opcion')];
+		const id = caja.dataset.diagnostico;
+
+		// Si ya contestó esta pregunta en la encuesta inicial, se le avisa que es la misma.
+		const repetida = caja.querySelector<HTMLElement>('[data-repetida]');
+		if (repetida && id && leer().diagnostico?.respuestas[id] !== undefined) repetida.hidden = false;
+
+		const reiniciar = () => {
+			botones.forEach((x) => {
+				x.classList.remove('bien', 'mal', 'tenue');
+				x.disabled = false;
+				x.removeAttribute('aria-pressed');
+			});
+			veredicto.textContent = '';
+			veredicto.className = 'veredicto';
+			explicacion.open = false;
+			otraVez.hidden = true;
+			botones[0]?.focus();
+		};
+
 		botones.forEach((b) =>
 			b.addEventListener('click', () => {
 				const i = Number(b.dataset.i);
-				botones.forEach((x) => {
-					x.classList.remove('elegida', 'bien', 'mal');
-					x.setAttribute('aria-pressed', 'false');
+				const bien = i === correcta;
+				if (id) responder(id, i, bien);
+				botones.forEach((x, j) => {
+					x.classList.toggle('bien', j === correcta);
+					x.classList.toggle('mal', j === i && !bien);
+					x.classList.toggle('tenue', j !== i && j !== correcta);
+					x.setAttribute('aria-pressed', String(j === i));
+					x.disabled = true;
 				});
-				b.classList.add('elegida', i === correcta ? 'bien' : 'mal');
-				b.setAttribute('aria-pressed', 'true');
-				botones[correcta].classList.add('bien');
-				resultado.textContent = i === correcta ? '¡Exacto!' : 'Casi. Mira la respuesta:';
-				resultado.className = 'resultado ' + (i === correcta ? 'ok' : 'no');
-				detalles.hidden = false;
-				detalles.open = true;
+				veredicto.textContent = bien ? 'Correcto.' : 'No exactamente.';
+				veredicto.className = 'veredicto ' + (bien ? 'ok' : 'no');
+				const txt = b.dataset.porque ?? '';
+				elegida.hidden = bien || !txt;
+				elegida.querySelector('[data-elegida-txt]')!.textContent = txt;
+				otraVez.hidden = bien;
+				explicacion.open = true;
+				caja.dispatchEvent(new CustomEvent('respondido', { bubbles: true }));
 			}),
 		);
+		otraVez.addEventListener('click', reiniciar);
 	});
 </script>
 
 <style>
-	.ejercicio {
-		margin: 2rem 0;
-		padding: 1.25rem;
-		border: 2px solid var(--nu-lila-borde);
-		border-radius: 1.25rem;
-		background: #ffffff;
-	}
-	.etiqueta {
-		margin: 0;
-		color: var(--nu-morado);
-		text-transform: uppercase;
-		font-size: 0.8125rem;
-		letter-spacing: 0.06em;
-	}
 	.pregunta {
-		margin: 0.4rem 0 1rem;
-		font-size: 1.1875rem;
-		font-weight: 700;
-		line-height: 1.35;
-		color: var(--nu-texto);
+		margin-top: 0.5rem;
+		font-family: var(--f-titulo);
+		font-size: clamp(1.375rem, 6vw, 1.625rem) !important;
+		font-weight: 600;
+		line-height: 1.25 !important;
+		letter-spacing: -0.025em;
+		color: var(--tinta) !important;
 	}
 	.opciones {
 		display: grid;
-		gap: 0.6rem;
-	}
-	:global(.js) .opciones.solo-js {
-		display: grid;
+		gap: 0.625rem;
+		margin-top: 1.5rem;
 	}
 	.opcion {
-		min-height: 3rem;
-		padding: 0.7rem 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		min-height: 3.5rem;
+		padding: 0.75rem 1rem;
 		text-align: start;
-		font: inherit;
-		font-weight: 600;
-		color: var(--nu-texto);
-		background: #ffffff;
-		border: 2px solid var(--nu-linea);
-		border-radius: 0.875rem;
+		font-size: 1.0625rem;
+		font-weight: 500;
+		line-height: 1.35;
+		background: #fff;
+		border: 0;
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
 		cursor: pointer;
+		transition:
+			box-shadow 0.15s,
+			background 0.15s,
+			opacity 0.15s;
 	}
-	.opcion:hover {
-		border-color: var(--nu-morado);
+	.opcion:hover:not(:disabled) {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.opcion:disabled {
+		cursor: default;
+		color: inherit;
+	}
+	.repetida {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		width: fit-content;
+		margin-top: 0.75rem;
+		padding: 0.3rem 0.7rem;
+		border-radius: 999px;
+		background: var(--morado-claro);
+		color: var(--morado-oscuro) !important;
+		font-size: 0.875rem !important;
+		font-weight: 600;
+	}
+	.repetida[hidden] {
+		display: none;
+	}
+	.letra {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 8px;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		font-size: 0.8125rem;
+		color: var(--gris);
 	}
 	.opcion.bien {
-		border-color: var(--nu-verde);
-		background: var(--nu-verde-fondo);
+		background: var(--verde-claro);
+		box-shadow: inset 0 0 0 2px var(--verde);
+	}
+	.opcion.bien .letra {
+		background: var(--verde);
+		color: #fff;
+		box-shadow: none;
 	}
 	.opcion.mal {
-		border-color: var(--nu-rojo);
-		background: var(--nu-rojo-fondo);
+		background: var(--rojo-claro);
+		box-shadow: inset 0 0 0 2px var(--rojo);
 	}
-	.opcion.bien::after {
-		content: '  ✓';
-		color: var(--nu-verde);
+	.opcion.mal .letra {
+		background: var(--rojo);
+		color: #fff;
+		box-shadow: none;
 	}
-	.opcion.mal::after {
-		content: '  ✗';
-		color: var(--nu-rojo);
+	.opcion.tenue {
+		opacity: 0.5;
 	}
-	.opciones-texto {
-		margin: 0 0 1rem;
-		padding-left: 1.2rem;
+	.opciones-sinjs {
+		margin: 1rem 0 0;
+		padding-left: 1.5rem;
 	}
-	.resultado {
-		margin: 0.75rem 0 0;
-		font-weight: 700;
-		min-height: 1px;
+	.veredicto {
+		margin-top: 1rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem !important;
 	}
-	.resultado.ok {
-		color: var(--nu-verde);
+	.veredicto.ok {
+		color: var(--verde) !important;
 	}
-	.resultado.no {
-		color: var(--nu-rojo);
-	}
-	.explicacion {
-		margin-top: 0.5rem;
+	.veredicto.no {
+		color: var(--rojo) !important;
 	}
 	.explicacion summary {
-		cursor: pointer;
-		font-weight: 600;
-		color: var(--nu-morado);
 		min-height: 2.75rem;
 		display: flex;
 		align-items: center;
+		margin-top: 0.5rem;
+		font-weight: 600;
+		color: var(--morado);
+		cursor: pointer;
 	}
-	:global(.js) .explicacion summary {
+	:global(html.js) .explicacion:not([open]) {
 		display: none;
 	}
-	.explicacion p,
-	.texto :global(p) {
-		margin: 0.5rem 0 0;
+	.caja {
+		margin-top: 0.25rem;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radio);
+		background: var(--fondo-2);
+	}
+	.correcta,
+	.elegida {
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-start;
+		font-size: 1rem !important;
+		line-height: 1.5 !important;
+		color: var(--tinta-2) !important;
+	}
+	.correcta :global(.icono) {
+		color: var(--verde);
+		margin-top: 0.1rem;
+	}
+	.elegida :global(.icono) {
+		color: var(--rojo);
+		margin-top: 0.1rem;
+	}
+	.elegida[hidden] {
+		display: none;
+	}
+	.elegida:not([hidden]) + .correcta {
+		margin-top: 0.75rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--linea);
+	}
+	.caja strong {
+		color: var(--tinta);
+	}
+	.otra-vez {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		margin-top: 0.75rem;
+		padding: 0 1rem;
+		border: 0;
+		border-radius: 999px;
+		background: transparent;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.otra-vez:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.otra-vez[hidden] {
+		display: none;
+	}
+	.porque {
+		padding-left: 1.75rem;
+	}
+	.porque :global(p) {
+		margin-top: 0.4rem;
+		font-size: 1rem !important;
+		color: var(--tinta-2);
 	}
 </style>

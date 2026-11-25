@@ -1,0 +1,23 @@
+---
+/**
+ * Deja en la página la lista de lecciones publicadas para que src/lib/ruta.ts
+ * calcule qué está desbloqueado. No se ve.
+ */
+import { getCollection } from 'astro:content';
+import { temario } from '../data/temario';
+
+const base = import.meta.env.BASE_URL;
+const publicadas = new Set((await getCollection('lecciones')).map((l) => l.data.numero));
+const datos = {
+	modulos: temario.map((m) => ({
+		numero: m.numero,
+		lecciones: m.lecciones.map((l) => ({
+			numero: l.numero,
+			publicada: publicadas.has(l.numero),
+			href: `${base}${m.clave}/${l.slug}/`,
+		})),
+	})),
+};
+---
+
+<script type="application/json" id="datos-ruta" set:html={JSON.stringify(datos)} />

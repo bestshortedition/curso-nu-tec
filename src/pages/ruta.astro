@@ -1,0 +1,356 @@
+---
+/**
+ * "Tu ruta": los 5 módulos en el orden sugerido. Se abre al darle "Empezar" en el inicio.
+ * Todos los módulos se pueden abrir. Con JavaScript cada uno muestra si está terminado o si sigue.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import DatosRuta from '../components/DatosRuta.astro';
+import Foto from '../components/Foto.astro';
+import Bienvenida from '../components/Bienvenida.astro';
+import AvanceAprendizaje from '../components/AvanceAprendizaje.astro';
+import { fotosModulo } from '../data/fotos';
+import { temario, totalLecciones } from '../data/temario';
+
+const base = import.meta.env.BASE_URL;
+const publicadas = new Set((await getCollection('lecciones')).map((l) => l.data.numero));
+const primera = temario
+	.flatMap((m) => m.lecciones.filter((l) => publicadas.has(l.numero)).map((l) => `${base}${m.clave}/${l.slug}/`))
+	.at(0);
+---
+
+<Base titulo="Tu ruta" descripcion="Los 5 módulos del curso. Empieza por el tema que más te interese.">
+	<div class="contenedor">
+		<header class="cabeza">
+			<p class="sobretitulo"><Icono nombre="map-trifold" tamano={18} /> Tu ruta</p>
+			<h1>De tu primer peso a tu primer historial.</h1>
+			<p class="bajada">
+				Son {temario.length} módulos y {totalLecciones} lecciones cortas. Te sugerimos este orden, pero puedes empezar por el
+				tema que más te interese.
+			</p>
+			<div class="avance solo-js" data-avance hidden>
+				<div class="barra" aria-hidden="true"><span data-barra></span></div>
+				<p data-avance-txt></p>
+			</div>
+			{primera && (
+				<a class="boton boton--morado" href={primera} data-continuar>
+					<span data-continuar-txt>Empezar la primera lección</span>
+					<Icono nombre="arrow-right" tamano={20} />
+				</a>
+			)}
+			<div class="aa-lugar"><AvanceAprendizaje /></div>
+		</header>
+
+		<ol class="camino">
+			{temario.map((m) => {
+				const disponibles = m.lecciones.filter((l) => publicadas.has(l.numero)).length;
+				return (
+					<li class="paso" data-paso={m.numero} data-estado={disponibles === 0 ? 'pronto' : 'abierto'}>
+						<span class="nodo" aria-hidden="true">
+							<span class="n-ico"><Icono nombre={m.icono} tamano={24} /></span>
+							<span class="n-hecho"><Icono nombre="check" tamano={22} /></span>
+						</span>
+						<a class="tarjeta" href={`${base}${m.clave}/`} data-enlace>
+							<span class="t-foto">
+								<Foto foto={fotosModulo[m.clave]} anchos={[400, 700, 1000]} tamanos="(min-width: 44rem) 600px, 90vw" />
+							</span>
+							<span class="t-arriba">
+								<span class="t-num">Módulo {m.numero}</span>
+								<span class="chip" data-chip>{disponibles === 0 ? 'Próximamente' : ''}</span>
+							</span>
+							<span class="t-tit">{m.titulo}</span>
+							<span class="t-prom">{m.promesa}</span>
+							<span class="t-meta">
+								<span><Icono nombre="book-open-text" tamano={16} /> {m.lecciones.length} lecciones</span>
+								<span class="solo-js" data-hechas></span>
+							</span>
+							<span class="sr-only" data-sr></span>
+						</a>
+					</li>
+				);
+			})}
+			<li class="paso paso--meta">
+				<span class="nodo" aria-hidden="true"><Icono nombre="flag-checkered" tamano={22} /></span>
+				<p class="meta-txt">Terminas el curso: sabes usar tu cuenta, tu tarjeta y tu historial a tu favor.</p>
+			</li>
+		</ol>
+	</div>
+	<DatosRuta />
+	<Bienvenida />
+</Base>
+
+<script>
+	import { calcular, leerDatos } from '../lib/ruta';
+
+	const datos = leerDatos();
+	if (datos) {
+		const ruta = calcular(datos);
+		const etiquetas = { hecho: 'Terminado', actual: 'Sigue aquí', disponible: 'Disponible', pronto: 'Próximamente' };
+		document.querySelectorAll<HTMLElement>('[data-paso]').forEach((li) => {
+			const m = ruta.modulos[Number(li.dataset.paso)];
+			li.dataset.estado = m.estado;
+			li.querySelector('[data-chip]')!.textContent = etiquetas[m.estado];
+			li.querySelector('[data-sr]')!.textContent = `(${etiquetas[m.estado]})`;
+			const hechas = li.querySelector('[data-hechas]');
+			if (hechas && m.publicadas > 0 && m.hechas > 0) hechas.textContent = `· ${m.hechas} de ${m.publicadas} terminadas`;
+		});
+		if (ruta.totalHechas > 0) {
+			const avance = document.querySelector<HTMLElement>('[data-avance]')!;
+			const publicadas = Object.values(ruta.lecciones).filter((e) => e !== 'pronto').length;
+			avance.hidden = false;
+			document.querySelector<HTMLElement>('[data-barra]')!.style.width = `${(ruta.totalHechas / publicadas) * 100}%`;
+			document.querySelector('[data-avance-txt]')!.textContent =
+				`Llevas ${ruta.totalHechas} de ${publicadas} ${publicadas === 1 ? 'lección disponible' : 'lecciones disponibles'}.`;
+		}
+		const boton = document.querySelector<HTMLAnchorElement>('[data-continuar]');
+		if (boton) {
+			if (ruta.siguiente) {
+				boton.href = ruta.siguiente.href;
+				if (ruta.totalHechas > 0) boton.querySelector('[data-continuar-txt]')!.textContent = 'Continuar donde te quedaste';
+			} else if (ruta.totalHechas > 0) {
+				boton.hidden = true;
+			}
+		}
+	}
+</script>
+
+<style>
+	.cabeza {
+		padding: clamp(2rem, 7vw, 3.5rem) 0 2.5rem;
+	}
+	.sobretitulo {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	h1 {
+		margin-top: 0.75rem;
+		font-size: clamp(2.125rem, 9vw, 3.25rem);
+		letter-spacing: -0.045em;
+		line-height: 1.02;
+		max-width: 16ch;
+	}
+	.bajada {
+		margin-top: 1rem;
+		font-size: 1.125rem;
+		color: var(--tinta-2);
+		max-width: 34rem;
+	}
+	.avance {
+		margin-top: 1.5rem;
+	}
+	.avance[hidden] {
+		display: none;
+	}
+	.barra {
+		height: 6px;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.barra span {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--morado);
+		border-radius: 999px;
+		transition: width 0.4s;
+	}
+	.avance p {
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.cabeza .boton {
+		margin-top: 1.75rem;
+	}
+	.aa-lugar :global(.avance-apr) {
+		margin-top: 1.25rem;
+	}
+	.cabeza .boton[hidden] {
+		display: none;
+	}
+
+	/* El camino */
+	.camino {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		position: relative;
+	}
+	.paso {
+		position: relative;
+		display: grid;
+		grid-template-columns: 3.25rem 1fr;
+		gap: 1rem;
+		padding-bottom: 1.25rem;
+	}
+	/* Línea que une los módulos */
+	.paso::before {
+		content: '';
+		position: absolute;
+		left: calc(1.625rem - 1px);
+		top: 3.25rem;
+		bottom: 0;
+		width: 2px;
+		background: var(--linea);
+	}
+	.paso--meta::before {
+		display: none;
+	}
+	.paso[data-estado='hecho']::before {
+		background: var(--morado);
+	}
+	.nodo {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3.25rem;
+		height: 3.25rem;
+		border-radius: 50%;
+		background: #fff;
+		color: var(--morado);
+		box-shadow: inset 0 0 0 2px var(--linea);
+	}
+	.n-hecho {
+		display: none;
+	}
+	.paso[data-estado='actual'] .nodo {
+		background: var(--morado);
+		color: #fff;
+		box-shadow: 0 0 0 6px var(--morado-claro);
+	}
+	.paso[data-estado='hecho'] .nodo {
+		background: var(--morado-claro);
+		color: var(--morado);
+		box-shadow: none;
+	}
+	.paso[data-estado='hecho'] .n-ico {
+		display: none;
+	}
+	.paso[data-estado='hecho'] .n-hecho {
+		display: inline-flex;
+	}
+	.paso--meta .nodo {
+		color: var(--tinta);
+		background: var(--fondo-2);
+	}
+
+	.tarjeta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		padding: 1rem 1.125rem 1.125rem;
+		border-radius: var(--radio);
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--linea);
+		color: var(--tinta);
+		text-decoration: none;
+		transition: box-shadow 0.15s;
+	}
+	.t-foto {
+		display: block;
+		margin: -1rem -1.125rem 0.75rem;
+		aspect-ratio: 16 / 7;
+		overflow: hidden;
+		border-radius: var(--radio) var(--radio) 0 0;
+		background: var(--fondo-2);
+	}
+	.t-foto :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.4s ease;
+	}
+	.tarjeta[href]:hover .t-foto :global(img) {
+		transform: scale(1.03);
+	}
+	/* Próximamente: la foto se ve un poco más tenue. */
+	.paso[data-estado='pronto'] .t-foto :global(img) {
+		filter: saturate(0.6);
+		opacity: 0.8;
+	}
+	.tarjeta {
+		overflow: hidden;
+	}
+	.tarjeta[href]:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.paso[data-estado='actual'] .tarjeta {
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.t-arriba {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+	.t-num {
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.chip:empty {
+		display: none;
+	}
+	.chip {
+		padding: 0.15rem 0.55rem;
+		border-radius: 999px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		background: var(--fondo-2);
+		color: var(--gris);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		white-space: nowrap;
+	}
+	.paso[data-estado='actual'] .chip {
+		background: var(--morado);
+		color: #fff;
+		box-shadow: none;
+	}
+	.paso[data-estado='hecho'] .chip {
+		background: var(--verde-claro);
+		color: var(--verde);
+		box-shadow: none;
+	}
+	.t-tit {
+		font-family: var(--f-titulo);
+		font-size: 1.1875rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.25;
+	}
+	.t-prom {
+		font-size: 0.9375rem;
+		color: var(--gris);
+		line-height: 1.45;
+	}
+	.t-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.5rem;
+		margin-top: 0.4rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.t-meta span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+	.t-meta [data-hechas] {
+		color: var(--verde);
+		font-weight: 600;
+	}
+	.meta-txt {
+		align-self: center;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		color: var(--tinta-2);
+		line-height: 1.35;
+	}
+</style>

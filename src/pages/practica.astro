@@ -1,0 +1,298 @@
+---
+/**
+ * "Practica": juegos cortos, retos para aplicar lo aprendido y plantillas para descargar.
+ * Se agregó por la evaluación del 22/11/2026: un tercio pidió juegos, simuladores y retos.
+ * El contenido vive en src/data/practica.ts y las plantillas en public/plantillas/.
+ */
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import MitoRealidad from '../components/practica/MitoRealidad.astro';
+import JuegoMes from '../components/practica/JuegoMes.astro';
+import RetoGastos from '../components/practica/RetoGastos.astro';
+import MetaAhorro from '../components/practica/MetaAhorro.astro';
+import { plantillas, mitoRealidad } from '../data/practica';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base titulo="Practica" descripcion="Juegos de un minuto, retos para tu dinero y plantillas para descargar. Sin registro.">
+	<div class="contenedor">
+		<nav class="migas" aria-label="Ruta">
+			<a href={`${base}ruta/`}><Icono nombre="arrow-left" tamano={18} /> Tu ruta</a>
+		</nav>
+
+		<header class="cabeza">
+			<p class="sobretitulo"><Icono nombre="game-controller" tamano={18} /> Practica</p>
+			<h1>Menos leer, más <em>hacer.</em></h1>
+			<p class="bajada">Juegos de un minuto, retos para tu dinero de verdad y plantillas para descargar. Elige por dónde empezar.</p>
+			<nav class="saltos" aria-label="Secciones">
+				<a href="#juegos"><Icono nombre="game-controller" tamano={18} /> Juegos</a>
+				<a href="#retos"><Icono nombre="flag-checkered" tamano={18} /> Retos</a>
+				<a href="#plantillas"><Icono nombre="download-simple" tamano={18} /> Plantillas</a>
+			</nav>
+		</header>
+
+		<section id="juegos" class="bloque" aria-labelledby="juegos-t">
+			<h2 id="juegos-t" class="bloque-tit">Juegos</h2>
+
+			<article class="pieza" aria-labelledby="mr-t">
+				<div class="pieza-cabeza">
+					<span class="pieza-ico"><Icono nombre="cards" tamano={24} /></span>
+					<div>
+						<h3 id="mr-t">¿Mito o realidad?</h3>
+						<p class="pieza-meta">{mitoRealidad.length} frases · 1 minuto</p>
+					</div>
+				</div>
+				<p class="pieza-txt">Cosas que se dicen del dinero. ¿Cuáles son ciertas?</p>
+				<MitoRealidad />
+			</article>
+
+			<article class="pieza" aria-labelledby="jm-t">
+				<div class="pieza-cabeza">
+					<span class="pieza-ico"><Icono nombre="ticket" tamano={24} /></span>
+					<div>
+						<h3 id="jm-t">Tu mes con tu domingo</h3>
+						<p class="pieza-meta">4 decisiones · 2 minutos</p>
+					</div>
+				</div>
+				<p class="pieza-txt">Salidas, antojos, videojuegos y tu primer pago. Decide y mira qué pasa con tu meta.</p>
+				<JuegoMes />
+			</article>
+		</section>
+
+		<section id="retos" class="bloque" aria-labelledby="retos-t">
+			<h2 id="retos-t" class="bloque-tit">Retos</h2>
+
+			<article class="pieza" aria-labelledby="rg-t">
+				<div class="pieza-cabeza">
+					<span class="pieza-ico"><Icono nombre="notebook" tamano={24} /></span>
+					<div>
+						<h3 id="rg-t">3 días anotando tus gastos</h3>
+						<p class="pieza-meta">1 minuto al día</p>
+					</div>
+				</div>
+				<RetoGastos />
+			</article>
+
+			<article class="pieza" aria-labelledby="ma-t">
+				<div class="pieza-cabeza">
+					<span class="pieza-ico"><Icono nombre="target" tamano={24} /></span>
+					<div>
+						<h3 id="ma-t">Tu meta de ahorro</h3>
+						<p class="pieza-meta">Aparta cada semana</p>
+					</div>
+				</div>
+				<MetaAhorro />
+			</article>
+		</section>
+
+		<section id="plantillas" class="bloque" aria-labelledby="plantillas-t">
+			<h2 id="plantillas-t" class="bloque-tit">Plantillas para descargar</h2>
+			<p class="bloque-txt">Se abren en Excel, Google Sheets o Numbers. Cambias tus números y las cuentas se hacen solas.</p>
+			<ul class="plantillas">
+				{plantillas.map((p) => (
+					<li>
+						<a class="plantilla" href={`${base}plantillas/${p.archivo}`} download>
+							<span class="pl-ico"><Icono nombre="file-csv" tamano={26} /></span>
+							<span class="pl-txt">
+								<span class="pl-tit">{p.titulo}</span>
+								<span class="pl-sub">{p.texto}</span>
+							</span>
+							<Icono nombre="download-simple" tamano={22} class="pl-bajar" />
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<nav class="botones" aria-label="¿A dónde sigues?">
+			<a class="boton boton--morado boton--ancho" href={`${base}ruta/`}>
+				<Icono nombre="map-trifold" tamano={20} /> Ir a las lecciones
+			</a>
+			<a class="link" href={`${base}glosario/`}><Icono nombre="book-bookmark" tamano={18} /> Ver el glosario</a>
+		</nav>
+	</div>
+</Base>
+
+<style>
+	.migas {
+		padding-top: 1.25rem;
+	}
+	.migas a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		color: var(--gris);
+		text-decoration: none;
+		font-size: 0.9375rem;
+	}
+	.cabeza {
+		padding: 1rem 0 1rem;
+	}
+	.sobretitulo {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	h1 {
+		margin-top: 0.75rem;
+		font-size: clamp(2.25rem, 10vw, 3.25rem);
+		letter-spacing: -0.045em;
+		line-height: 1.02;
+	}
+	h1 em {
+		font-family: var(--f-display);
+		font-weight: 400;
+		letter-spacing: -0.01em;
+		color: var(--morado);
+	}
+	.bajada {
+		margin-top: 1rem;
+		font-size: 1.125rem;
+		color: var(--tinta-2);
+	}
+	.saltos {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+		margin-top: 1.5rem;
+	}
+	.saltos a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		min-height: 2.75rem;
+		padding: 0 0.8rem;
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		color: var(--tinta);
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		text-decoration: none;
+	}
+	.saltos a:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.bloque {
+		padding-top: 2.5rem;
+		scroll-margin-top: var(--alto-barra);
+	}
+	.bloque-tit {
+		font-size: clamp(1.625rem, 7vw, 2rem);
+		letter-spacing: -0.035em;
+	}
+	.bloque-txt {
+		margin-top: 0.5rem;
+		color: var(--tinta-2);
+	}
+	.pieza {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--linea);
+	}
+	.bloque-tit + .pieza {
+		border-top: 0;
+		padding-top: 0.5rem;
+	}
+	.pieza-cabeza {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+	.pieza-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.875rem;
+		background: var(--morado-claro);
+		color: var(--morado);
+	}
+	.pieza h3 {
+		font-size: 1.3125rem;
+		letter-spacing: -0.025em;
+	}
+	.pieza-meta {
+		margin-top: 0.1rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.pieza-txt {
+		margin: 0.875rem 0 1rem;
+		font-size: 1.0625rem;
+		color: var(--tinta-2);
+	}
+	.pieza-cabeza + :global(.rg),
+	.pieza-cabeza + :global(.ma) {
+		margin-top: 0.875rem;
+	}
+	.plantillas {
+		list-style: none;
+		margin: 1rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.625rem;
+	}
+	.plantilla {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: 0.875rem;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		color: var(--tinta);
+		text-decoration: none;
+	}
+	.plantilla:hover {
+		box-shadow: inset 0 0 0 1.5px var(--morado);
+		color: var(--tinta);
+	}
+	.pl-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.875rem;
+		background: var(--verde-claro);
+		color: var(--verde);
+	}
+	.pl-txt {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+	}
+	.pl-tit {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+	}
+	.pl-sub {
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		color: var(--gris);
+	}
+	.plantilla :global(.pl-bajar) {
+		color: var(--morado);
+	}
+	.botones {
+		display: grid;
+		gap: 0.75rem;
+		margin: 3rem 0 3rem;
+	}
+	.link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		font-weight: 600;
+		color: var(--tinta-2);
+		text-decoration: none;
+	}
+</style>

@@ -1,0 +1,32 @@
+---
+/**
+ * Foto optimizada (AVIF/WebP con tamaños para celular y computadora).
+ *   <Foto foto={fotosModulo.credito} anchos={[480, 800, 1200]} tamanos="100vw" />
+ * Las fotos y sus créditos están en src/data/fotos.ts.
+ */
+import { Picture } from 'astro:assets';
+import type { Foto } from '../data/fotos';
+
+interface Props {
+	foto: Foto;
+	anchos?: number[];
+	tamanos?: string;
+	class?: string;
+	/** true solo para la foto principal de la página (carga antes). */
+	prioridad?: boolean;
+}
+const { foto, anchos = [480, 800, 1200], tamanos = '100vw', class: clase, prioridad = false } = Astro.props;
+---
+
+<Picture
+	src={foto.src}
+	alt={foto.alt}
+	widths={anchos}
+	sizes={tamanos}
+	formats={['avif', 'webp']}
+	quality={70}
+	loading={prioridad ? 'eager' : 'lazy'}
+	fetchpriority={prioridad ? 'high' : 'auto'}
+	class={clase}
+	style={foto.foco ? `object-position:${foto.foco}` : undefined}
+/>

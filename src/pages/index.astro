@@ -1,0 +1,604 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import DatosRuta from '../components/DatosRuta.astro';
+import Foto from '../components/Foto.astro';
+import Bienvenida from '../components/Bienvenida.astro';
+import AvanceAprendizaje from '../components/AvanceAprendizaje.astro';
+import { fotoInicio } from '../data/fotos';
+import { temario, totalLecciones } from '../data/temario';
+
+const base = import.meta.env.BASE_URL;
+const publicadas = new Set((await getCollection('lecciones')).map((l) => l.data.numero));
+
+// Orden de todas las lecciones publicadas, para el botón "Empezar / Continuar".
+const rutaPublicadas = temario.flatMap((m) =>
+	m.lecciones
+		.filter((l) => publicadas.has(l.numero))
+		.map((l) => ({ numero: l.numero, titulo: l.titulo, href: `${base}${m.clave}/${l.slug}/` })),
+);
+const primera = rutaPublicadas[0];
+---
+
+<Base
+	titulo="Bytes de dinero"
+	descripcion="Curso gratuito de dinero para quienes están por cumplir 18. Lecciones de 1 a 2 minutos. Nu × Tec de Monterrey."
+>
+	<section class="portada contenedor contenedor--amplio">
+		<div class="portada-texto">
+		<p class="sobretitulo">Curso gratuito · Para quienes están por cumplir 18</p>
+		<h1>Tu dinero, explicado en&nbsp;2&nbsp;minutos.</h1>
+		<p class="bajada">
+			Lecciones cortas para tu primera cuenta, tu primera tarjeta y tus primeros ahorros. Sin registro. Las puedes
+			mandar por WhatsApp.
+		</p>
+		<div class="accion">
+			{primera && (
+				<a class="boton boton--morado" href={`${base}ruta/`} data-continuar>
+					<span data-continuar-texto>Empezar el curso</span>
+					<Icono nombre="arrow-right" tamano={20} />
+				</a>
+			)}
+			<a class="boton boton--borde" href="#temario">Ver el temario</a>
+		</div>
+		<div class="aa-lugar"><AvanceAprendizaje /></div>
+		</div>
+		<figure class="portada-foto">
+			<Foto foto={fotoInicio} anchos={[480, 760, 1100]} tamanos="(min-width: 60rem) 420px, 100vw" prioridad />
+			<figcaption class="etq-foto">
+				<span class="etq-ico"><Icono nombre="credit-card" tamano={20} /></span>
+				<span><strong>Tu primera tarjeta</strong> Qué revisar antes de usarla</span>
+			</figcaption>
+		</figure>
+		<dl class="numeros">
+			<div><dt>módulos</dt><dd class="cifra">{temario.length}</dd></div>
+			<div><dt>lecciones</dt><dd class="cifra">{totalLecciones}</dd></div>
+			<div><dt>minutos cada una</dt><dd class="cifra">1–2</dd></div>
+		</dl>
+	</section>
+
+	<section class="voz" aria-labelledby="voz-t">
+		<div class="contenedor contenedor--amplio">
+			<p class="voz-etq"><Icono nombre="lightbulb" tamano={20} /> Por qué existe este curso</p>
+			<h2 id="voz-t" class="voz-frase">En casa nos enseñaron a ahorrar. Casi nadie nos enseñó a usar el&nbsp;crédito.</h2>
+			<dl class="voz-datos">
+				<div>
+					<dt class="cifra">96%</dt>
+					<dd>les cree a sus papás cuando se habla de dinero</dd>
+				</div>
+				<div>
+					<dt class="cifra">2 de 17</dt>
+					<dd>aprendieron algo de crédito en casa</dd>
+				</div>
+			</dl>
+			<p class="contexto">
+				<Icono nombre="users-three" tamano={20} />
+				<span>Escuchamos a 25 jóvenes de 15 a 18 años en seis estados. Cada lección resuelve una duda que salió de esas entrevistas.</span>
+			</p>
+		</div>
+	</section>
+
+	<section class="como contenedor contenedor--amplio" aria-labelledby="como-t">
+		<h2 id="como-t">Así es cada lección</h2>
+		<ol class="pasos">
+			<li>
+				<span class="p-ico"><Icono nombre="question" tamano={26} /></span>
+				<span class="p-tit">Una duda real</span>
+				<span class="p-txt">Lo que muchos jóvenes no saben, con datos de las entrevistas.</span>
+			</li>
+			<li>
+				<span class="p-ico"><Icono nombre="play-circle" tamano={26} /></span>
+				<span class="p-tit">Un video corto</span>
+				<span class="p-txt">La respuesta en menos de un minuto, con un ejemplo.</span>
+			</li>
+			<li>
+				<span class="p-ico"><Icono nombre="hand-coins" tamano={26} /></span>
+				<span class="p-tit">Lo pruebas tú</span>
+				<span class="p-txt">Un simulador o una pregunta para ver si quedó claro.</span>
+			</li>
+			<li>
+				<span class="p-ico"><Icono nombre="calendar-check" tamano={26} /></span>
+				<span class="p-tit">Una acción para hoy</span>
+				<span class="p-txt">Algo concreto que puedes hacer con tu dinero.</span>
+			</li>
+		</ol>
+	</section>
+
+	<section class="extra contenedor contenedor--amplio" aria-labelledby="extra-t">
+		<h2 id="extra-t" class="sr-only">Además de las lecciones</h2>
+		<a class="ex-practica" href={`${base}practica/`}>
+			<span class="ex-etq"><Icono nombre="game-controller" tamano={18} /> Practica</span>
+			<span class="ex-tit">Juegos de un minuto y retos para tu dinero.</span>
+			<span class="ex-lista">
+				<span><Icono nombre="cards" tamano={18} /> ¿Mito o realidad?</span>
+				<span><Icono nombre="ticket" tamano={18} /> Tu mes con tu domingo</span>
+				<span><Icono nombre="notebook" tamano={18} /> 3 días anotando tus gastos</span>
+				<span><Icono nombre="download-simple" tamano={18} /> Plantillas para descargar</span>
+			</span>
+			<span class="ex-ir">Ir a practicar <Icono nombre="arrow-right" tamano={18} /></span>
+		</a>
+		<a class="ex-glosario" href={`${base}glosario/`}>
+			<span class="ex-etq"><Icono nombre="book-bookmark" tamano={18} /> Glosario</span>
+			<span class="ex-tit">¿Qué es la fecha de corte? ¿Y el CAT?</span>
+			<span class="ex-txt">Cada palabra difícil en una frase, con un ejemplo. Dentro de las lecciones, toca la palabra subrayada.</span>
+			<span class="ex-ir">Ver el glosario <Icono nombre="arrow-right" tamano={18} /></span>
+		</a>
+	</section>
+
+	<section id="temario" class="temario contenedor contenedor--amplio" aria-labelledby="temario-t">
+		<div class="temario-cabeza">
+			<h2 id="temario-t">El temario</h2>
+			<p class="solo-js avance-total" data-avance-total></p>
+		</div>
+		<ol class="modulos">
+			{temario.map((m) => {
+				const disponibles = m.lecciones.filter((l) => publicadas.has(l.numero)).length;
+				return (
+					<li>
+						<a class="modulo" href={`${base}${m.clave}/`} data-modulo-num={m.numero}>
+							<span class="num cifra" aria-hidden="true">{String(m.numero).padStart(2, '0')}</span>
+							<span class="cuerpo">
+								<span class="titulo">{m.titulo}</span>
+								<span class="promesa">{m.promesa}</span>
+								<span class="meta">
+									{m.lecciones.length} lecciones
+									{disponibles === 0 ? (
+										<span class="pronto">Próximamente</span>
+									) : disponibles < m.lecciones.length ? (
+										<span class="pronto">{disponibles} disponible{disponibles > 1 ? 's' : ''}</span>
+									) : null}
+									<span class="solo-js hechas" data-hechas></span>
+								</span>
+							</span>
+							<Icono nombre={m.icono} tamano={28} class="ico" />
+						</a>
+					</li>
+				);
+			})}
+		</ol>
+	</section>
+	<DatosRuta />
+	<Bienvenida />
+</Base>
+
+<script>
+	import { calcular, leerDatos } from '../lib/ruta';
+
+	const datos = leerDatos();
+	if (datos) {
+		const ruta = calcular(datos);
+		const etiquetas = { hecho: 'Terminado', actual: 'Sigue aquí', disponible: '', pronto: '' };
+		document.querySelectorAll<HTMLElement>('[data-modulo-num]').forEach((a) => {
+			const m = ruta.modulos[Number(a.dataset.moduloNum)];
+			a.dataset.estado = m.estado;
+			const el = a.querySelector('[data-hechas]');
+			if (el && etiquetas[m.estado]) el.textContent = `· ${etiquetas[m.estado]}`;
+		});
+		const total = document.querySelector('[data-avance-total]');
+		if (total && ruta.totalHechas > 0)
+			total.textContent = `Llevas ${ruta.totalHechas} ${ruta.totalHechas === 1 ? 'lección' : 'lecciones'}`;
+		const boton = document.querySelector('[data-continuar-texto]');
+		if (boton && ruta.totalHechas > 0) boton.textContent = 'Continuar el curso';
+	}
+</script>
+
+
+
+<style>
+	.portada {
+		padding-top: clamp(2.5rem, 9vw, 5rem);
+		padding-bottom: 3rem;
+		display: grid;
+		grid-template-areas: 'texto' 'foto' 'numeros';
+	}
+	.portada-texto {
+		grid-area: texto;
+	}
+	.aa-lugar :global(.avance-apr) {
+		margin-top: 1.5rem;
+		max-width: 30rem;
+	}
+	.portada .numeros {
+		grid-area: numeros;
+	}
+	.portada-foto {
+		grid-area: foto;
+		position: relative;
+		margin: 2.25rem 0 0;
+		border-radius: var(--radio);
+		overflow: hidden;
+		aspect-ratio: 4 / 3.4;
+		background: #e9d8c8;
+	}
+	.portada-foto :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	/* Etiqueta sobre la foto: dice de qué trata el curso, no promueve ninguna marca. */
+	.etq-foto {
+		position: absolute;
+		left: 0.875rem;
+		bottom: 0.875rem;
+		display: flex;
+		align-items: center;
+		gap: 0.65rem;
+		max-width: calc(100% - 1.75rem);
+		padding: 0.6rem 0.9rem 0.6rem 0.6rem;
+		border-radius: 0.875rem;
+		background: rgb(255 255 255 / 0.94);
+		box-shadow: 0 6px 24px rgb(31 26 36 / 0.12);
+		font-size: 0.875rem;
+		line-height: 1.3;
+		color: var(--gris);
+	}
+	.etq-foto strong {
+		display: block;
+		font-family: var(--f-titulo);
+		font-size: 0.9375rem;
+		color: var(--tinta);
+	}
+	.etq-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 0.625rem;
+		background: var(--morado-claro);
+		color: var(--morado);
+	}
+	@media (min-width: 60rem) {
+		.portada {
+			grid-template-columns: 1fr 26rem;
+			grid-template-areas: 'texto foto' 'numeros foto';
+			column-gap: 4rem;
+			align-items: start;
+		}
+		.portada-foto {
+			margin-top: 0;
+			aspect-ratio: 4 / 5;
+		}
+	}
+	h1 {
+		margin-top: 1rem;
+		font-size: clamp(2.5rem, 11vw, 4.5rem);
+		font-weight: 600;
+		letter-spacing: -0.045em;
+		line-height: 1;
+		max-width: 14ch;
+	}
+	.bajada {
+		margin-top: 1.25rem;
+		max-width: 34rem;
+		font-size: 1.1875rem;
+		color: var(--tinta-2);
+	}
+	.accion {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 2rem;
+	}
+	.numeros {
+		display: flex;
+		gap: 2rem;
+		margin: 2.5rem 0 0;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--linea);
+	}
+	.numeros div {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+	.numeros dt {
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.numeros dd {
+		margin: 0;
+		font-size: 1.75rem;
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	/* Practica y glosario */
+	.extra {
+		display: grid;
+		gap: 0.875rem;
+		padding-block: 0.5rem 1rem;
+	}
+	@media (min-width: 48rem) {
+		.extra {
+			grid-template-columns: 1.4fr 1fr;
+		}
+	}
+	.ex-practica,
+	.ex-glosario {
+		display: flex;
+		flex-direction: column;
+		gap: 0.625rem;
+		padding: 1.5rem;
+		border-radius: var(--radio);
+		text-decoration: none;
+	}
+	.ex-practica {
+		background: var(--tinta);
+		color: #fff;
+	}
+	.ex-practica:hover {
+		background: #000;
+		color: #fff;
+	}
+	.ex-glosario {
+		background: var(--morado-claro);
+		color: var(--tinta);
+	}
+	.ex-glosario:hover {
+		background: #e6d4f7;
+		color: var(--tinta);
+	}
+	.ex-etq {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-family: var(--f-titulo);
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+	.ex-practica .ex-etq {
+		color: #d8b8f5;
+	}
+	.ex-glosario .ex-etq {
+		color: var(--morado-oscuro);
+	}
+	.ex-tit {
+		font-family: var(--f-titulo);
+		font-size: clamp(1.375rem, 6vw, 1.75rem);
+		font-weight: 600;
+		line-height: 1.2;
+		letter-spacing: -0.03em;
+	}
+	.ex-lista {
+		display: grid;
+		gap: 0.5rem;
+		margin-top: 0.25rem;
+	}
+	.ex-lista span {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: rgb(255 255 255 / 0.85);
+	}
+	.ex-lista :global(.icono) {
+		color: #c995f0;
+	}
+	.ex-txt {
+		color: var(--tinta-2);
+		line-height: 1.5;
+	}
+	.ex-ir {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-top: auto;
+		padding-top: 0.5rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+	}
+	.ex-glosario .ex-ir {
+		color: var(--morado);
+	}
+	.voz {
+		background: var(--tinta);
+		color: #fff;
+		padding-block: clamp(3rem, 10vw, 5rem);
+	}
+	.voz-etq {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: #d8b8f5;
+	}
+	.voz-frase {
+		margin-top: 1rem;
+		font-family: var(--f-titulo);
+		font-size: clamp(1.875rem, 8vw, 3rem);
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.035em;
+		max-width: 20ch;
+		color: #fff;
+	}
+	.voz-datos {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin: 2rem 0 0;
+		max-width: 34rem;
+	}
+	.voz-datos div {
+		padding-top: 1rem;
+		border-top: 1px solid rgb(255 255 255 / 0.2);
+	}
+	.voz-datos dt {
+		font-size: clamp(1.75rem, 8vw, 2.25rem);
+		font-weight: 500;
+		color: #d8b8f5;
+		line-height: 1.1;
+	}
+	.voz-datos dd {
+		margin: 0.4rem 0 0;
+		font-size: 0.9375rem;
+		line-height: 1.45;
+		color: #c9c3cf;
+	}
+	.contexto {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.6rem;
+		margin-top: 2rem;
+		max-width: 34rem;
+		font-size: 0.9375rem;
+		color: #c9c3cf;
+	}
+	.contexto :global(.icono) {
+		color: #d8b8f5;
+		margin-top: 0.15rem;
+	}
+
+	.como {
+		padding-top: clamp(3rem, 10vw, 5rem);
+	}
+	.pasos {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+	.pasos li {
+		display: grid;
+		grid-template-columns: 3rem 1fr;
+		column-gap: 1rem;
+		align-items: start;
+		padding: 1rem;
+		border-radius: var(--radio);
+		background: var(--fondo-2);
+	}
+	.p-ico {
+		grid-row: span 2;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 0.875rem;
+		background: #fff;
+		color: var(--morado);
+		box-shadow: inset 0 0 0 1px var(--linea);
+	}
+	.p-tit {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		letter-spacing: -0.01em;
+	}
+	.p-txt {
+		font-size: 0.9375rem;
+		color: var(--gris);
+		line-height: 1.45;
+	}
+	@media (min-width: 48rem) {
+		.pasos {
+			grid-template-columns: repeat(4, 1fr);
+		}
+		.pasos li {
+			grid-template-columns: 1fr;
+			row-gap: 0.75rem;
+		}
+		.p-ico {
+			grid-row: auto;
+		}
+	}
+
+	.temario {
+		padding-top: clamp(3rem, 10vw, 5rem);
+	}
+	.temario-cabeza {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	h2 {
+		font-size: clamp(1.75rem, 6vw, 2.25rem);
+	}
+	.avance-total {
+		font-size: 0.9375rem;
+		color: var(--morado);
+		font-weight: 600;
+	}
+	.modulos {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		border-top: 1px solid var(--tinta);
+	}
+	.modulos li {
+		border-bottom: 1px solid var(--linea);
+	}
+	.modulo {
+		display: grid;
+		grid-template-columns: 2.75rem 1fr auto;
+		gap: 0.75rem;
+		align-items: start;
+		padding: 1.5rem 0;
+		color: var(--tinta);
+		text-decoration: none;
+	}
+	.modulo:hover .titulo {
+		color: var(--morado);
+	}
+	.num {
+		font-size: 1rem;
+		color: var(--gris);
+		padding-top: 0.2rem;
+	}
+	.cuerpo {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+	.titulo {
+		font-family: var(--f-titulo);
+		font-size: 1.25rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.25;
+		transition: color 0.15s;
+	}
+	.promesa {
+		color: var(--gris);
+	}
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.5rem;
+		margin-top: 0.25rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.pronto {
+		color: var(--morado-oscuro);
+		font-weight: 600;
+	}
+	.hechas {
+		color: var(--gris);
+		font-weight: 600;
+	}
+	[data-estado='actual'] .hechas {
+		color: var(--morado);
+	}
+	[data-estado='hecho'] .hechas {
+		color: var(--verde);
+	}
+	.modulo :global(.ico) {
+		color: var(--morado);
+		margin-top: 0.1rem;
+	}
+	@media (min-width: 48rem) {
+		.modulo {
+			grid-template-columns: 4rem 1fr auto;
+			padding: 1.75rem 0;
+		}
+		.titulo {
+			font-size: 1.5rem;
+		}
+	}
+</style>

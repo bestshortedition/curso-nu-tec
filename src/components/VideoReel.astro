@@ -1,0 +1,112 @@
+---
+/**
+ * Video vertical estilo reel. Los videos se hacen en la carpeta videos/ (HyperFrames)
+ * y se exportan a public/videos/<archivo>.mp4 con su portada <archivo>.jpg.
+ *
+ *   <VideoReel archivo="pago-minimo" titulo="…">
+ *     Lo que dice el video, en texto (para quien no puede verlo).
+ *   </VideoReel>
+ *
+ * Los videos no tienen sonido: todo lo importante está escrito en pantalla.
+ */
+interface Props {
+	archivo: string;
+	titulo: string;
+	segundos: number;
+}
+const { archivo, titulo, segundos } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<figure class="reel">
+	<div class="marco">
+		<video
+			src={`${base}videos/${archivo}.mp4`}
+			poster={`${base}videos/${archivo}.jpg`}
+			muted
+			playsinline
+			controls
+			preload="metadata"
+			width="1080"
+			height="1920"
+			aria-label={titulo}
+			data-reel></video>
+	</div>
+	<figcaption>
+		<span>Video de {segundos} segundos · sin sonido</span>
+	</figcaption>
+	<details class="texto">
+		<summary>Leer el video en texto</summary>
+		<div class="cuerpo"><slot /></div>
+	</details>
+</figure>
+
+<script>
+	// El video arranca solo (sin sonido) cuando su pantalla está a la vista, y se pausa al salir.
+	const videos = document.querySelectorAll<HTMLVideoElement>('[data-reel]');
+	const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if ('IntersectionObserver' in window && !quieto) {
+		const obs = new IntersectionObserver(
+			(entradas) =>
+				entradas.forEach((e) => {
+					const v = e.target as HTMLVideoElement;
+					if (e.isIntersecting) v.play().catch(() => {});
+					else v.pause();
+				}),
+			{ threshold: 0.5 },
+		);
+		videos.forEach((v) => obs.observe(v));
+	}
+</script>
+
+<style>
+	.reel {
+		margin: 1.25rem 0 0;
+	}
+	.marco {
+		position: relative;
+		width: min(100%, calc((100dvh - 15rem) * 9 / 16));
+		min-width: 15rem;
+		margin-inline: auto;
+		aspect-ratio: 9 / 16;
+		border-radius: 1.25rem;
+		overflow: hidden;
+		background: #fff;
+		box-shadow:
+			0 0 0 1px var(--linea),
+			0 24px 48px -28px rgb(31 26 36 / 0.35);
+	}
+	video {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	figcaption {
+		margin-top: 0.75rem;
+		text-align: center;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.texto {
+		margin-top: 0.5rem;
+		font-size: 0.9375rem;
+	}
+	.texto summary {
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.cuerpo {
+		padding: 1rem 1.125rem;
+		border-radius: var(--radio);
+		background: var(--fondo-2);
+	}
+	.cuerpo :global(p) {
+		font-size: 1rem !important;
+	}
+</style>

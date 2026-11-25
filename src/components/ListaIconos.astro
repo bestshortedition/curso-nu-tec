@@ -1,0 +1,93 @@
+---
+/**
+ * Lista corta con un ícono por idea. Para explicar en 2 o 3 puntos.
+ *
+ *   <ListaIconos items={[
+ *     { icono: 'check-circle', tono: 'bien', titulo: 'Te mantiene al corriente', texto: '…' },
+ *     { icono: 'x-circle', tono: 'mal', titulo: '…' },
+ *   ]} />
+ *
+ * tono: 'bien' (verde), 'mal' (rojo) o 'neutro' (morado). Íconos en src/components/Icono.astro.
+ */
+import Icono, { type NombreIcono } from './Icono.astro';
+
+interface Item {
+	icono: NombreIcono;
+	titulo: string;
+	texto?: string;
+	tono?: 'bien' | 'mal' | 'neutro';
+}
+interface Props {
+	items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<ul class="lista">
+	{items.map((it) => (
+		<li class={it.tono ?? 'neutro'}>
+			<span class="ico"><Icono nombre={it.icono} tamano={24} /></span>
+			<span class="txt">
+				<strong>{it.titulo}</strong>
+				{it.texto && <span>{it.texto}</span>}
+			</span>
+		</li>
+	))}
+</ul>
+
+<style>
+	.lista {
+		list-style: none;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+	li {
+		display: grid;
+		grid-template-columns: 2.75rem 1fr;
+		gap: 0.875rem;
+		align-items: start;
+		padding: 0.875rem 1rem 0.875rem 0.875rem;
+		border-radius: var(--radio);
+		background: var(--fondo-2);
+	}
+	.ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 0.75rem;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--linea);
+	}
+	.bien .ico {
+		color: var(--verde);
+	}
+	.mal .ico {
+		color: var(--rojo);
+	}
+	.neutro .ico {
+		color: var(--morado);
+	}
+	.txt {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+		padding-top: 0.15rem;
+	}
+	.txt strong {
+		font-family: var(--f-titulo);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--tinta);
+		line-height: 1.3;
+	}
+	.txt span {
+		font-size: 1rem;
+		line-height: 1.45;
+		color: var(--tinta-2);
+	}
+</style>

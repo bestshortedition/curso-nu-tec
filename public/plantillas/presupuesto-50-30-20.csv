@@ -1,0 +1,13 @@
+﻿Presupuesto 50/30/20 · Bytes de dinero (Nu × Tec)
+"Cambia solo la celda B4: cuánto recibes al mes (domingo, mesada o sueldo). Lo demás se calcula solo."
+
+Lo que recibes al mes,2000
+
+Parte,Porcentaje,Cuánto,Para qué
+Básicos,50%,=B4*0.5,"Lo que sí o sí necesitas: transporte, comida de la escuela, celular"
+Gustos,30%,=B4*0.3,"Salidas, antojos, videojuegos, ropa"
+Ahorro,20%,=B4*0.2,"Apártalo primero, en cuanto recibes tu dinero"
+Total,100%,=C7+C8+C9,
+
+"Es una guía. Si tus básicos son más, ajusta los gustos, no tu ahorro."
+Contenido educativo. No es asesoría financiera.

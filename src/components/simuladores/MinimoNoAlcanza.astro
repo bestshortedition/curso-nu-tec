@@ -1,320 +1,324 @@
 ---
 /**
- * Simulador "El mínimo no alcanza" (CLAUDE.md, iniciativa 1).
- * Compara pagar una deuda de $3,000 solo con el mínimo contra otras formas de pagar.
- * Es un EJEMPLO ILUSTRATIVO: no usa tasas de ningún banco.
- *
- * Sin JavaScript se ve una tabla fija con el ejemplo de 45% anual.
+ * Simulador "El mínimo no alcanza". EJEMPLO ILUSTRATIVO.
+ * Eliges cuánto pagas al mes y ves cuánto tardas y cuánto pagas en total.
+ * Funciona sin JavaScript: los botones son radios y el resultado se muestra con CSS.
  */
+import Icono from '../Icono.astro';
 import { simular, pesos, tiempo } from '../../lib/minimo';
 
 const DEUDA = 3000;
 const LIMITE = 5000;
-const TASAS = [0.3, 0.45, 0.6];
-const TASA_INICIAL = 0.45;
+const TASA = 0.45;
 
-const filas = [
-	{ nombre: 'Solo el mínimo', pagoFijo: null as number | null },
-	{ nombre: '$300 al mes', pagoFijo: 300 },
-	{ nombre: '$500 al mes', pagoFijo: 500 },
-].map((f) => ({ ...f, r: simular({ deuda: DEUDA, tasaAnual: TASA_INICIAL, limite: LIMITE, pagoFijo: f.pagoFijo }) }));
+const base = [
+	{ id: 'minimo', boton: 'Solo el mínimo', sub: 'Empieza en $176', pagoFijo: null as number | null },
+	{ id: '300', boton: '$300', sub: 'al mes', pagoFijo: 300 },
+	{ id: '500', boton: '$500', sub: 'al mes', pagoFijo: 500 },
+	{ id: 'total', boton: 'Todo', sub: 'antes de la fecha límite', pagoFijo: DEUDA },
+];
+const opciones = base.map((o) => {
+	const r =
+		o.id === 'total'
+			? { meses: 1, intereses: 0, pagado: DEUDA }
+			: simular({ deuda: DEUDA, tasaAnual: TASA, limite: LIMITE, pagoFijo: o.pagoFijo });
+	const deCada10 = Math.round((r.intereses / r.pagado) * 10);
+	const idea =
+		o.id === 'total'
+			? 'Sin intereses. Así la tarjeta no te cuesta de más.'
+			: o.id === 'minimo'
+				? `Casi ${deCada10} de cada 10 pesos que pagas son intereses.`
+				: `Pagar más cada mes recorta años e intereses.`;
+	return { ...o, ...r, idea };
+});
+const maximo = Math.max(...opciones.map((o) => o.pagado));
 ---
 
-<section class="sim not-content" data-simulador data-deuda={DEUDA} data-limite={LIMITE} aria-labelledby="sim-titulo">
-	<div class="cabeza">
-		<p class="tag">Simulador · Ejemplo ilustrativo</p>
-		<h2 id="sim-titulo">El mínimo no alcanza</h2>
-		<p class="planteamiento">
-			Debes <strong>{pesos(DEUDA)}</strong> en tu tarjeta. Tu límite es de {pesos(LIMITE)}. Ya no compras nada más con ella.
-		</p>
+<figure class="sim">
+	<p class="etiqueta">Ejemplo ilustrativo</p>
+	<p class="planteo">
+		Debes <span class="cifra">{pesos(DEUDA)}</span> en tu tarjeta y ya no la usas. ¿Cuánto pagas cada mes?
+	</p>
+
+	<fieldset class="grupo">
+	<legend class="sr-only">Cuánto pagas cada mes</legend>
+	{opciones.map((o, i) => (
+		<input class="radio sr-only" type="radio" name="pago-sim" id={`pago-${o.id}`} checked={i === 0} aria-label={`${o.boton} ${o.sub}`} />
+	))}
+
+	<div class="botones" aria-hidden="true">
+		{opciones.map((o) => (
+			<label for={`pago-${o.id}`} class={`op op-${o.id}`}>
+				<span class="op-t">{o.boton}</span>
+				<span class="op-s">{o.sub}</span>
+			</label>
+		))}
 	</div>
 
-	<form class="controles solo-js" onsubmit="return false">
-		<fieldset>
-			<legend>¿Cómo la pagas?</legend>
-			<div class="chips">
-				<label><input type="radio" name="pago" value="minimo" checked /> <span>Solo el mínimo</span></label>
-				<label><input type="radio" name="pago" value="300" /> <span>$300 al mes</span></label>
-				<label><input type="radio" name="pago" value="500" /> <span>$500 al mes</span></label>
-				<label><input type="radio" name="pago" value="total" /> <span>Todo, antes de la fecha límite</span></label>
+	<div class="resultados" aria-live="polite">
+		{opciones.map((o) => (
+			<div class={`panel p-${o.id}`}>
+				<p class="tiempo">
+					<Icono nombre="hourglass-medium" tamano={22} />
+					<span>
+						Terminas de pagar en <strong>{o.id === 'total' ? 'un solo pago' : tiempo(o.meses)}</strong>
+					</span>
+				</p>
+				<dl class="cuentas">
+					<div>
+						<dt><Icono nombre="coins" tamano={18} /> Intereses + IVA</dt>
+						<dd class:list={['cifra', { cero: o.intereses === 0 }]}>{pesos(o.intereses)}</dd>
+					</div>
+					<div>
+						<dt><Icono nombre="receipt" tamano={18} /> Pagas en total</dt>
+						<dd class="cifra">{pesos(o.pagado)}</dd>
+					</div>
+				</dl>
+				<div class="barra" aria-hidden="true">
+					<span class="b-deuda" style={`width:${(DEUDA / maximo) * 100}%`}></span>
+					<span class="b-int" style={`width:${(o.intereses / maximo) * 100}%`}></span>
+				</div>
+				<p class="leyenda" aria-hidden="true">
+					<span><i class="p-deuda"></i>Lo que compraste</span>
+					<span><i class="p-int"></i>Lo que pagas de más</span>
+				</p>
+				<p class:list={['idea', { buena: o.id === 'total' }]}>{o.idea}</p>
 			</div>
-		</fieldset>
-		<fieldset>
-			<legend>Tasa de interés anual (ilustrativa)</legend>
-			<div class="chips chips--tasa">
-				{TASAS.map((t) => (
-					<label>
-						<input type="radio" name="tasa" value={t} checked={t === TASA_INICIAL} />
-						<span>{Math.round(t * 100)}%</span>
-					</label>
-				))}
-			</div>
-		</fieldset>
-	</form>
-
-	<div class="resultado solo-js" aria-live="polite">
-		<div class="cifras">
-			<div>
-				<p class="cifra" data-meses>—</p>
-				<p class="leyenda">para terminar de pagar</p>
-			</div>
-			<div>
-				<p class="cifra" data-intereses>—</p>
-				<p class="leyenda">de intereses + IVA</p>
-			</div>
-		</div>
-		<div class="barra" aria-hidden="true">
-			<span class="b-deuda" data-b-deuda></span><span class="b-int" data-b-int></span>
-		</div>
-		<p class="barra-leyenda" aria-hidden="true">
-			<span class="item"><span class="punto punto--deuda"></span> Lo que compraste</span>
-			<span class="item"><span class="punto punto--int"></span> Lo que pagas de más</span>
-		</p>
-		<p class="mensaje" data-mensaje></p>
+		))}
 	</div>
+	</fieldset>
 
-	<div class="sin-js">
-		<table>
-			<caption>Ejemplo con tasa ilustrativa de {Math.round(TASA_INICIAL * 100)}% anual</caption>
-			<thead>
-				<tr><th scope="col">Cómo pagas</th><th scope="col">Tiempo</th><th scope="col">Intereses + IVA</th></tr>
-			</thead>
-			<tbody>
-				{filas.map((f) => (
-					<tr><th scope="row">{f.nombre}</th><td>{tiempo(f.r.meses)}</td><td>{pesos(f.r.intereses)}</td></tr>
-				))}
-				<tr><th scope="row">Todo, antes de la fecha límite</th><td>1 mes</td><td>{pesos(0)}</td></tr>
-			</tbody>
-		</table>
-	</div>
-
-	<details class="supuestos">
+	<details class="como">
 		<summary>¿Cómo se calcula?</summary>
 		<ul>
-			<li>Es un ejemplo para aprender. Las tasas no son de ningún banco. Como referencia, Banxico reporta 37.1% de tasa efectiva promedio para quienes no pagan el total (datos a junio de 2025).</li>
+			<li>Es un ejemplo para aprender, con una tasa de interés de {Math.round(TASA * 100)}% al año. No es la tasa de ningún banco. Como referencia, Banxico reporta 37.1% de tasa efectiva promedio para quienes no pagan el total (datos a junio de 2025).</li>
 			<li>Cada mes se cobran intereses sobre lo que debes, más 16% de IVA sobre esos intereses.</li>
-			<li>El pago mínimo sigue la regla de Banxico (Circular 34/2010, numeral 4.1): el mayor entre 1.5% de lo que debes más intereses e IVA, y 1.25% de tu límite.</li>
-			<li>Si pagas todo antes de la fecha límite, no pagas intereses.</li>
+			<li>El pago mínimo sigue la regla de Banxico (Circular 34/2010, numeral 4.1): el mayor entre 1.5% de lo que debes más intereses e IVA, y 1.25% de tu límite. Aquí el límite es de {pesos(LIMITE)}.</li>
 			<li>No incluye comisiones, seguros ni compras nuevas.</li>
 		</ul>
 	</details>
-</section>
-
-<script>
-	import { simular, pesos, tiempo } from '../../lib/minimo';
-
-	document.querySelectorAll<HTMLElement>('[data-simulador]').forEach((caja) => {
-		const deuda = Number(caja.dataset.deuda);
-		const limite = Number(caja.dataset.limite);
-		const form = caja.querySelector('form')!;
-		const $ = (s: string) => caja.querySelector<HTMLElement>(s)!;
-
-		function actualizar() {
-			const datos = new FormData(form);
-			const pago = String(datos.get('pago'));
-			const tasa = Number(datos.get('tasa'));
-			const tasaTexto = Math.round(tasa * 100) + '%';
-
-			if (pago === 'total') {
-				$('[data-meses]').textContent = '1 mes';
-				$('[data-intereses]').textContent = pesos(0);
-				$('[data-b-deuda]').style.flexGrow = '1';
-				$('[data-b-int]').style.flexGrow = '0';
-				$('[data-mensaje]').textContent =
-					'Pagas solo lo que compraste. Así se usa bien una tarjeta.';
-				return;
-			}
-
-			const r = simular({ deuda, tasaAnual: tasa, limite, pagoFijo: pago === 'minimo' ? null : Number(pago) });
-			$('[data-meses]').textContent = tiempo(r.meses);
-			$('[data-intereses]').textContent = pesos(r.intereses);
-			$('[data-b-deuda]').style.flexGrow = String(deuda);
-			$('[data-b-int]').style.flexGrow = String(r.intereses);
-			$('[data-mensaje]').textContent =
-				pago === 'minimo'
-					? `Con ${tasaTexto} anual, tu primer mínimo sería de ${pesos(r.primerPago)}. En total pagas ${pesos(r.pagado)} por algo que costó ${pesos(deuda)}.`
-					: `Pagando ${pesos(Number(pago))} al mes, en total pagas ${pesos(r.pagado)}.`;
-		}
-
-		form.addEventListener('change', actualizar);
-		actualizar();
-	});
-</script>
+</figure>
 
 <style>
 	.sim {
-		margin: 2rem 0;
+		margin: 1.25rem 0 0;
 		padding: 1.25rem;
-		border-radius: 1.25rem;
-		background: var(--nu-lila);
-		color: var(--nu-texto);
+		border-radius: var(--radio);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		background: #fff;
 	}
-	.tag {
+	.etiqueta {
+		display: inline-block;
+		padding: 0.15rem 0.6rem;
+		border-radius: 999px;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		font-size: 0.75rem !important;
+		font-weight: 600;
+		color: var(--gris) !important;
+	}
+	.planteo {
+		margin-top: 0.75rem;
+		font-family: var(--f-titulo);
+		font-size: 1.25rem !important;
+		font-weight: 600;
+		line-height: 1.3 !important;
+		letter-spacing: -0.02em;
+		color: var(--tinta) !important;
+	}
+
+	.grupo {
 		margin: 0;
-		font-size: 0.8125rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: var(--nu-morado);
-	}
-	h2 {
-		margin: 0.25rem 0 0;
-		font-size: 1.5rem;
-		line-height: 1.2;
-		color: var(--nu-texto);
-	}
-	.planteamiento {
-		margin: 0.5rem 0 1rem;
-	}
-	fieldset {
-		margin: 0 0 1rem;
 		padding: 0;
 		border: 0;
+		min-width: 0;
 	}
-	legend {
-		font-weight: 700;
-		margin-bottom: 0.5rem;
-	}
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-	.chips label {
-		position: relative;
-	}
-	.chips input {
-		position: absolute;
-		opacity: 0;
-		inset: 0;
-	}
-	.chips span {
-		display: inline-flex;
-		align-items: center;
-		min-height: 2.75rem;
-		padding: 0.5rem 1rem;
-		border-radius: 999px;
-		border: 2px solid var(--nu-lila-borde);
-		background: #ffffff;
-		font-weight: 600;
-		cursor: pointer;
-	}
-	.chips input:checked + span {
-		background: var(--nu-morado);
-		border-color: var(--nu-morado);
-		color: #ffffff;
-	}
-	.chips input:focus-visible + span {
-		outline: 3px solid var(--nu-morado);
-		outline-offset: 2px;
-	}
-	.resultado {
-		padding: 1rem;
-		border-radius: 1rem;
-		background: #ffffff;
-	}
-	:global(.js) .resultado.solo-js,
-	:global(.js) .controles.solo-js {
-		display: block;
-	}
-	.cifras {
+	/* Botones de opción (radios) */
+	.botones {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
+		gap: 0.5rem;
+		margin-top: 1rem;
 	}
-	.cifra {
-		margin: 0;
-		font-size: clamp(1.375rem, 6vw, 1.875rem);
-		font-weight: 800;
-		line-height: 1.1;
-		color: var(--nu-morado);
+	.op {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 3.75rem;
+		padding: 0.6rem 0.875rem;
+		border-radius: var(--radio-chico);
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		cursor: pointer;
+		transition:
+			box-shadow 0.15s,
+			background 0.15s;
 	}
-	.leyenda {
-		margin: 0.25rem 0 0;
-		font-size: 0.9375rem;
-		color: var(--nu-gris);
+	.op:hover {
+		box-shadow: inset 0 0 0 1.5px var(--gris-claro);
+	}
+	.op-t {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.2;
+	}
+	.op-s {
+		font-size: 0.8125rem;
+		color: var(--gris);
+		line-height: 1.3;
+	}
+	#pago-minimo:checked ~ .botones .op-minimo,
+	#pago-300:checked ~ .botones .op-300,
+	#pago-500:checked ~ .botones .op-500,
+	#pago-total:checked ~ .botones .op-total {
+		background: var(--morado-claro);
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	#pago-minimo:focus-visible ~ .botones .op-minimo,
+	#pago-300:focus-visible ~ .botones .op-300,
+	#pago-500:focus-visible ~ .botones .op-500,
+	#pago-total:focus-visible ~ .botones .op-total {
+		outline: 3px solid var(--morado);
+		outline-offset: 2px;
+	}
+
+	/* Resultado: solo se ve el de la opción elegida */
+	.panel {
+		display: none;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--linea);
+		animation: aparecer 0.25s ease-out;
+	}
+	#pago-minimo:checked ~ .resultados .p-minimo,
+	#pago-300:checked ~ .resultados .p-300,
+	#pago-500:checked ~ .resultados .p-500,
+	#pago-total:checked ~ .resultados .p-total {
+		display: block;
+	}
+	@keyframes aparecer {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+	.tiempo {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		font-size: 1.0625rem !important;
+		color: var(--tinta-2) !important;
+	}
+	.tiempo :global(.icono) {
+		color: var(--morado);
+		margin-top: 0.1rem;
+	}
+	.tiempo strong {
+		display: block;
+		font-family: var(--f-titulo);
+		font-size: 1.625rem;
+		font-weight: 600;
+		letter-spacing: -0.03em;
+		line-height: 1.15;
+		color: var(--tinta);
+	}
+	.cuentas {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
+		margin: 1rem 0 0;
+	}
+	.cuentas div {
+		padding: 0.75rem;
+		border-radius: var(--radio-chico);
+		background: var(--fondo-2);
+	}
+	.cuentas dt {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.cuentas dd {
+		margin: 0.2rem 0 0;
+		font-size: 1.375rem;
+		font-weight: 600;
+		color: var(--tinta);
+	}
+	.p-minimo .cuentas div:first-child dd {
+		color: var(--morado);
+	}
+	.cuentas dd.cero {
+		color: var(--verde);
 	}
 	.barra {
 		display: flex;
-		height: 0.875rem;
+		height: 12px;
 		margin-top: 1rem;
 		border-radius: 999px;
 		overflow: hidden;
-		background: var(--nu-linea);
+		background: var(--fondo-2);
 	}
 	.b-deuda {
-		background: var(--nu-texto);
-		transition: flex-grow 0.3s;
+		background: var(--tinta);
 	}
 	.b-int {
-		background: var(--nu-morado);
-		transition: flex-grow 0.3s;
+		background: var(--morado);
 	}
-	.barra-leyenda {
+	.leyenda {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.35rem 0.5rem;
-		margin: 0.5rem 0 0;
-		font-size: 0.875rem;
-		color: var(--nu-gris);
+		gap: 0.25rem 1.25rem;
+		margin-top: 0.5rem;
+		font-size: 0.8125rem !important;
+		color: var(--gris) !important;
 	}
-	.punto {
-		display: inline-block;
-		width: 0.75rem;
-		height: 0.75rem;
-		border-radius: 50%;
-	}
-	.punto--deuda {
-		background: var(--nu-texto);
-	}
-	.punto--int {
-		background: var(--nu-morado);
-	}
-	.item {
+	.leyenda span {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.35rem;
-		margin-right: 0.75rem;
-		white-space: nowrap;
+		gap: 0.4rem;
 	}
-	.mensaje {
-		margin: 0.75rem 0 0;
+	.leyenda i {
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 3px;
+	}
+	.p-deuda {
+		background: var(--tinta);
+	}
+	.p-int {
+		background: var(--morado);
+	}
+	.idea {
+		margin-top: 0.875rem;
+		font-family: var(--f-titulo);
 		font-weight: 600;
+		font-size: 1.0625rem !important;
+		color: var(--morado-oscuro) !important;
 	}
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		background: #ffffff;
-		border-radius: 0.75rem;
-		overflow: hidden;
+	.idea.buena {
+		color: var(--verde) !important;
+	}
+	.como {
+		margin-top: 0.75rem;
 		font-size: 0.9375rem;
 	}
-	caption {
-		text-align: start;
-		font-weight: 600;
-		padding-bottom: 0.5rem;
-	}
-	th,
-	td {
-		padding: 0.6rem 0.75rem;
-		text-align: start;
-		border-bottom: 1px solid var(--nu-linea);
-	}
-	.supuestos {
-		margin-top: 1rem;
-		font-size: 0.9375rem;
-	}
-	.supuestos summary {
-		cursor: pointer;
-		font-weight: 600;
-		color: var(--nu-morado);
+	.como summary {
 		min-height: 2.75rem;
 		display: flex;
 		align-items: center;
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--tinta-2);
 	}
-	.supuestos ul {
+	.como ul {
 		margin: 0.25rem 0 0;
-		padding-left: 1.2rem;
+		padding-left: 1.1rem;
+		color: var(--gris);
+	}
+	.como li + li {
+		margin-top: 0.4rem;
 	}
 </style>

@@ -1,0 +1,502 @@
+---
+/**
+ * "Tus resultados": compara la encuesta inicial con las respuestas en las lecciones.
+ * Se abre al terminar las lecciones disponibles, o desde la tarjeta "Lo que has aprendido"
+ * cuando alguien vuelve sin haber terminado. Todo se calcula en el navegador.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import { temario } from '../data/temario';
+import { preguntasDiagnostico, preguntaConfianza } from '../data/diagnostico';
+
+const base = import.meta.env.BASE_URL;
+const publicadas = new Set((await getCollection('lecciones')).map((l) => l.data.numero));
+const enlaces: Record<string, string | null> = {};
+for (const m of temario)
+	for (const l of m.lecciones) enlaces[l.numero] = publicadas.has(l.numero) ? `${base}${m.clave}/${l.slug}/` : null;
+---
+
+<Base titulo="Tus resultados" descripcion="Lo que sabías antes del curso y lo que sabes ahora.">
+	<div class="contenedor">
+		<nav class="migas" aria-label="Ruta">
+			<a href={`${base}ruta/`}><Icono nombre="arrow-left" tamano={18} /> Tu ruta</a>
+		</nav>
+
+		<header class="cabeza">
+			<p class="sobretitulo"><Icono nombre="chart-line-up" tamano={18} /> Tus resultados</p>
+			<h1>Lo que sabías y lo que sabes <em>ahora.</em></h1>
+		</header>
+
+		<noscript><p class="aviso-js">Para ver tus resultados necesitas activar JavaScript.</p></noscript>
+
+		<!-- Sin encuesta inicial -->
+		<section class="vacio solo-js" data-sin-encuesta hidden>
+			<p>Todavía no contestas la encuesta inicial. Son 5 preguntas y toma menos de un minuto.</p>
+			<a class="boton boton--morado" href={`${base}?diagnostico=1`}>
+				Contestar la encuesta <Icono nombre="arrow-right" tamano={20} />
+			</a>
+		</section>
+
+		<!-- Resumen -->
+		<section class="resumen solo-js" data-resumen hidden>
+			<div class="marcador">
+				<div class="m-col">
+					<p class="m-etq">Antes del curso</p>
+					<p class="m-num"><span data-antes></span><small> de <span data-n-antes></span></small></p>
+				</div>
+				<span class="m-flecha" aria-hidden="true"><Icono nombre="arrow-right" tamano={28} /></span>
+				<div class="m-col m-col--ahora">
+					<p class="m-etq">Ahora</p>
+					<p class="m-num"><span data-ahora></span><small> de <span data-n-ahora></span></small></p>
+				</div>
+			</div>
+			<p class="m-nota" data-m-nota></p>
+		</section>
+
+		<!-- Confianza -->
+		<section class="confianza solo-js" data-confianza hidden>
+			<h2 class="c-tit"><Icono nombre="hand-palm" tamano={22} /> Cómo te sientes</h2>
+			<div data-c-pregunta hidden>
+				<p class="c-preg" id="c-preg">{preguntaConfianza.pregunta}</p>
+				<div class="escala" role="group" aria-labelledby="c-preg">
+					{preguntaConfianza.etiquetas.map((e, i) => (
+						<button type="button" class="esc-op" data-valor={i + 1} aria-label={`${i + 1}: ${e}`}>
+							<span class="cifra">{i + 1}</span>
+						</button>
+					))}
+				</div>
+				<p class="esc-etq" aria-hidden="true">
+					<span>{preguntaConfianza.etiquetas[0]}</span><span>{preguntaConfianza.etiquetas[4]}</span>
+				</p>
+			</div>
+			<div class="c-comparar" data-c-comparar hidden>
+				<div class="c-fila">
+					<span class="c-lado">Antes</span>
+					<span class="c-barra"><i data-c-antes></i></span>
+					<span class="c-val cifra" data-c-antes-txt></span>
+				</div>
+				<div class="c-fila c-fila--ahora">
+					<span class="c-lado">Ahora</span>
+					<span class="c-barra"><i data-c-despues></i></span>
+					<span class="c-val cifra" data-c-despues-txt></span>
+				</div>
+			</div>
+		</section>
+
+		<!-- Detalle por tema -->
+		<section class="detalle solo-js" data-detalle hidden>
+			<h2 class="d-tit">Tema por tema</h2>
+			<p class="d-sub">Y cómo respondieron los 25 jóvenes que entrevistamos.</p>
+			<ol class="temas">
+				{preguntasDiagnostico.map((p) => (
+					<li data-tema={p.id}>
+						<span class="t-ico"><Icono nombre={p.icono} tamano={22} /></span>
+						<span class="t-cuerpo">
+							<span class="t-nombre">{p.tema}</span>
+							<span class="t-chips">
+								<span class="chip" data-chip-antes></span>
+								<Icono nombre="arrow-right" tamano={14} class="t-flecha" />
+								<span class="chip" data-chip-despues></span>
+							</span>
+							<span class="t-25"><Icono nombre="users-three" tamano={16} /> <span>{p.entrevistas}</span></span>
+							{enlaces[p.leccion] ? (
+								<a class="t-link" href={enlaces[p.leccion]!} data-t-link>Ir a la lección {p.leccion}</a>
+							) : (
+								<span class="t-pronto">Lección {p.leccion} · Próximamente</span>
+							)}
+						</span>
+					</li>
+				))}
+			</ol>
+		</section>
+
+		<p class="privado solo-js">
+			<Icono nombre="device-mobile" tamano={18} />
+			<span>Tus respuestas solo están guardadas en este celular. Nadie más las ve.</span>
+		</p>
+
+		<nav class="botones" aria-label="¿A dónde sigues?">
+			<a class="boton boton--morado boton--ancho" href={`${base}ruta/`}>
+				<Icono nombre="map-trifold" tamano={20} /> Seguir con el curso
+			</a>
+			<a class="link-inicio" href={base}><Icono nombre="house" tamano={18} /> Ir al inicio</a>
+		</nav>
+	</div>
+</Base>
+
+<script>
+	import { resumir, type Resultado } from '../lib/aprendizaje';
+	import { guardarConfianzaFinal, leer } from '../lib/progreso';
+
+	const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
+	const textos: Record<Resultado | 'pendiente', string> = {
+		bien: 'Correcto',
+		mal: 'Incorrecto',
+		nose: 'No sabía',
+		pendiente: 'Aún no llegas',
+	};
+
+	const pintar = () => {
+		const r = resumir();
+		if (!r.tieneEncuesta) {
+			$('[data-sin-encuesta]').hidden = false;
+			return;
+		}
+		const total = r.items.length;
+
+		// Marcador: antes (sobre todo) y ahora (lo sabido antes + lo aprendido en lecciones).
+		const ahora = r.items.filter((i) => i.repasada || (i.despues ?? (i.antes === 'bien' ? 'bien' : null)) === 'bien').length;
+		$('[data-antes]').textContent = String(r.antesBien);
+		$('[data-n-antes]').textContent = String(total);
+		$('[data-ahora]').textContent = String(ahora);
+		$('[data-n-ahora]').textContent = String(total);
+		$('[data-m-nota]').textContent =
+			r.vistos === 0
+				? 'Todavía no contestas ninguna pregunta en una lección. Cuando lo hagas, aquí verás tu avance.'
+				: `En ${r.vistos === 1 ? 'el tema que ya viste' : `los ${r.vistos} temas que ya viste`}: antes ${r.antesBienVistos} de ${r.vistos}, ahora ${r.ahoraBienVistos} de ${r.vistos}. Los demás temas se cuentan con lo que respondiste al inicio.`;
+		$('[data-resumen]').hidden = false;
+
+		// Tema por tema
+		r.items.forEach((it) => {
+			const li = $(`[data-tema="${it.pregunta.id}"]`);
+			const a = li.querySelector<HTMLElement>('[data-chip-antes]')!;
+			const d = li.querySelector<HTMLElement>('[data-chip-despues]')!;
+			a.textContent = `Antes: ${textos[it.antes ?? 'nose']}`;
+			a.dataset.tono = it.antes ?? 'nose';
+			d.textContent = it.despues ? `Ahora: ${textos[it.despues]}` : textos.pendiente;
+			d.dataset.tono = it.despues ?? 'pendiente';
+			// Si la falló en la lección, se le invita a repasarla. Si al repasar acertó, se le dice.
+			const link = li.querySelector<HTMLElement>('[data-t-link]');
+			if (link) {
+				link.hidden = it.despues === 'bien' || it.repasada;
+				if (it.despues === 'mal') link.textContent = `Repasar la lección ${it.pregunta.leccion}`;
+			}
+			if (it.repasada) {
+				d.textContent = 'Al repasar: Correcto';
+				d.dataset.tono = 'bien';
+			}
+		});
+		$('[data-detalle]').hidden = false;
+
+		// Confianza: se pregunta al final solo si ya hizo al menos una lección.
+		if (r.confianzaAntes && Object.keys(leer().terminadas).length > 0) {
+			$('[data-confianza]').hidden = false;
+			if (!r.confianzaDespues) {
+				$('[data-c-pregunta]').hidden = false;
+				$('[data-c-comparar]').hidden = true;
+			} else {
+				$('[data-c-pregunta]').hidden = true;
+				$('[data-c-comparar]').hidden = false;
+				$('[data-c-antes]').style.width = `${(r.confianzaAntes / 5) * 100}%`;
+				$('[data-c-despues]').style.width = `${(r.confianzaDespues / 5) * 100}%`;
+				$('[data-c-antes-txt]').textContent = `${r.confianzaAntes} de 5`;
+				$('[data-c-despues-txt]').textContent = `${r.confianzaDespues} de 5`;
+			}
+		}
+	};
+
+	document.querySelectorAll<HTMLButtonElement>('[data-c-pregunta] [data-valor]').forEach((b) =>
+		b.addEventListener('click', () => {
+			b.classList.add('elegida');
+			guardarConfianzaFinal(Number(b.dataset.valor));
+			setTimeout(pintar, 300);
+		}),
+	);
+
+	pintar();
+</script>
+
+<style>
+	.migas {
+		padding-top: 1.25rem;
+	}
+	.migas a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		color: var(--gris);
+		text-decoration: none;
+		font-size: 0.9375rem;
+	}
+	.cabeza {
+		padding: 1rem 0 2rem;
+	}
+	.sobretitulo {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	h1 {
+		margin-top: 0.75rem;
+		font-size: clamp(2.125rem, 9vw, 3.25rem);
+		letter-spacing: -0.045em;
+		line-height: 1.02;
+		max-width: 16ch;
+	}
+	h1 em {
+		font-family: var(--f-display);
+		font-weight: 400;
+		font-style: italic;
+		letter-spacing: -0.02em;
+		color: var(--morado);
+	}
+	[hidden] {
+		display: none !important;
+	}
+	.vacio p {
+		font-size: 1.125rem;
+		color: var(--tinta-2);
+	}
+	.vacio .boton {
+		margin-top: 1.25rem;
+	}
+
+	.resumen {
+		padding: 1.5rem;
+		border-radius: var(--radio);
+		background: var(--tinta);
+		color: #fff;
+	}
+	.marcador {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: end;
+		gap: 0.75rem;
+	}
+	.m-etq {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #c9c3cf;
+	}
+	.m-num {
+		margin-top: 0.25rem;
+		font-family: var(--f-display);
+		font-size: clamp(4rem, 20vw, 6rem);
+		line-height: 0.9;
+		color: #fff;
+	}
+	.m-num small {
+		font-family: var(--f-texto);
+		font-size: 1rem;
+		color: #c9c3cf;
+	}
+	.m-col--ahora .m-num {
+		color: #d8b8f5;
+	}
+	.m-flecha {
+		padding-bottom: 1.25rem;
+		color: #8b8494;
+	}
+	.m-nota {
+		margin-top: 1.25rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgb(255 255 255 / 0.15);
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		color: #c9c3cf;
+	}
+
+	.confianza,
+	.detalle {
+		margin-top: 2.5rem;
+	}
+	.c-tit,
+	.d-tit {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.375rem;
+	}
+	.c-tit :global(.icono) {
+		color: var(--morado);
+	}
+	.c-preg {
+		margin-top: 0.75rem;
+		font-size: 1.125rem;
+		color: var(--tinta-2);
+	}
+	.escala {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+	.esc-op {
+		aspect-ratio: 1;
+		max-height: 4rem;
+		border: 0;
+		border-radius: var(--radio);
+		background: #fff;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-size: 1.25rem;
+		color: var(--tinta);
+		cursor: pointer;
+	}
+	.esc-op.elegida {
+		background: var(--morado);
+		color: #fff;
+		box-shadow: none;
+	}
+	.esc-etq {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.c-comparar {
+		display: grid;
+		gap: 0.75rem;
+		margin-top: 1rem;
+	}
+	.c-fila {
+		display: grid;
+		grid-template-columns: 3.5rem 1fr auto;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.9375rem;
+	}
+	.c-lado {
+		color: var(--gris);
+		font-weight: 600;
+	}
+	.c-barra {
+		height: 12px;
+		border-radius: 999px;
+		background: var(--fondo-2);
+		overflow: hidden;
+	}
+	.c-barra i {
+		display: block;
+		height: 100%;
+		border-radius: 999px;
+		background: var(--gris-claro);
+		transition: width 0.6s ease;
+	}
+	.c-fila--ahora .c-barra i {
+		background: var(--morado);
+	}
+	.c-val {
+		font-size: 0.9375rem;
+	}
+
+	.temas {
+		list-style: none;
+		margin: 1rem 0 0;
+		padding: 0;
+		border-top: 1px solid var(--linea);
+	}
+	.temas li {
+		display: grid;
+		grid-template-columns: 2.75rem 1fr;
+		gap: 0.875rem;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--linea);
+	}
+	.t-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 0.75rem;
+		background: var(--fondo-2);
+		color: var(--morado);
+	}
+	.t-cuerpo {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+	.t-nombre {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+	}
+	.t-chips {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.35rem;
+	}
+	.t-chips :global(.t-flecha) {
+		color: var(--gris-claro);
+	}
+	.chip {
+		padding: 0.15rem 0.6rem;
+		border-radius: 999px;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		background: var(--fondo-2);
+		color: var(--gris);
+	}
+	.chip[data-tono='bien'] {
+		background: var(--verde-claro);
+		color: var(--verde);
+	}
+	.chip[data-tono='mal'] {
+		background: var(--rojo-claro);
+		color: var(--rojo);
+	}
+	.chip[data-tono='pendiente'] {
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--linea);
+	}
+	.t-link {
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.d-sub {
+		margin-top: 0.25rem;
+		font-size: 0.9375rem;
+		color: var(--gris);
+	}
+	.t-25 {
+		display: flex;
+		gap: 0.35rem;
+		align-items: flex-start;
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: var(--gris);
+	}
+	.t-25 :global(.icono) {
+		margin-top: 0.15rem;
+		color: var(--morado);
+	}
+	.t-pronto {
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+
+	.privado {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		margin-top: 2rem;
+		font-size: 0.9375rem;
+		color: var(--gris);
+	}
+	.privado :global(.icono) {
+		color: var(--morado);
+		margin-top: 0.15rem;
+	}
+	.botones {
+		display: grid;
+		gap: 0.75rem;
+		margin: 2rem 0 3rem;
+	}
+	.link-inicio {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		font-weight: 600;
+		color: var(--tinta-2);
+		text-decoration: none;
+	}
+</style>

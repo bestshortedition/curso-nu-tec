@@ -1,0 +1,343 @@
+---
+/**
+ * Reto "Tu meta de ahorro": eliges una meta, cuánto apartas por semana y ves en cuántas
+ * semanas la juntas. Luego marcas cada semana que apartaste.
+ * Se guarda SOLO en este navegador (localStorage): montos, sin datos personales.
+ * Sin JavaScript: se explica cómo hacer la cuenta.
+ */
+import Icono from '../Icono.astro';
+import { ideasMeta } from '../../data/practica';
+
+const pesos = (n: number) => `$${n.toLocaleString('es-MX')}`;
+---
+
+<div class="ma" data-ma>
+	<p class="ma-txt">Elige algo que quieras y decide cuánto apartar cada semana, en cuanto te den tu dinero.</p>
+	<p class="sin-js ma-sinjs">
+		Haz la cuenta así: lo que cuesta, menos lo que ya tienes, entre lo que apartas cada semana. Ese es el número de semanas.
+	</p>
+
+	<div class="solo-js">
+		<fieldset class="ma-ideas">
+			<legend class="ma-etq">¿Para qué ahorras?</legend>
+			<div class="ma-chips">
+				{ideasMeta.map((m) => (
+					<button type="button" class="ma-chip" data-nombre={m.nombre} data-monto={m.monto}>
+						<Icono nombre={m.icono} tamano={18} /> {m.nombre} <span class="cifra">{pesos(m.monto)}</span>
+					</button>
+				))}
+			</div>
+		</fieldset>
+
+		<div class="ma-campos">
+			<label class="ma-campo">
+				<span class="ma-etq">Cuánto cuesta</span>
+				<span class="ma-input"><span aria-hidden="true">$</span><input type="number" inputmode="numeric" min="1" data-ma-meta /></span>
+			</label>
+			<label class="ma-campo">
+				<span class="ma-etq">Ya tengo</span>
+				<span class="ma-input"><span aria-hidden="true">$</span><input type="number" inputmode="numeric" min="0" placeholder="0" data-ma-tengo /></span>
+			</label>
+			<label class="ma-campo">
+				<span class="ma-etq">Aparto cada semana</span>
+				<span class="ma-input"><span aria-hidden="true">$</span><input type="number" inputmode="numeric" min="1" data-ma-semana /></span>
+			</label>
+		</div>
+
+		<div class="ma-res" data-ma-res hidden aria-live="polite">
+			<p class="ma-r-num"><span class="cifra" data-ma-semanas></span></p>
+			<p class="ma-r-txt" data-ma-txt></p>
+		</div>
+
+		<div class="ma-checks" data-ma-checks hidden>
+			<p class="ma-c-tit"><Icono nombre="calendar-check" tamano={20} /> Marca cada semana que apartes</p>
+			<div class="ma-barra" aria-hidden="true"><span data-ma-barra></span></div>
+			<p class="ma-c-llevas" data-ma-llevas></p>
+			<div class="ma-semanas" data-ma-semanas-lista></div>
+		</div>
+
+		<p class="ma-priv"><Icono nombre="device-mobile" tamano={16} /> Se guarda solo en este celular.</p>
+	</div>
+</div>
+
+<script>
+	const CLAVE = 'bytes-de-dinero:meta';
+	type Meta = { nombre: string; meta: number; tengo: number; semana: number; hechas: number[] };
+	const leer = (): Meta | null => {
+		try {
+			return JSON.parse(localStorage.getItem(CLAVE) || 'null');
+		} catch {
+			return null;
+		}
+	};
+	const guardar = (m: Meta) => {
+		try {
+			localStorage.setItem(CLAVE, JSON.stringify(m));
+		} catch {
+			/* sin almacenamiento: funciona mientras la página esté abierta */
+		}
+	};
+	const pesos = (n: number) => `$${Math.round(n).toLocaleString('es-MX')}`;
+
+	document.querySelectorAll<HTMLElement>('[data-ma]').forEach((caja) => {
+		const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+		const inMeta = $<HTMLInputElement>('[data-ma-meta]');
+		const inTengo = $<HTMLInputElement>('[data-ma-tengo]');
+		const inSemana = $<HTMLInputElement>('[data-ma-semana]');
+		const chips = [...caja.querySelectorAll<HTMLButtonElement>('.ma-chip')];
+		let m: Meta = leer() ?? { nombre: '', meta: 0, tengo: 0, semana: 0, hechas: [] };
+
+		if (m.meta) inMeta.value = String(m.meta);
+		if (m.tengo) inTengo.value = String(m.tengo);
+		if (m.semana) inSemana.value = String(m.semana);
+
+		const pintar = () => {
+			chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.nombre === m.nombre)));
+			const falta = Math.max(0, m.meta - m.tengo);
+			const listo = m.meta > 0 && m.semana > 0;
+			$('[data-ma-res]').hidden = !listo;
+			$('[data-ma-checks]').hidden = !listo || falta === 0;
+			if (!listo) return;
+			const n = Math.ceil(falta / m.semana);
+			const que = m.nombre ? m.nombre.toLowerCase() : 'tu meta';
+			if (falta === 0) {
+				$('[data-ma-semanas]').textContent = '¡Ya lo tienes!';
+				$('[data-ma-txt]').textContent = `Ya te alcanza para ${que}.`;
+				return;
+			}
+			$('[data-ma-semanas]').textContent = `${n} ${n === 1 ? 'semana' : 'semanas'}`;
+			$('[data-ma-txt]').textContent =
+				`Apartando ${pesos(m.semana)} cada semana juntas ${pesos(falta)} para ${que}${n > 4 ? `: unos ${Math.round(n / 4.3)} ${Math.round(n / 4.3) === 1 ? 'mes' : 'meses'}` : ''}.`;
+
+			const total = Math.min(n, 52);
+			m.hechas = m.hechas.filter((h) => h < total);
+			const lista = $('[data-ma-semanas-lista]');
+			lista.replaceChildren(
+				...Array.from({ length: total }, (_, i) => {
+					const b = document.createElement('button');
+					b.type = 'button';
+					b.className = 'ma-sem';
+					b.textContent = String(i + 1);
+					b.setAttribute('aria-label', `Semana ${i + 1}`);
+					b.setAttribute('aria-pressed', String(m.hechas.includes(i)));
+					b.addEventListener('click', () => {
+						m.hechas = m.hechas.includes(i) ? m.hechas.filter((h) => h !== i) : [...m.hechas, i];
+						guardar(m);
+						pintar();
+					});
+					return b;
+				}),
+			);
+			const juntado = Math.min(falta, m.hechas.length * m.semana);
+			$('[data-ma-barra]').style.width = `${(juntado / falta) * 100}%`;
+			$('[data-ma-llevas]').textContent =
+				juntado >= falta
+					? `¡Meta cumplida! Juntaste ${pesos(falta)}.`
+					: `Llevas ${pesos(m.tengo + juntado)} de ${pesos(m.meta)}. Te faltan ${pesos(falta - juntado)}.`;
+		};
+
+		const leerCampos = () => {
+			m.meta = Number(inMeta.value) || 0;
+			m.tengo = Number(inTengo.value) || 0;
+			m.semana = Number(inSemana.value) || 0;
+			guardar(m);
+			pintar();
+		};
+		inMeta.addEventListener('input', () => {
+			// Si escribe otro monto, ya no es la idea que eligió.
+			m.nombre = chips.find((c) => Number(c.dataset.monto) === Number(inMeta.value))?.dataset.nombre ?? '';
+			leerCampos();
+		});
+		[inTengo, inSemana].forEach((i) => i.addEventListener('input', leerCampos));
+		chips.forEach((c) =>
+			c.addEventListener('click', () => {
+				m.nombre = c.dataset.nombre!;
+				inMeta.value = c.dataset.monto!;
+				if (!inSemana.value) inSemana.value = '150';
+				m.hechas = [];
+				leerCampos();
+			}),
+		);
+		pintar();
+	});
+</script>
+
+<style>
+	.ma-txt {
+		font-size: 1.0625rem;
+		line-height: 1.5;
+		color: var(--tinta-2);
+	}
+	.ma-sinjs {
+		margin-top: 0.75rem;
+		color: var(--gris);
+	}
+	.ma-ideas {
+		margin: 1.25rem 0 0;
+		padding: 0;
+		border: 0;
+	}
+	.ma-etq {
+		display: block;
+		padding: 0;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--gris);
+	}
+	.ma-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+	}
+	.ma-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		min-height: 2.75rem;
+		padding: 0 0.875rem;
+		border: 0;
+		border-radius: 999px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-size: 0.9375rem;
+		font-weight: 500;
+		cursor: pointer;
+	}
+	.ma-chip .cifra {
+		color: var(--gris);
+		font-size: 0.8125rem;
+	}
+	.ma-chip[aria-pressed='true'] {
+		background: var(--morado-claro);
+		box-shadow: inset 0 0 0 2px var(--morado);
+		color: var(--morado-oscuro);
+		font-weight: 600;
+	}
+	.ma-campos {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.625rem;
+		margin-top: 1rem;
+	}
+	@media (max-width: 26rem) {
+		.ma-campos {
+			grid-template-columns: 1fr 1fr;
+		}
+		.ma-campo:first-child {
+			grid-column: 1 / -1;
+		}
+	}
+	.ma-input {
+		display: flex;
+		align-items: center;
+		gap: 0.2rem;
+		margin-top: 0.35rem;
+		min-height: 3.25rem;
+		padding: 0 0.875rem;
+		border-radius: var(--radio-chico);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-family: var(--f-cifra);
+		font-size: 1.125rem;
+		color: var(--gris);
+		background: #fff;
+	}
+	.ma-input:focus-within {
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.ma-input input {
+		flex: 1;
+		min-width: 0;
+		width: 100%;
+		border: 0;
+		outline: 0;
+		background: none;
+		font: inherit;
+		color: var(--tinta);
+	}
+	.ma-res {
+		margin-top: 1.25rem;
+		padding: 1.125rem 1.25rem;
+		border-radius: var(--radio);
+		background: var(--tinta);
+		color: #fff;
+	}
+	.ma-res[hidden],
+	.ma-checks[hidden] {
+		display: none;
+	}
+	.ma-r-num {
+		font-family: var(--f-titulo);
+		font-size: 2.25rem;
+		font-weight: 600;
+		letter-spacing: -0.04em;
+		line-height: 1.1;
+	}
+	.ma-r-txt {
+		margin-top: 0.35rem;
+		font-size: 1.0625rem;
+		line-height: 1.5;
+		color: rgb(255 255 255 / 0.85);
+	}
+	.ma-checks {
+		margin-top: 1rem;
+	}
+	.ma-c-tit {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+	}
+	.ma-barra {
+		height: 8px;
+		margin-top: 0.75rem;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.ma-barra span {
+		display: block;
+		height: 100%;
+		width: 0;
+		border-radius: 999px;
+		background: var(--verde);
+		transition: width 0.4s;
+	}
+	.ma-c-llevas {
+		margin-top: 0.5rem;
+		font-size: 0.9375rem;
+		color: var(--tinta-2);
+	}
+	.ma-semanas {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+		gap: 0.375rem;
+		margin-top: 0.75rem;
+	}
+	.ma-semanas :global(.ma-sem) {
+		height: 2.75rem;
+		border: 0;
+		border-radius: var(--radio-chico);
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		font-family: var(--f-cifra);
+		font-size: 0.9375rem;
+		color: var(--gris);
+		cursor: pointer;
+	}
+	.ma-semanas :global(.ma-sem[aria-pressed='true']) {
+		background: var(--verde);
+		box-shadow: none;
+		color: #fff;
+		font-weight: 600;
+	}
+	.ma-priv {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-top: 1rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+</style>

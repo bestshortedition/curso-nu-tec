@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import Texto from '../layouts/Texto.astro';
+import { buscarLeccion } from '../data/temario';
+import { todasLasFotos } from '../data/fotos';
+
+const lecciones = (await getCollection('lecciones')).sort((a, b) =>
+	a.data.numero.localeCompare(b.data.numero, 'es', { numeric: true }),
+);
+---
+
+<Texto titulo="Fuentes" descripcion="De dónde sale cada dato del curso.">
+	<p>
+		Cada dato técnico se revisó en fuentes oficiales: Banco de México (Banxico), CONDUSEF y el Diario Oficial de la
+		Federación. Las cifras sobre jóvenes vienen de nuestras entrevistas. Los ejemplos con montos y tasas son ilustrativos:
+		no son de ningún banco ni producto.
+	</p>
+
+	<h2>Entrevistas del equipo</h2>
+	<p>
+		25 entrevistas a jóvenes de 15 a 18 años, del 10 al 12 de noviembre de 2026, en Nuevo León, Coahuila, Sonora, Puebla,
+		Chihuahua y Jalisco. Con consentimiento firmado de madre, padre o tutor. Sin nombres. Limitación: 21 de 25 viven en
+		ciudad grande, 16 de 25 van a escuela privada y solo 1 vive en comunidad rural.
+	</p>
+
+	{lecciones.map((l) => {
+		const { leccion } = buscarLeccion(l.data.numero)!;
+		return (
+			<>
+				<h2>{l.data.numero} · {leccion.titulo}</h2>
+				<ul>
+					{l.data.fuentes.map((f) => <li><a href={f.url} target="_blank" rel="noopener">{f.nombre}</a></li>)}
+				</ul>
+			</>
+		);
+	})}
+
+	<h2>Fotos</h2>
+	<p>
+		Fotos oficiales de Nu México, usadas con permiso de Nu para este piloto. Son la identidad visual del curso, no una
+		recomendación de producto.
+	</p>
+	<ul>
+		{todasLasFotos.map((f) => <li>{f.alt.replace(/\.$/, '')}. {f.autor} (<a href={f.enlace} target="_blank" rel="noopener">{new URL(f.enlace).hostname.replace('www.', '')}</a>)</li>)}
+	</ul>
+</Texto>

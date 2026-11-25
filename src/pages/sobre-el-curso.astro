@@ -1,0 +1,29 @@
+---
+import Texto from '../layouts/Texto.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<Texto titulo="Sobre el curso" descripcion="Quién lo hizo, para quién es y qué hacemos con tus datos.">
+	<p>
+		Bytes de dinero es un curso corto y gratuito para quienes están por cumplir 18. Lo hicimos estudiantes del
+		Tecnológico de Monterrey en un reto de educación financiera con Nu México.
+	</p>
+
+	<h2>Qué es y qué no es</h2>
+	<ul>
+		<li>Es educativo: explica cómo funcionan las cosas para que decidas tú.</li>
+		<li>No es asesoría financiera ni publicidad. No te recomienda ningún banco ni producto.</li>
+	</ul>
+
+	<h2>Tus datos</h2>
+	<ul>
+		<li>No te pedimos nombre, correo, teléfono ni ningún dato personal. No hay registro.</li>
+		<li>Tu avance y tus respuestas a “¿Te sirvió?” se guardan solo en tu navegador. Si borras los datos del sitio, se borran.</li>
+	</ul>
+
+	<h2>Cómo lo hicimos</h2>
+	<p>
+		Entrevistamos a 25 jóvenes de 15 a 18 años en seis estados. Cada lección empieza con una duda que salió de esas
+		entrevistas. Los datos técnicos los revisamos en fuentes oficiales: <a href={`${base}fuentes/`}>ver fuentes</a>.
+	</p>
+</Texto>

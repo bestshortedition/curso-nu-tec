@@ -1,0 +1,391 @@
+---
+/**
+ * Página de un módulo: presentación + lista de lecciones.
+ * Todas las lecciones publicadas se pueden abrir; con JavaScript se marca cuál sigue (ver src/lib/ruta.ts).
+ */
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icono from '../../components/Icono.astro';
+import DatosRuta from '../../components/DatosRuta.astro';
+import Foto from '../../components/Foto.astro';
+import { fotosModulo } from '../../data/fotos';
+import { temario, type Modulo } from '../../data/temario';
+
+export function getStaticPaths() {
+	return temario.map((modulo, i) => ({
+		params: { modulo: modulo.clave },
+		props: { modulo, anterior: temario[i - 1], siguiente: temario[i + 1] },
+	}));
+}
+
+interface Props {
+	modulo: Modulo;
+	anterior?: Modulo;
+	siguiente?: Modulo;
+}
+const { modulo, anterior, siguiente } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const lecciones = await getCollection('lecciones');
+const porNumero = new Map(lecciones.map((l) => [l.data.numero, l]));
+const og = ['credito'].includes(modulo.clave) ? modulo.clave : 'general';
+const minutos = modulo.lecciones.reduce((n, l) => n + (porNumero.get(l.numero)?.data.minutos ?? 0), 0);
+---
+
+<Base titulo={`Módulo ${modulo.numero}: ${modulo.titulo}`} descripcion={modulo.promesa} og={og}>
+	<div class="contenedor">
+		<nav class="migas" aria-label="Ruta">
+			<a href={`${base}ruta/`}><Icono nombre="arrow-left" tamano={18} /> Tu ruta</a>
+		</nav>
+
+		<header class="cabeza" data-modulo-cabeza>
+			<figure class="foto-mod">
+				<Foto foto={fotosModulo[modulo.clave]} anchos={[480, 800, 1200]} tamanos="(min-width: 44rem) 640px, 100vw" prioridad />
+			</figure>
+			<span class="ico-mod"><Icono nombre={modulo.icono} tamano={34} /></span>
+			<p class="sobretitulo">Módulo {modulo.numero} de {temario.length}</p>
+			<h1>{modulo.titulo}</h1>
+			<p class="intro">{modulo.intro}</p>
+			<ul class="datos">
+				<li><Icono nombre="book-open-text" tamano={18} /> {modulo.lecciones.length} lecciones</li>
+				{minutos > 0 && <li><Icono nombre="clock" tamano={18} /> {minutos} min disponibles</li>}
+				<li><Icono nombre="lock-simple-open" tamano={18} /> Elige la que quieras</li>
+			</ul>
+			<div class="solo-js barra" data-barra aria-hidden="true"><span></span></div>
+			<p class="solo-js estado" data-estado></p>
+		</header>
+
+		<h2 class="lista-tit">Lo que vas a aprender</h2>
+		<ol class="lecciones" data-lecciones>
+			{modulo.lecciones.map((l) => {
+				const entrada = porNumero.get(l.numero);
+				const cuerpo = (
+					<>
+						<span class="texto">
+							<span class="num cifra">Lección {l.numero}</span>
+							<span class="titulo">{l.titulo}</span>
+							<span class="resumen">{l.resumen}</span>
+						</span>
+					</>
+				);
+				return (
+					<li class:list={{ disponible: !!entrada }} data-numero={l.numero}>
+						{entrada ? (
+							<a href={`${base}${modulo.clave}/${l.slug}/`} data-enlace>
+								<span class="ico-l">
+									<Icono nombre={l.icono} tamano={22} />
+								</span>
+								{cuerpo}
+								<span class="lado">
+									<span class="dur"><Icono nombre="clock" tamano={16} /> {entrada.data.minutos} min</span>
+									<span class="sigue">Sigue</span>
+									<span class="hecho" aria-hidden="true"><Icono nombre="check" tamano={16} /></span>
+									<span class="sr-only" data-sr></span>
+								</span>
+							</a>
+						) : (
+							<div class="fila">
+								<span class="ico-l"><Icono nombre={l.icono} tamano={22} /></span>
+								{cuerpo}
+								<span class="lado"><span class="pronto">Próximamente</span></span>
+							</div>
+						)}
+					</li>
+				);
+			})}
+		</ol>
+
+		<nav class="vecinos" aria-label="Otros módulos">
+			{anterior ? (
+				<a href={`${base}${anterior.clave}/`}>
+					<span class="sobretitulo">Módulo {anterior.numero}</span>
+					<span>{anterior.titulo}</span>
+				</a>
+			) : <span />}
+			{siguiente && (
+				<a class="der" href={`${base}${siguiente.clave}/`}>
+					<span class="sobretitulo">Módulo {siguiente.numero}</span>
+					<span>{siguiente.titulo}</span>
+				</a>
+			)}
+		</nav>
+	</div>
+	<DatosRuta />
+</Base>
+
+<script>
+	import { calcular, leerDatos } from '../../lib/ruta';
+
+	const datos = leerDatos();
+	if (datos) {
+		const ruta = calcular(datos);
+		const items = [...document.querySelectorAll<HTMLElement>('[data-lecciones] li')];
+		let hechas = 0;
+		let total = 0;
+		items.forEach((li) => {
+			const estado = ruta.lecciones[li.dataset.numero!];
+			li.dataset.estado = estado;
+			if (estado !== 'pronto') total++;
+			const sr = li.querySelector('[data-sr]');
+			if (estado === 'hecha') {
+				hechas++;
+				if (sr) sr.textContent = '(terminada)';
+			} else if (estado === 'siguiente') {
+				if (sr) sr.textContent = '(sigue esta)';
+			}
+		});
+		const barra = document.querySelector<HTMLElement>('[data-barra] span');
+		if (barra && total) barra.style.width = `${(hechas / total) * 100}%`;
+		const estado = document.querySelector('[data-estado]');
+		if (estado && total) estado.textContent = `Terminadas: ${hechas} de ${total} ${total === 1 ? 'disponible' : 'disponibles'}`;
+	}
+</script>
+
+<style>
+	.migas {
+		padding-top: 1.25rem;
+	}
+	.migas a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		color: var(--gris);
+		text-decoration: none;
+		font-size: 0.9375rem;
+	}
+	.cabeza {
+		padding: 1rem 0 2.5rem;
+	}
+	.foto-mod {
+		margin: 0.5rem 0 0;
+		aspect-ratio: 16 / 9;
+		border-radius: var(--radio);
+		overflow: hidden;
+		background: var(--fondo-2);
+	}
+	.foto-mod :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	/* El ícono del módulo se monta sobre el borde inferior de la foto. */
+	.foto-mod + .ico-mod {
+		position: relative;
+		margin-top: -2.25rem;
+		margin-left: 1rem;
+		box-shadow: 0 0 0 5px #fff;
+	}
+	.ico-mod {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		margin-bottom: 1.25rem;
+		border-radius: 1.125rem;
+		background: var(--morado);
+		color: #fff;
+	}
+	h1 {
+		margin-top: 0.5rem;
+		font-size: clamp(2rem, 8vw, 3rem);
+		letter-spacing: -0.04em;
+	}
+	.intro {
+		margin-top: 0.875rem;
+		max-width: 36rem;
+		font-size: 1.1875rem;
+		line-height: 1.55;
+		color: var(--tinta-2);
+	}
+	.datos {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+		list-style: none;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		font-size: 0.9375rem;
+		color: var(--gris);
+	}
+	.datos li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.datos :global(.icono) {
+		color: var(--morado);
+	}
+	.barra {
+		height: 6px;
+		margin-top: 1.75rem;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.barra span {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--morado);
+		border-radius: 999px;
+		transition: width 0.4s;
+	}
+	.estado {
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		color: var(--gris);
+	}
+	.lista-tit {
+		margin-bottom: 0.75rem;
+		font-size: 1.25rem;
+		letter-spacing: -0.02em;
+	}
+	.lecciones {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--tinta);
+	}
+	.lecciones li {
+		border-bottom: 1px solid var(--linea);
+	}
+	.lecciones a,
+	.fila {
+		display: grid;
+		grid-template-columns: 2.75rem 1fr auto;
+		gap: 0.875rem;
+		padding: 1.25rem 0;
+		color: var(--tinta);
+		text-decoration: none;
+	}
+	.lecciones a[href]:hover .titulo {
+		color: var(--morado);
+	}
+	.ico-l {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 0.875rem;
+		background: var(--fondo-2);
+		box-shadow: inset 0 0 0 1px var(--linea);
+		color: var(--gris);
+	}
+	.disponible .ico-l {
+		background: var(--morado-claro);
+		box-shadow: none;
+		color: var(--morado);
+	}
+	.texto {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+	.num {
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+	.disponible .num {
+		color: var(--morado);
+		font-weight: 600;
+	}
+	.titulo {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.3;
+		letter-spacing: -0.015em;
+	}
+	.resumen {
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		color: var(--gris);
+	}
+	.fila .titulo {
+		color: var(--tinta-2);
+	}
+	.lado {
+		display: flex;
+		align-items: flex-start;
+		padding-top: 0.15rem;
+	}
+	.dur {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+		white-space: nowrap;
+	}
+	.pronto {
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: var(--gris);
+		white-space: nowrap;
+	}
+	.sigue {
+		display: none;
+		padding: 0.2rem 0.6rem;
+		border-radius: 999px;
+		background: var(--morado);
+		color: #fff;
+		font-size: 0.75rem;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	.hecho {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 50%;
+		background: var(--verde-claro);
+		color: var(--verde);
+	}
+
+	/* Estados (con JavaScript) */
+	[data-estado='siguiente'] .sigue,
+	[data-estado='hecha'] .hecho {
+		display: inline-flex;
+	}
+	[data-estado='siguiente'] .dur,
+	[data-estado='hecha'] .dur {
+		display: none;
+	}
+	[data-estado='hecha'] .ico-l {
+		background: var(--verde-claro);
+		color: var(--verde);
+	}
+
+	.vecinos {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-top: 3rem;
+	}
+	.vecinos a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 1rem;
+		border: 1px solid var(--linea);
+		border-radius: var(--radio);
+		color: var(--tinta);
+		text-decoration: none;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		line-height: 1.3;
+	}
+	.vecinos a:hover {
+		border-color: var(--gris-claro);
+	}
+	.vecinos .der {
+		text-align: right;
+		grid-column: 2;
+	}
+</style>

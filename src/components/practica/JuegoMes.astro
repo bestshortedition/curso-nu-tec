@@ -1,0 +1,359 @@
+---
+/**
+ * Juego "Tu mes con tu domingo": 4 semanas, 4 decisiones, y ves qué pasa con tu meta.
+ * EJEMPLO ILUSTRATIVO. Las situaciones viven en src/data/practica.ts.
+ * Sin JavaScript: se ven las situaciones con sus dos caminos y lo que pasa en cada uno.
+ */
+import Icono from '../Icono.astro';
+import { juegoMes } from '../../data/practica';
+
+const { porSemana, meta, metaNombre, decisiones } = juegoMes;
+const pesos = (n: number) => `$${n.toLocaleString('es-MX')}`;
+---
+
+<div class="jm" data-jm data-meta={meta}>
+	<p class="jm-etq">Ejemplo ilustrativo</p>
+	<p class="jm-planteo">
+		Cada semana te dan <strong>{pesos(porSemana)}</strong>. Quieres juntar <strong>{pesos(meta)}</strong> para {metaNombre} en 4
+		semanas. Tú decides.
+	</p>
+
+	<div class="jm-meta solo-js" aria-live="polite">
+		<div class="jm-meta-txt">
+			<span><Icono nombre="ticket" tamano={18} /> Tu meta</span>
+			<span class="cifra"><span data-jm-llevas>$0</span> de {pesos(meta)}</span>
+		</div>
+		<div class="jm-barra" aria-hidden="true"><span data-jm-barra></span></div>
+	</div>
+
+	<ol class="jm-semanas">
+		{decisiones.map((d, i) => (
+			<li class="jm-semana" data-semana={i}>
+				<p class="jm-num">
+					<span class="jm-ico"><Icono nombre={d.icono} tamano={20} /></span> Semana {d.semana} de {decisiones.length}
+				</p>
+				<p class="jm-sit">{d.situacion}</p>
+				<div class="jm-ops" role="group" aria-label={`Semana ${d.semana}: ¿qué haces?`}>
+					{d.opciones.map((o, j) => (
+						<button type="button" class="jm-op solo-js" data-ahorro={o.ahorro} data-j={j}>
+							{o.texto}
+						</button>
+					))}
+				</div>
+				{d.opciones.map((o, j) => (
+					<div class="jm-cons" data-cons={j}>
+						<p class="jm-cons-sinjs sin-js"><strong>Si eliges “{o.texto}”:</strong></p>
+						<p>{o.consecuencia}</p>
+						<p class="jm-suma cifra">+{pesos(o.ahorro)} a tu meta</p>
+					</div>
+				))}
+				<button type="button" class="boton boton--morado boton--ancho jm-sig solo-js" data-jm-sig hidden>
+					{i < decisiones.length - 1 ? 'Siguiente semana' : 'Ver cómo te fue'} <Icono nombre="arrow-right" tamano={20} />
+				</button>
+			</li>
+		))}
+	</ol>
+
+	<div class="jm-final solo-js" data-jm-final hidden tabindex="-1">
+		<p class="jm-f-etq">Al final del mes</p>
+		<p class="jm-f-num"><span class="cifra" data-jm-total></span></p>
+		<p class="jm-f-txt" data-jm-veredicto></p>
+		<div class="jm-aprende">
+			<p class="jm-a-tit"><Icono nombre="lightbulb" tamano={20} /> Lo que hace la diferencia</p>
+			<ul>
+				<li>Apartar primero, en cuanto te dan el dinero.</li>
+				<li>Esperar 24 horas antes de un antojo grande.</li>
+				<li>Ahorrar una parte de lo que ganas, aunque sea poco.</li>
+			</ul>
+		</div>
+		<button type="button" class="boton boton--borde" data-jm-otra>
+			<Icono nombre="arrow-counter-clockwise" tamano={20} /> Jugar otra vez
+		</button>
+	</div>
+</div>
+
+<script>
+	const pesos = (n: number) => `$${n.toLocaleString('es-MX')}`;
+
+	document.querySelectorAll<HTMLElement>('[data-jm]').forEach((juego) => {
+		const meta = Number(juego.dataset.meta);
+		const semanas = [...juego.querySelectorAll<HTMLElement>('[data-semana]')];
+		const llevasEl = juego.querySelector<HTMLElement>('[data-jm-llevas]')!;
+		const barra = juego.querySelector<HTMLElement>('[data-jm-barra]')!;
+		const final = juego.querySelector<HTMLElement>('[data-jm-final]')!;
+		let llevas = 0;
+		let actual = 0;
+		juego.classList.add('jugando');
+
+		const pintarMeta = () => {
+			llevasEl.textContent = pesos(llevas);
+			barra.style.width = `${Math.min(100, (llevas / meta) * 100)}%`;
+			barra.classList.toggle('lista', llevas >= meta);
+		};
+		const mostrar = (i: number) => {
+			actual = i;
+			semanas.forEach((s, j) => (s.hidden = j !== i));
+		};
+		const empezar = () => {
+			llevas = 0;
+			final.hidden = true;
+			semanas.forEach((s) => {
+				s.classList.remove('decidida');
+				s.querySelectorAll<HTMLButtonElement>('.jm-op').forEach((b) => {
+					b.disabled = false;
+					b.classList.remove('elegida');
+				});
+				s.querySelectorAll<HTMLElement>('[data-cons]').forEach((c) => (c.hidden = true));
+				s.querySelector<HTMLElement>('[data-jm-sig]')!.hidden = true;
+			});
+			pintarMeta();
+			mostrar(0);
+		};
+
+		semanas.forEach((s) => {
+			s.querySelectorAll<HTMLButtonElement>('.jm-op').forEach((b) =>
+				b.addEventListener('click', () => {
+					llevas += Number(b.dataset.ahorro);
+					b.classList.add('elegida');
+					s.classList.add('decidida');
+					s.querySelectorAll<HTMLButtonElement>('.jm-op').forEach((x) => (x.disabled = true));
+					s.querySelector<HTMLElement>(`[data-cons="${b.dataset.j}"]`)!.hidden = false;
+					const sig = s.querySelector<HTMLButtonElement>('[data-jm-sig]')!;
+					sig.hidden = false;
+					sig.focus({ preventScroll: true });
+					pintarMeta();
+				}),
+			);
+			s.querySelector('[data-jm-sig]')!.addEventListener('click', () => {
+				if (actual < semanas.length - 1) {
+					mostrar(actual + 1);
+					semanas[actual].querySelector<HTMLButtonElement>('.jm-op')!.focus({ preventScroll: true });
+					return;
+				}
+				semanas.forEach((x) => (x.hidden = true));
+				juego.querySelector('[data-jm-total]')!.textContent = pesos(llevas);
+				juego.querySelector('[data-jm-veredicto]')!.textContent =
+					llevas >= meta
+						? `¡Lo lograste! Te alcanza para tu boleto${llevas > meta ? ` y te sobran ${pesos(llevas - meta)}` : ''}.`
+						: `Te faltaron ${pesos(meta - llevas)} para tu boleto. Prueba otros caminos: no es ahorrar todo, es decidir primero.`;
+				final.hidden = false;
+				final.focus();
+			});
+		});
+		juego.querySelector('[data-jm-otra]')!.addEventListener('click', empezar);
+		empezar();
+	});
+</script>
+
+<style>
+	.jm {
+		padding: 1.25rem;
+		border-radius: var(--radio);
+		background: var(--morado-tenue);
+		box-shadow: inset 0 0 0 1px #e9dcf6;
+	}
+	.jm-etq {
+		display: inline-block;
+		padding: 0.15rem 0.6rem;
+		border-radius: 999px;
+		background: #fff;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: var(--gris);
+		box-shadow: inset 0 0 0 1px var(--linea);
+	}
+	.jm-planteo {
+		margin-top: 0.75rem;
+		font-size: 1.0625rem;
+		line-height: 1.5;
+		color: var(--tinta-2);
+	}
+	.jm-planteo strong {
+		color: var(--tinta);
+	}
+	.jm-meta {
+		margin-top: 1rem;
+		padding: 0.875rem 1rem;
+		border-radius: var(--radio-chico);
+		background: #fff;
+	}
+	.jm-meta-txt {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+	}
+	.jm-meta-txt span:first-child {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: var(--morado-oscuro);
+	}
+	.jm-barra {
+		height: 8px;
+		margin-top: 0.5rem;
+		border-radius: 999px;
+		background: var(--linea);
+		overflow: hidden;
+	}
+	.jm-barra span {
+		display: block;
+		height: 100%;
+		width: 0;
+		border-radius: 999px;
+		background: var(--morado);
+		transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+	.jm-barra span.lista {
+		background: var(--verde);
+	}
+	.jm-semanas {
+		list-style: none;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 1.5rem;
+	}
+	.jm-semana[hidden] {
+		display: none;
+	}
+	.jm-semana {
+		animation: carta 0.3s ease-out;
+	}
+	@keyframes carta {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+	}
+	.jm-num {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.jm-ico {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.625rem;
+		background: #fff;
+	}
+	.jm-sit {
+		margin-top: 0.625rem;
+		font-family: var(--f-titulo);
+		font-size: clamp(1.25rem, 5.5vw, 1.5rem);
+		font-weight: 600;
+		line-height: 1.25;
+		letter-spacing: -0.02em;
+	}
+	.jm-ops {
+		display: grid;
+		gap: 0.625rem;
+		margin-top: 1rem;
+	}
+	.jm-op {
+		min-height: 3.5rem;
+		padding: 0.75rem 1rem;
+		border: 0;
+		border-radius: var(--radio);
+		background: #fff;
+		box-shadow: inset 0 0 0 1.5px var(--linea);
+		text-align: start;
+		font-size: 1.0625rem;
+		font-weight: 500;
+		line-height: 1.35;
+		cursor: pointer;
+		transition: box-shadow 0.15s, opacity 0.15s;
+	}
+	.jm-op:hover:not(:disabled) {
+		box-shadow: inset 0 0 0 1.5px var(--morado);
+	}
+	.jm-op:disabled {
+		cursor: default;
+		opacity: 0.45;
+	}
+	.jm-op.elegida {
+		opacity: 1;
+		box-shadow: inset 0 0 0 2px var(--morado);
+	}
+	.jm-cons {
+		margin-top: 1rem;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radio);
+		background: #fff;
+		font-size: 1.0625rem;
+		line-height: 1.5;
+		color: var(--tinta-2);
+	}
+	.jm-cons[hidden] {
+		display: none;
+	}
+	.jm-suma {
+		margin-top: 0.5rem;
+		font-weight: 600;
+		color: var(--verde);
+	}
+	.jm-sig {
+		margin-top: 1rem;
+	}
+	.jm-sig[hidden] {
+		display: none;
+	}
+	.jm-final {
+		margin-top: 1.25rem;
+		outline: none;
+	}
+	.jm-final[hidden] {
+		display: none;
+	}
+	.jm-f-etq {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--morado);
+	}
+	.jm-f-num {
+		font-family: var(--f-titulo);
+		font-size: 3rem;
+		font-weight: 600;
+		letter-spacing: -0.04em;
+		line-height: 1.1;
+	}
+	.jm-f-txt {
+		margin-top: 0.25rem;
+		font-size: 1.125rem;
+		line-height: 1.45;
+		color: var(--tinta);
+	}
+	.jm-aprende {
+		margin-top: 1rem;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radio);
+		background: #fff;
+	}
+	.jm-a-tit {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--f-titulo);
+		font-weight: 600;
+	}
+	.jm-aprende ul {
+		margin: 0.5rem 0 0;
+		padding-left: 1.25rem;
+		color: var(--tinta-2);
+	}
+	.jm-aprende li + li {
+		margin-top: 0.25rem;
+	}
+	.jm-final .boton {
+		margin-top: 1rem;
+		background: #fff;
+	}
+</style>

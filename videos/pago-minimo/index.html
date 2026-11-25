@@ -1,0 +1,695 @@
+<!doctype html>
+<!--
+  Video de la lección 4.5 "La trampa del pago mínimo". EJEMPLO ILUSTRATIVO.
+  Números: deuda de $3,000, límite de $5,000, tasa de 45% anual + IVA, regla de Banxico
+  (Circular 34/2010, numeral 4.1). Salen de src/lib/minimo.ts; si cambian allá, cámbienlos aquí.
+  Ver:      npm run ver -- pago-minimo      (desde la carpeta videos)
+  Exportar: npm run render -- pago-minimo
+-->
+<html lang="es" data-resolution="portrait">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=1080, height=1920" />
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+		<style>
+			@font-face {
+				font-family: 'Geist';
+				src: url('assets/fonts/geist-latin-wght-normal.woff2') format('woff2');
+				font-weight: 100 900;
+			}
+			@font-face {
+				font-family: 'Geist Mono';
+				src: url('assets/fonts/geist-mono-latin-wght-normal.woff2') format('woff2');
+				font-weight: 100 900;
+			}
+			@font-face {
+				font-family: 'Hanken Grotesk';
+				src: url('assets/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2');
+				font-weight: 100 900;
+			}
+			:root {
+				--morado: #820ad1;
+				--morado-claro: #efe3fa;
+				--lila: #c79af0;
+				--tinta: #1f1a24;
+				--gris: #5f5966;
+				--linea: #e8e3ee;
+				--fondo: #ffffff;
+				--fondo-2: #faf9fb;
+				--verde: #1b7f4a;
+				--f-titulo: 'Geist', sans-serif;
+				--f-texto: 'Hanken Grotesk', sans-serif;
+				--f-cifra: 'Geist Mono', monospace;
+			}
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				width: 1080px;
+				height: 1920px;
+				overflow: hidden;
+				background: var(--fondo);
+			}
+			#root {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				font-family: var(--f-texto);
+				color: var(--tinta);
+				background: var(--fondo);
+			}
+			.escena {
+				position: absolute;
+				inset: 0;
+				padding: 0 110px;
+			}
+			/* Baja el contenido para centrarlo en la pantalla */
+			#e1,
+			#e2,
+			#e3,
+			#e4 {
+				top: 230px;
+				bottom: -230px;
+			}
+			#e5 {
+				top: 120px;
+				bottom: -120px;
+			}
+			.oscura {
+				background: var(--tinta);
+				color: #fff;
+			}
+			.titulo {
+				font-family: var(--f-titulo);
+				font-weight: 600;
+				letter-spacing: -0.045em;
+				line-height: 1.02;
+			}
+			.cifra {
+				font-family: var(--f-cifra);
+				font-variant-numeric: tabular-nums;
+				letter-spacing: -0.04em;
+			}
+			.sobre {
+				font-family: var(--f-texto);
+				font-size: 40px;
+				font-weight: 600;
+				color: var(--gris);
+				letter-spacing: -0.01em;
+			}
+
+			/* Siempre visible: barra de avance y aviso */
+			#avance {
+				position: absolute;
+				top: 120px;
+				left: 110px;
+				right: 110px;
+				height: 8px;
+				border-radius: 8px;
+				background: rgb(130 10 209 / 0.14);
+				overflow: hidden;
+				z-index: 20;
+			}
+			#avance-barra {
+				width: 100%;
+				height: 100%;
+				background: var(--morado);
+				transform-origin: left center;
+			}
+			#aviso {
+				position: absolute;
+				left: 110px;
+				right: 110px;
+				top: 160px;
+				display: flex;
+				align-items: center;
+				gap: 18px;
+				font-size: 30px;
+				font-weight: 600;
+				color: var(--gris);
+				z-index: 20;
+			}
+			#aviso i {
+				display: block;
+				width: 14px;
+				height: 14px;
+				border-radius: 50%;
+				background: var(--morado);
+			}
+
+			/* 1 · Gancho */
+			#e1-a {
+				position: absolute;
+				top: 430px;
+				left: 110px;
+				right: 110px;
+				font-size: 150px;
+			}
+			#e1-b {
+				position: absolute;
+				top: 820px;
+				left: 110px;
+				right: 110px;
+				font-size: 150px;
+				color: var(--morado);
+			}
+
+			/* 2 · La tarjeta */
+			#e2-sobre {
+				position: absolute;
+				top: 330px;
+				left: 110px;
+			}
+			#e2-tarjeta {
+				position: absolute;
+				top: 430px;
+				left: 110px;
+				width: 860px;
+				height: 540px;
+				border-radius: 44px;
+				background: var(--tinta);
+				color: #fff;
+				padding: 64px;
+				box-shadow: 0 40px 80px -30px rgb(31 26 36 / 0.45);
+			}
+			#e2-chip {
+				width: 110px;
+				height: 84px;
+				border-radius: 18px;
+				background: linear-gradient(135deg, #d9c27a, #b79a4e);
+			}
+			#e2-etq {
+				margin-top: 96px;
+				font-size: 40px;
+				font-weight: 600;
+				color: #c9c3cf;
+			}
+			#e2-monto {
+				margin-top: 6px;
+				font-size: 150px;
+				font-weight: 500;
+				line-height: 1;
+			}
+			#e2-pie {
+				position: absolute;
+				top: 1060px;
+				left: 110px;
+				right: 110px;
+				font-size: 56px;
+				line-height: 1.25;
+				font-weight: 500;
+				letter-spacing: -0.02em;
+			}
+
+			/* 3 · El primer mínimo se reparte */
+			#e3-sobre {
+				position: absolute;
+				top: 330px;
+				left: 110px;
+			}
+			#e3-monto {
+				position: absolute;
+				top: 400px;
+				left: 104px;
+				font-size: 230px;
+				font-weight: 500;
+				line-height: 1;
+			}
+			#e3-barra {
+				position: absolute;
+				top: 720px;
+				left: 110px;
+				width: 860px;
+				height: 120px;
+				border-radius: 28px;
+				background: var(--fondo-2);
+				box-shadow: inset 0 0 0 3px var(--linea);
+				overflow: hidden;
+			}
+			#e3-int,
+			#e3-deu {
+				position: absolute;
+				top: 0;
+				height: 100%;
+				transform-origin: left center;
+			}
+			#e3-int {
+				left: 0;
+				width: 640px; /* 131 de 176 */
+				background: var(--morado);
+			}
+			#e3-deu {
+				left: 640px;
+				width: 220px; /* 45 de 176 */
+				background: var(--tinta);
+			}
+			.e3-etq {
+				position: absolute;
+				top: 880px;
+				font-size: 40px;
+				font-weight: 600;
+				line-height: 1.25;
+			}
+			.e3-etq b {
+				display: block;
+				font-family: var(--f-cifra);
+				font-size: 76px;
+				font-weight: 500;
+				letter-spacing: -0.04em;
+			}
+			#e3-etq-int {
+				left: 110px;
+				color: var(--morado);
+			}
+			#e3-etq-deu {
+				right: 110px;
+				text-align: right;
+			}
+
+			/* 4 · La deuda casi no baja */
+			#e4-sobre {
+				position: absolute;
+				top: 330px;
+				left: 110px;
+			}
+			#e4-antes {
+				position: absolute;
+				top: 410px;
+				left: 104px;
+				font-size: 150px;
+				color: var(--gris);
+			}
+			#e4-tache {
+				position: absolute;
+				top: 500px;
+				left: 104px;
+				width: 560px;
+				height: 12px;
+				border-radius: 12px;
+				background: var(--morado);
+				transform-origin: left center;
+			}
+			#e4-flecha {
+				position: absolute;
+				top: 620px;
+				left: 110px;
+				width: 96px;
+				height: 96px;
+				color: var(--morado);
+			}
+			#e4-despues {
+				position: absolute;
+				top: 730px;
+				left: 104px;
+				font-size: 190px;
+				font-weight: 500;
+			}
+			#e4-pie {
+				position: absolute;
+				top: 1030px;
+				left: 110px;
+				right: 110px;
+				font-size: 92px;
+			}
+
+			/* 5 · Los meses */
+			#e5-sobre {
+				position: absolute;
+				top: 250px;
+				left: 110px;
+				right: 110px;
+				font-size: 64px;
+				line-height: 1.12;
+			}
+			#e5-puntos {
+				position: absolute;
+				top: 470px;
+				left: 110px;
+				width: 860px;
+				display: grid;
+				grid-template-columns: repeat(12, 1fr);
+				gap: 22px 14px;
+			}
+			#e5-puntos span {
+				display: block;
+				width: 52px;
+				height: 52px;
+				border-radius: 50%;
+				background: var(--linea);
+			}
+			#e5-puntos span.lleno {
+				background: var(--morado);
+			}
+			#e5-leyenda {
+				position: absolute;
+				top: 1160px;
+				left: 110px;
+				font-size: 32px;
+				color: var(--gris);
+				font-weight: 600;
+			}
+			#e5-total {
+				position: absolute;
+				top: 1240px;
+				left: 104px;
+				font-size: 104px;
+				font-weight: 600;
+				color: var(--tinta);
+			}
+
+			/* 6 · Lo que pagas al final */
+			#e6-sobre {
+				position: absolute;
+				top: 250px;
+				left: 110px;
+				right: 110px;
+				font-size: 64px;
+				line-height: 1.12;
+			}
+			.e6-col {
+				position: absolute;
+				bottom: 600px;
+				width: 330px;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+			}
+			#e6-c1 {
+				left: 110px;
+			}
+			#e6-c2 {
+				left: 640px;
+			}
+			.e6-num {
+				font-size: 72px;
+				font-weight: 500;
+				margin-bottom: 18px;
+			}
+			.e6-bar {
+				border-radius: 24px 24px 0 0;
+				transform-origin: center bottom;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+			#e6-b1 {
+				height: 200px;
+				background: var(--tinta);
+			}
+			#e6-b2 {
+				height: 636px; /* 9,531 en la misma escala */
+			}
+			#e6-b2-int {
+				flex: 1;
+				background: var(--morado);
+			}
+			#e6-b2-deu {
+				height: 200px;
+				background: var(--tinta);
+			}
+			.e6-etq {
+				position: absolute;
+				top: 1340px;
+				width: 330px;
+				font-size: 40px;
+				font-weight: 600;
+				line-height: 1.2;
+			}
+			#e6-t1 {
+				left: 110px;
+			}
+			#e6-t2 {
+				left: 640px;
+				color: var(--morado);
+			}
+			#e6-suelo {
+				position: absolute;
+				left: 110px;
+				right: 110px;
+				top: 1320px;
+				height: 4px;
+				background: var(--tinta);
+			}
+			#e6-triple {
+				position: absolute;
+				top: 430px;
+				left: 110px;
+				font-size: 96px;
+				color: var(--morado);
+			}
+
+			/* 7 · Cierre */
+			#e7-a {
+				position: absolute;
+				top: 520px;
+				left: 110px;
+				right: 110px;
+				font-size: 112px;
+			}
+			#e7-b {
+				position: absolute;
+				top: 780px;
+				left: 110px;
+				right: 110px;
+				font-size: 112px;
+				color: var(--lila);
+			}
+			#e7-raya {
+				position: absolute;
+				top: 1090px;
+				left: 110px;
+				width: 860px;
+				height: 3px;
+				background: rgb(255 255 255 / 0.2);
+				transform-origin: left center;
+			}
+			#e7-c {
+				position: absolute;
+				top: 1150px;
+				left: 110px;
+				right: 110px;
+				font-size: 64px;
+				line-height: 1.15;
+			}
+			#e7-cero {
+				position: absolute;
+				top: 1350px;
+				left: 110px;
+				display: inline-flex;
+				align-items: center;
+				gap: 22px;
+				padding: 22px 40px;
+				border-radius: 999px;
+				background: var(--morado);
+				font-size: 56px;
+				font-weight: 600;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root" data-composition-id="main" data-start="0" data-duration="36" data-width="1080" data-height="1920">
+			<!-- 1 · Gancho -->
+			<section id="e1" class="escena clip" data-start="0" data-duration="3.4" data-track-index="0">
+				<p id="e1-a" class="titulo">Pagaste el mínimo.</p>
+				<p id="e1-b" class="titulo">¿Ya quedaste bien?</p>
+			</section>
+
+			<!-- 2 · La tarjeta -->
+			<section id="e2" class="escena clip" data-start="3.4" data-duration="5" data-track-index="0">
+				<p id="e2-sobre" class="sobre">Imagina esto:</p>
+				<div id="e2-tarjeta">
+					<div id="e2-chip"></div>
+					<p id="e2-etq">Debes en tu tarjeta</p>
+					<p id="e2-monto" class="cifra">$3,000</p>
+				</div>
+				<p id="e2-pie">Ya no la usas. Cada mes pagas solo el mínimo.</p>
+			</section>
+
+			<!-- 3 · El primer mínimo -->
+			<section id="e3" class="escena clip" data-start="8.4" data-duration="6" data-track-index="0">
+				<p id="e3-sobre" class="sobre">Tu primer pago mínimo</p>
+				<p id="e3-monto" class="cifra">$176</p>
+				<div id="e3-barra"><span id="e3-int"></span><span id="e3-deu"></span></div>
+				<p id="e3-etq-int" class="e3-etq"><b>$131</b>se va en<br />intereses + IVA</p>
+				<p id="e3-etq-deu" class="e3-etq"><b>$45</b>baja tu<br />deuda</p>
+			</section>
+
+			<!-- 4 · Casi no baja -->
+			<section id="e4" class="escena clip" data-start="14.4" data-duration="5" data-track-index="0">
+				<p id="e4-sobre" class="sobre">Después de un mes</p>
+				<p id="e4-antes" class="cifra" data-layout-allow-overlap>$3,000</p>
+				<span id="e4-tache" data-layout-allow-overlap></span>
+				<svg id="e4-flecha" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+					<path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"></path>
+				</svg>
+				<p id="e4-despues" class="cifra">$2,955</p>
+				<p id="e4-pie" class="titulo">Casi todo se fue en intereses.</p>
+			</section>
+
+			<!-- 5 · Los meses -->
+			<section id="e5" class="escena clip" data-start="19.4" data-duration="6.4" data-track-index="0">
+				<p id="e5-sobre" class="titulo">Si sigues pagando solo el mínimo…</p>
+				<div id="e5-puntos"></div>
+				<p id="e5-leyenda">Cada punto es un mes</p>
+				<p id="e5-total" class="titulo"><span id="e5-anios" class="cifra">0</span> años y <span id="e5-meses" class="cifra">0</span> meses</p>
+			</section>
+
+			<!-- 6 · El total -->
+			<section id="e6" class="escena clip" data-start="25.8" data-duration="5" data-track-index="0">
+				<p id="e6-sobre" class="titulo">Al final, por $3,000 pagas…</p>
+				<div id="e6-c1" class="e6-col">
+					<p class="e6-num cifra">$3,000</p>
+					<div id="e6-b1" class="e6-bar"></div>
+				</div>
+				<div id="e6-c2" class="e6-col">
+					<p class="e6-num cifra" id="e6-n2">$9,531</p>
+					<div id="e6-b2" class="e6-bar"><span id="e6-b2-int"></span><span id="e6-b2-deu"></span></div>
+				</div>
+				<span id="e6-suelo"></span>
+				<p id="e6-t1" class="e6-etq">Lo que compraste</p>
+				<p id="e6-t2" class="e6-etq">Lo que terminas pagando</p>
+				<p id="e6-triple" class="titulo">Más del triple.</p>
+			</section>
+
+			<!-- 7 · Cierre -->
+			<section id="e7" class="escena oscura clip" data-start="30.8" data-duration="5.2" data-track-index="0">
+				<p id="e7-a" class="titulo">El mínimo evita el atraso.</p>
+				<p id="e7-b" class="titulo">No apaga tu deuda.</p>
+				<span id="e7-raya"></span>
+				<p id="e7-c" class="titulo">Paga el total antes de la fecha límite:</p>
+				<p id="e7-cero"><span class="cifra">$0</span> de intereses</p>
+			</section>
+
+			<!-- Encima de todo -->
+			<div id="avance"><div id="avance-barra"></div></div>
+			<p id="aviso" class="clip" data-start="3.4" data-duration="27.4" data-track-index="1">
+				<i></i><span>Ejemplo ilustrativo · tasa de 45% anual + IVA</span>
+			</p>
+		</div>
+
+		<script>
+			// 101 meses = 8 años y 5 meses (resultado del simulador con 45%).
+			const MESES = 101;
+			const puntos = document.getElementById('e5-puntos');
+			for (let i = 0; i < 108; i++) {
+				const s = document.createElement('span');
+				s.className = 'p';
+				s.dataset.i = i;
+				puntos.appendChild(s);
+			}
+			const todos = [...puntos.children];
+
+			const tl = gsap.timeline({ paused: true });
+			const sale = 'power3.out';
+
+			// Barra de avance de todo el video
+			tl.fromTo('#avance-barra', { scaleX: 0 }, { scaleX: 1, duration: 36, ease: 'none' }, 0);
+
+			// 1 · Gancho (la primera línea ya está en pantalla en el cuadro 0)
+			tl.fromTo('#e1-a', { y: 0, opacity: 1 }, { y: -20, duration: 1.2, ease: 'none' }, 0);
+			tl.fromTo('#e1-b', { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: sale }, 1.3);
+			tl.to(['#e1-a', '#e1-b'], { y: -140, opacity: 0, duration: 0.35, ease: 'power2.in' }, 3.0);
+
+			// 2 · La tarjeta
+			const t2 = 3.4;
+			tl.fromTo('#e2-sobre', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t2);
+			tl.fromTo(
+				'#e2-tarjeta',
+				{ y: 260, rotation: -6, opacity: 0 },
+				{ y: 0, rotation: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.4)' },
+				t2 + 0.15,
+			);
+			const deuda = { v: 0 };
+			tl.fromTo(
+				deuda,
+				{ v: 0 },
+				{
+					v: 3000,
+					duration: 1.1,
+					ease: 'power2.out',
+					onUpdate: () => {
+						document.getElementById('e2-monto').textContent = '$' + Math.round(deuda.v).toLocaleString('en-US');
+					},
+				},
+				t2 + 0.6,
+			);
+			tl.fromTo('#e2-pie', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t2 + 2.0);
+			tl.to('#e2-tarjeta', { scale: 0.9, y: -40, duration: 0.4, ease: 'power2.in' }, t2 + 4.6);
+			tl.to(['#e2-sobre', '#e2-tarjeta', '#e2-pie'], { opacity: 0, duration: 0.3 }, t2 + 4.7);
+
+			// 3 · El primer mínimo se reparte
+			const t3 = 8.4;
+			tl.fromTo('#e3-sobre', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t3);
+			tl.fromTo('#e3-monto', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', transformOrigin: 'left center' }, t3 + 0.15);
+			tl.fromTo('#e3-barra', { opacity: 0 }, { opacity: 1, duration: 0.3 }, t3 + 1.0);
+			tl.fromTo('#e3-int', { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: 'power2.inOut' }, t3 + 1.3);
+			tl.fromTo('#e3-etq-int', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t3 + 1.9);
+			tl.fromTo('#e3-deu', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'power2.out' }, t3 + 2.9);
+			tl.fromTo('#e3-etq-deu', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t3 + 3.2);
+			tl.to('#e3-etq-int b', { scale: 1.12, duration: 0.25, yoyo: true, repeat: 1, transformOrigin: 'left center' }, t3 + 4.2);
+			tl.to(['#e3-sobre', '#e3-monto', '#e3-barra', '.e3-etq'], { opacity: 0, y: -40, duration: 0.3, ease: 'power2.in' }, t3 + 5.6);
+
+			// 4 · La deuda casi no baja
+			const t4 = 14.4;
+			tl.fromTo('#e4-sobre', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t4);
+			tl.fromTo('#e4-antes', { opacity: 0 }, { opacity: 1, duration: 0.4 }, t4 + 0.1);
+			tl.fromTo('#e4-tache', { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.inOut' }, t4 + 0.8);
+			tl.fromTo('#e4-flecha', { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t4 + 1.1);
+			tl.fromTo('#e4-despues', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t4 + 1.4);
+			tl.fromTo('#e4-pie', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t4 + 2.5);
+			tl.to(['#e4-sobre', '#e4-antes', '#e4-tache', '#e4-flecha', '#e4-despues', '#e4-pie'], { opacity: 0, duration: 0.3 }, t4 + 4.7);
+
+			// 5 · Los meses se llenan
+			const t5 = 19.4;
+			tl.fromTo('#e5-sobre', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t5);
+			tl.fromTo(todos, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.004, ease: sale }, t5 + 0.4);
+			tl.fromTo('#e5-leyenda', { opacity: 0 }, { opacity: 1, duration: 0.3 }, t5 + 0.7);
+			tl.fromTo('#e5-total', { opacity: 0 }, { opacity: 1, duration: 0.3 }, t5 + 0.9);
+			const mes = { v: 0 };
+			tl.fromTo(
+				mes,
+				{ v: 0 },
+				{
+					v: MESES,
+					duration: 3.4,
+					ease: 'power1.inOut',
+					onUpdate: () => {
+						const n = Math.round(mes.v);
+						todos.forEach((p, i) => p.classList.toggle('lleno', i < n));
+						document.getElementById('e5-anios').textContent = Math.floor(n / 12);
+						document.getElementById('e5-meses').textContent = n % 12;
+					},
+				},
+				t5 + 1.1,
+			);
+			tl.to('#e5-total', { color: '#820ad1', scale: 1.06, duration: 0.3, transformOrigin: 'left center' }, t5 + 4.6);
+			tl.to(['#e5-sobre', '#e5-puntos', '#e5-leyenda', '#e5-total'], { opacity: 0, duration: 0.3 }, t5 + 6.0);
+
+			// 6 · El total
+			const t6 = 25.8;
+			tl.fromTo('#e6-sobre', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t6);
+			tl.fromTo('#e6-suelo', { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: sale }, t6 + 0.2);
+			tl.fromTo(['#e6-t1', '#e6-t2'], { opacity: 0 }, { opacity: 1, duration: 0.3 }, t6 + 0.4);
+			tl.fromTo('#e6-b1', { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: sale }, t6 + 0.6);
+			tl.fromTo('#e6-c1 .e6-num', { opacity: 0 }, { opacity: 1, duration: 0.3 }, t6 + 0.9);
+			tl.fromTo('#e6-b2', { scaleY: 0 }, { scaleY: 1, duration: 1.3, ease: 'power2.out' }, t6 + 1.3);
+			tl.fromTo('#e6-n2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: sale }, t6 + 2.4);
+			tl.fromTo('#e6-triple', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: sale }, t6 + 3.0);
+			tl.to(['#e6-sobre', '.e6-col', '#e6-suelo', '.e6-etq', '#e6-triple'], { opacity: 0, duration: 0.3 }, t6 + 4.7);
+
+			// 7 · Cierre
+			const t7 = 30.8;
+			tl.fromTo('#e7-a', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.55, ease: sale }, t7 + 0.1);
+			tl.fromTo('#e7-b', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.55, ease: sale }, t7 + 1.0);
+			tl.fromTo('#e7-raya', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: sale }, t7 + 2.0);
+			tl.fromTo('#e7-c', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: sale }, t7 + 2.3);
+			tl.fromTo('#e7-cero', { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.8)', transformOrigin: 'left center' }, t7 + 3.0);
+
+			window.__timelines['main'] = tl;
+			tl.seek(0);
+		</script>
+	</body>
+</html>

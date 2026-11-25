@@ -1,0 +1,8 @@
+---
+import Texto from '../layouts/Texto.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<Texto titulo="No encontramos esta página" descripcion="El enlace puede estar incompleto.">
+	<p>Puede que el enlace esté incompleto. <a href={base}>Vuelve al inicio</a> y elige un módulo.</p>
+</Texto>

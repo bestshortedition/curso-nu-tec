@@ -1,0 +1,46 @@
+---
+/**
+ * Una palabra difícil dentro del texto. Al tocarla se abre su definición y un ejemplo.
+ *
+ *   <Termino id="pago-minimo">pago mínimo</Termino>
+ *
+ * Usa el atributo `popover` del navegador: funciona sin JavaScript. En celular se abre
+ * como una hoja desde abajo. Las palabras viven en src/data/glosario.ts.
+ */
+import { buscarPalabra } from '../data/glosario';
+import Definicion from './Definicion.astro';
+
+interface Props {
+	id: string;
+}
+const p = buscarPalabra(Astro.props.id);
+const pid = `def-${p.id}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<button type="button" class="termino" popovertarget={pid} aria-haspopup="dialog"><slot /></button><span
+	popover
+	id={pid}
+	class="hoja-def"
+	role="dialog"
+	aria-label={p.palabra}
+	><Definicion palabra={p} cerrar={pid} /></span
+>
+
+<style>
+	.termino {
+		display: inline;
+		padding: 0;
+		border: 0;
+		background: none;
+		font: inherit;
+		color: inherit;
+		text-decoration: underline dotted var(--morado);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.22em;
+		cursor: help;
+	}
+	.termino:hover {
+		color: var(--morado-oscuro);
+		text-decoration-style: solid;
+	}
+</style>

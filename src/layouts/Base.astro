@@ -1,0 +1,244 @@
+---
+/**
+ * Estructura común de todas las páginas: <head>, vista previa para WhatsApp,
+ * encabezado con la identidad Nu × Tec y pie con el aviso legal.
+ */
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logoNu from '../assets/nu_purple.png';
+import Icono from '../components/Icono.astro';
+
+interface Props {
+	titulo: string;
+	descripcion: string;
+	/** Imagen de vista previa en public/og/ (sin extensión). */
+	og?: string;
+	/** En las lecciones el encabezado lo pone la propia lección. */
+	sinEncabezado?: boolean;
+	sinPie?: boolean;
+}
+
+const { titulo, descripcion, og = 'general', sinEncabezado = false, sinPie = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const NOMBRE = 'Bytes de dinero';
+const tituloCompleto = titulo === NOMBRE ? `${NOMBRE} · Nu × Tec` : `${titulo} · ${NOMBRE}`;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+const imagen = new URL(`${base}og/${og}.png`, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es-MX">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<title>{tituloCompleto}</title>
+		<meta name="description" content={descripcion} />
+		<link rel="canonical" href={canonica} />
+		<link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_MX" />
+		<meta property="og:site_name" content={NOMBRE} />
+		<meta property="og:title" content={titulo} />
+		<meta property="og:description" content={descripcion} />
+		<meta property="og:url" content={canonica} />
+		<meta property="og:image" content={imagen} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta name="twitter:card" content="summary_large_image" />
+
+		<script is:inline>
+			document.documentElement.classList.add('js');
+			// Primera visita: la bienvenida (hook + encuesta) se muestra antes de pintar la página.
+			// Modo presentación: ?demo=1 borra el avance de este navegador y empieza desde cero.
+			try {
+				var q = location.search;
+				if (/[?&]demo=1/.test(q)) {
+					localStorage.removeItem('bytes-de-dinero:v1');
+					q = '?hook=1';
+				}
+				var e = JSON.parse(localStorage.getItem('bytes-de-dinero:v1') || '{}');
+				if (!e.diagnostico || /[?&](diagnostico|hook)=1/.test(q))
+					document.documentElement.classList.add('sin-diagnostico');
+				if (/[?&]hook=1/.test(q)) document.documentElement.classList.add('ver-hook');
+				if (e.hookVisto) document.documentElement.classList.add('hook-visto');
+			} catch (_) {}
+		</script>
+	</head>
+	<body>
+		<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+		{!sinEncabezado && (
+			<header class="encabezado">
+				<div class="contenedor contenedor--amplio fila">
+					<a class="marca" href={base} aria-label={`${NOMBRE}, inicio`}>
+						<Image src={logoNu} alt="" width={40} densities={[1, 2]} loading="eager" />
+						<span class="por" aria-hidden="true">×</span>
+						<span class="tec">Tec de Monterrey</span>
+					</a>
+					<nav class="nav" aria-label="Principal">
+						<a href={`${base}practica/`} aria-current={Astro.url.pathname.startsWith(`${base}practica`) ? 'page' : undefined}>
+							<Icono nombre="game-controller" tamano={20} /><span>Practica</span>
+						</a>
+						<a href={`${base}glosario/`} aria-current={Astro.url.pathname.startsWith(`${base}glosario`) ? 'page' : undefined}>
+							<Icono nombre="book-bookmark" tamano={20} /><span>Glosario</span>
+						</a>
+					</nav>
+				</div>
+			</header>
+		)}
+
+		<main id="contenido">
+			<slot />
+		</main>
+
+		{!sinPie && (
+			<footer class="pie">
+				<div class="contenedor contenedor--amplio">
+					<p class="aviso">Contenido educativo. No es asesoría financiera.</p>
+					<p>
+						Los datos técnicos vienen de Banxico, CONDUSEF y el DOF.
+						Este sitio no pide ni guarda datos personales: tu avance se queda en tu celular.
+					</p>
+					<nav class="enlaces" aria-label="Pie de página">
+						<a href={base}>Inicio</a>
+						<a href={`${base}ruta/`}>Lecciones</a>
+						<a href={`${base}practica/`}>Practica</a>
+						<a href={`${base}glosario/`}>Glosario</a>
+						<a href={`${base}fuentes/`}>Fuentes</a>
+						<a href={`${base}sobre-el-curso/`}>Sobre el curso</a>
+					</nav>
+					<p class="creditos">{NOMBRE} · Nu × Tecnológico de Monterrey · 2026</p>
+				</div>
+			</footer>
+		)}
+	</body>
+</html>
+
+<style>
+	.saltar {
+		position: absolute;
+		left: 1rem;
+		top: -4rem;
+		z-index: 100;
+		padding: 0.75rem 1rem;
+		background: var(--tinta);
+		color: #fff;
+		border-radius: var(--radio-chico);
+	}
+	.saltar:focus {
+		top: 1rem;
+	}
+	.encabezado {
+		border-bottom: 1px solid var(--linea);
+		background: rgb(255 255 255 / 0.92);
+		backdrop-filter: saturate(1.4) blur(8px);
+		position: sticky;
+		top: 0;
+		z-index: 20;
+	}
+	.fila {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		height: var(--alto-barra);
+	}
+	.marca {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		color: var(--tinta);
+		text-decoration: none;
+		min-height: 2.75rem;
+	}
+	.marca img {
+		width: 40px;
+		height: auto;
+	}
+	.por {
+		color: var(--gris-claro);
+		font-size: 0.9375rem;
+	}
+	.tec {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		letter-spacing: -0.01em;
+	}
+	.nav {
+		display: flex;
+		gap: 0.25rem;
+	}
+	.nav a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		min-height: 2.75rem;
+		padding: 0 0.75rem;
+		border-radius: 999px;
+		color: var(--tinta-2);
+		font-family: var(--f-titulo);
+		font-size: 0.9375rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+	.nav a:hover {
+		background: var(--fondo-2);
+		color: var(--tinta);
+	}
+	.nav a[aria-current='page'] {
+		background: var(--morado-claro);
+		color: var(--morado-oscuro);
+	}
+	/* En celulares chicos: solo el ícono, con su nombre para lectores de pantalla. */
+	@media (max-width: 25rem) {
+		.nav a {
+			width: 2.75rem;
+			padding: 0;
+			justify-content: center;
+		}
+		.nav a span {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+		}
+	}
+	.pie {
+		margin-top: 5rem;
+		padding-block: 2.5rem 3rem;
+		border-top: 1px solid var(--linea);
+		background: var(--fondo-2);
+		color: var(--gris);
+		font-size: 0.9375rem;
+	}
+	.pie p + p {
+		margin-top: 0.5rem;
+	}
+	.aviso {
+		font-family: var(--f-titulo);
+		font-weight: 600;
+		color: var(--tinta);
+	}
+	.enlaces {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.5rem;
+		margin-top: 1.25rem;
+	}
+	.enlaces a {
+		color: var(--tinta);
+		min-height: 2.75rem;
+		display: inline-flex;
+		align-items: center;
+	}
+	.creditos {
+		margin-top: 1rem;
+		font-size: 0.8125rem;
+		color: var(--gris);
+	}
+</style>

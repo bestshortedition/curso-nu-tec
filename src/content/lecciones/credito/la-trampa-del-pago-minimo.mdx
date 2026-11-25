@@ -1,0 +1,75 @@
+---
+numero: "4.5"
+descripcion: Pagar el mínimo te mantiene al corriente, pero tu deuda sigue creciendo con intereses.
+minutos: 2
+duda:
+  pregunta: ¿Si pagas solo el mínimo, tu deuda deja de crecer?
+  tema: Cada mes, tu tarjeta de crédito te pide un pago mínimo. Es lo menos que puedes pagar sin atrasarte. Aquí vas a ver qué pasa con tu deuda si solo pagas eso.
+  cifra:
+    texto: 64% (16 de 25) no sabe que pagar solo el mínimo genera intereses.
+    n: 16
+    de: 25
+accion: "Decide desde hoy: cuando tengas tarjeta, pagarás el total antes de la fecha límite."
+resumen:
+  - El pago mínimo evita que te atrases, pero no frena los intereses.
+  - "En el ejemplo, $3,000 pagados solo con el mínimo tardan más de 8 años y cuestan más del triple."
+  - Si pagas el total antes de la fecha límite, no pagas intereses por tus compras.
+palabras:
+  - pago-minimo
+  - interes
+  - fecha-de-corte
+  - fecha-limite-de-pago
+  - pago-para-no-generar-intereses
+  - limite-de-credito
+fuentes:
+  - nombre: Banxico, Circular 34/2010, Reglas de tarjetas de crédito, numeral 4.1 (DOF, 12/11/2010)
+    url: https://dof.gob.mx/nota_detalle.php?codigo=5167209&fecha=12%2F11%2F2010
+  - nombre: CONDUSEF, Calculadora de pagos mínimos
+    url: https://www.condusef.gob.mx/?p=contenido&idc=941&idcat=1
+  - nombre: Banxico, Indicadores básicos de tarjetas de crédito (datos a junio de 2025)
+    url: https://www.banxico.org.mx/publicaciones-y-prensa/rib-tarjetas-de-credito/%7BEDFAC909-76C7-749D-778B-859D724250E2%7D.pdf
+  - nombre: Banxico, Términos financieros de tarjetas de crédito
+    url: https://comparador.banxico.org.mx/ComparadorCrediticio/terminos-tarjeta-de-credito.jsp
+---
+import VideoReel from '../../../components/VideoReel.astro';
+import MinimoNoAlcanza from '../../../components/simuladores/MinimoNoAlcanza.astro';
+import ListaIconos from '../../../components/ListaIconos.astro';
+import Nota from '../../../components/Nota.astro';
+import Ejercicio from '../../../components/Ejercicio.astro';
+import Termino from '../../../components/Termino.astro';
+
+## Mira qué pasa.
+
+Vale pagó con su tarjeta de crédito un boleto para un concierto: **$3,000**. Cada mes paga solo el <Termino id="pago-minimo">pago mínimo</Termino>.
+
+<VideoReel archivo="pago-minimo" segundos={36} titulo="Video: qué pasa si pagas solo el mínimo de una deuda de $3,000">
+	Ejemplo ilustrativo, con una tasa de 45% anual más IVA. Debes $3,000 en tu tarjeta y ya no la usas. Cada mes pagas solo el mínimo. Tu primer mínimo es de $176: $131 se van en intereses e IVA y solo $45 bajan tu deuda. Después de un mes debes $2,955. Si sigues pagando solo el mínimo, terminas en 8 años y 5 meses, y pagas $9,531 en total: más del triple. El mínimo evita el atraso, pero no apaga tu deuda. Si pagas el total antes de la fecha límite, pagas $0 de intereses.
+</VideoReel>
+
+---
+
+## Ahora pruébalo tú.
+
+<MinimoNoAlcanza />
+
+---
+
+## ¿Por qué pasa?
+
+<ListaIconos
+	items={[
+		{ icono: 'check-circle', tono: 'bien', titulo: 'Te mantiene al corriente', texto: 'Pagar el mínimo a tiempo evita que te atrases.' },
+		{ icono: 'x-circle', tono: 'mal', titulo: 'No frena los intereses', texto: 'Lo que sigues debiendo genera intereses cada mes, más IVA.' },
+		{ icono: 'hourglass-medium', tono: 'neutro', titulo: 'Por eso tarda años', texto: 'Casi todo tu pago se va en intereses y la deuda baja muy poco.' },
+	]}
+/>
+
+<Nota titulo="Así se calcula el mínimo" fuente="Banxico, Circular 34/2010">
+	Es el mayor de dos montos: 1.5% de lo que debes más <Termino id="interes">intereses</Termino> e IVA, o 1.25% de tu <Termino id="limite-de-credito">límite de crédito</Termino>.
+</Nota>
+
+---
+
+<Ejercicio diagnostico="pago-minimo">
+	Lo que no pagas se queda como deuda y genera <Termino id="interes">intereses</Termino> cada mes. Para no pagar intereses, paga el total antes de la <Termino id="fecha-limite-de-pago">fecha límite de pago</Termino>.
+</Ejercicio>
